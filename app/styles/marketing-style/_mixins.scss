@@ -1,0 +1,39 @@
+/* Converts "px" to "em" using the ($)em-base*/
+@function convert-to-em($value, $base-value: $font-size-base)  {
+  $value: strip-unit($value) / strip-unit($base-value) * 1em;
+  @if ($value == 0em) { $value: 0; } /* Turn 0em into 0*/
+  @return $value;
+}
+
+/* Working in ems is annoying. Think in pixels by using this handy function, em-calc(#)*/
+/*Just enter the number, no need to mention "px"*/
+@function em-calc($values, $base-value: $font-size-base) {
+  $max: length($values); /* Get the total number of parameters passed*/
+
+  /* If there is only 1 parameter, then return it as an integer.*/
+  /* This is done because a list can\'t be multiplied or divided even if it contains a single value*/
+  @if $max == 1 { @return convert-to-em(nth($values, 1), $base-value); }
+
+  $emValues: (); /* This will eventually store the converted $values in a list*/
+  @for $i from 1 through $max {
+    $emValues: append($emValues, convert-to-em(nth($values, $i), $base-value));
+  }
+  @return $emValues;
+}
+
+@mixin inline-block {
+  display:inline-block;
+  *display:inline;
+  vertical-align:top;
+  *zoom:1;
+}
+
+@mixin styled-dark-border-bottom {
+  background:transparent url('#{$assetMarketingPath}/bg-header-border-bottom.png') no-repeat center bottom;
+  padding-bottom:22px;
+}
+
+@mixin styled-light-border-bottom {
+  background:transparent url('#{$assetMarketingPath}/bg-header-border-bottom-clear.png') no-repeat center bottom;
+  padding-bottom:22px;
+}

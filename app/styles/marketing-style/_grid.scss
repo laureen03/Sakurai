@@ -1,0 +1,114 @@
+.access-area .container{
+	position:relative;
+	z-index:5;
+}
+
+/*!
+ *	recreate fluid grids from bootstrap2
+ */
+.container-fluid {
+	max-width:1060px;
+	margin:0 auto;
+	padding-left:10px;
+	padding-right:10px;
+	min-height:100%;
+}
+
+
+/*! 
+ *
+ *	custom grids with singularitygs
+ *
+ *	grid is slightly abnormal/assymeterical 
+ *	breaking between 12 and 15 columns depending on section
+ *	
+ *	our normal bootstrap grid works in 90% of grid scenarios
+ *	but we can create custom grids in these unique cases
+ *
+ */
+$grids:15;
+$gutters:10px;
+$gutter-styles: 'split' 'fixed';
+$output: 'float';
+$grids: add-grid(15 at $screen-sm);
+
+//[$screen-xs, $screen-sm, $screen-md, $screen-lg]
+section.available-subjects{
+	li {
+		margin-bottom:4em; 
+		
+		&:last-child{
+			margin-bottom:0;
+		}
+
+		@include breakpoint($screen-sm) {
+			@include grid-span(3);
+			margin-bottom:50px;
+		}
+	}
+}
+
+
+
+/*!
+ *	Apply to 12 column grid
+ */
+$grids: 12;
+$gutters:10px;
+
+.block-grid-3 {
+	list-style:none;
+	@extend .cf;
+	> li {
+		&:nth-of-type(n) {
+			clear: none;
+		}
+		@include breakpoint(600px) {
+			@include grid-span(6);
+			&:nth-of-type(2n+1) {
+				clear:left;
+			}
+		}
+		@include breakpoint(860px) {
+			@include grid-span(4);
+			&:nth-of-type(3n+1) {
+				clear:left;
+			}
+			&:nth-of-type(2n+1) {
+				clear:none;
+			}
+		}
+	}
+}
+
+.block-grid-2 {
+	list-style:none;
+	@extend .cf;
+	> li {
+		&:nth-of-type(n) {
+			clear: none;
+		}
+		@include breakpoint(600px) {
+			@include grid-span(6);
+			&:nth-of-type(2n+1) {
+				clear:left;
+			}
+		}
+	}
+}
+
+body.student .block-grid-3 {
+	> li {
+		@include breakpoint(860px) {
+			&.first {
+				padding-right:24px;
+			}
+			&.second {
+				padding:0 24px;
+			}
+			&.third {
+				padding-left:24px;
+			}
+		}
+	}
+}

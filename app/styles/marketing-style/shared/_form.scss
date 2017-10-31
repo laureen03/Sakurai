@@ -1,0 +1,76 @@
+section.hero {
+	label {
+		color:#fff;
+		span{
+			color:#fff;
+		}
+	}
+}
+
+label {
+	font-size:12px;
+	margin-bottom:12px;
+	color:#444;
+	display:block;
+	span {
+		color:#ef6b35;
+		font-weight:bold;
+	}
+}
+
+label[for="school_state"] {
+	width:86px;
+}
+
+input[type="text"], input[type="email"], input[type="password"], input[type="tel"] {
+	@include border-radius(3px);
+	border:1px solid #e1e1e1;
+	color:#666;
+	display:block;
+	font-size:13px;
+	padding:12px 7px;
+	width:100%;
+}
+
+form {
+	.select-wrapper{
+		margin-right:3px;
+		.selector {
+			overflow:visible;
+			span {
+				position:relative;
+				right:-3px;
+			}
+		}
+	}
+	div.price {
+		p {
+			line-height: 47px;
+			font-size: 26px;
+			margin-right: 18px;
+			margin-bottom: 0;
+		}
+	}
+	input, .selector {
+		margin-bottom:16px;
+	}
+	.inline-block, input[type="text"].inline-block{
+		@include inline-block;
+		width:auto;
+		vertical-align:top;
+	}
+}
+
+.grey-border-bottom {
+	border-bottom:1px solid #e1e1e1;
+	margin-bottom:24px;
+}
+
+body.purchase .grey-border-bottom:last-child {
+	border-bottom:1px solid #e1e1e1;
+	margin-bottom:24px;
+}
+
+input[type="text"] + .apply-button {
+	margin-left:8px;
+}

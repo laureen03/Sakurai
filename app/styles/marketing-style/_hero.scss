@@ -1,0 +1,211 @@
+#landing-tile {
+	position:absolute;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	background:transparent url('#{$assetMarketingPath}/bg-hero-landing-tile.png') repeat center center;
+	z-index:2;
+}
+
+section.hero-static {
+	position:relative;
+	background-color:#fff!important;
+	background-position:center top;
+	background-repeat:no-repeat;
+
+	
+	.text-column {
+		h2 {
+			color:#fff;
+			span{
+				display:block;
+				line-height:1em;
+			}
+		}
+		span.large {
+			font-size:42px;
+			font-weight:200;
+		}
+		span.extra-large {
+			font-size:65px;
+		}
+		p{
+			font-size:15px;
+			line-height:21px;
+		}
+	}
+}
+
+
+
+.hero {
+	.text-column {
+		p{
+			margin-bottom:20px;
+		}
+	}
+	label {
+		margin-bottom:6px;
+	}
+}
+
+.landing-page-hero{
+	position:relative;
+	z-index:5;
+}
+
+.landing-page-hero .hero {
+	p {
+		a, a:hover, a:focus, a:active, a:visited {
+			color:#fff;
+			text-decoration:underline;
+		}
+	}
+}
+
+section.hero.gray-bb{
+	background:#000;
+	color: #fff;
+	padding:0;
+
+	&.hero-fixed {
+		position:fixed;
+		left:0;
+		right:0;
+	}
+
+	&.hero-static{
+		padding:45px 0 2px;
+	}
+
+	z-index:1;
+
+	> div.container-fluid {
+		max-width:1300px!important;
+		padding-left:0;
+		padding-right:0;
+	}
+
+}
+
+//[$screen-xs, $screen-sm, $screen-md, $screen-lg]
+
+@media screen and (max-width:$screen-sm) {
+	body {
+		padding-top:109px;
+	}
+}
+
+body {
+	&.large-hero{
+		padding-top:335px;
+	}
+	&.small-hero{
+		padding-top:258px;
+	}
+}
+section.hero-fixed {
+	top:109px;
+	.large-hero {
+		height:253px;
+	}
+	.small-hero {
+		height:177px;
+	}
+}
+
+@include breakpoint($screen-xs) {
+	body {
+		&.large-hero{
+			padding-top:335px;
+		}
+		&.small-hero{
+			padding-top:258px;
+		}
+	}
+	section.hero-fixed {
+		top:109px;
+		.large-hero {
+			height:253px;
+		}
+		.small-hero {
+			height:177px;
+		}
+	}
+}
+
+@include breakpoint($screen-sm) {
+	body {
+		&.large-hero{
+			padding-top:369px;
+		}
+		&.small-hero{
+			padding-top:266px;
+		}
+	}
+	section.hero-fixed {
+		top:117px;
+		.large-hero {
+			height:253px;
+		}
+		.small-hero {
+			height:150px;
+		}
+	}
+}
+
+@include breakpoint($screen-md) {
+	body {
+		&.large-hero{
+			padding-top:446px;
+		}
+		&.small-hero{
+			padding-top:320px;
+		}
+	}
+	section.hero-fixed {
+		top:117px;
+		.large-hero {
+			height:330px;
+		}
+		.small-hero {
+			height:204px;
+		}
+	}
+}
+
+@include breakpoint($screen-lg) {
+	body {
+		&.large-hero{
+			padding-top:532px;
+		}
+		&.small-hero{
+			padding-top:373px;
+		}
+	}
+	section.hero-fixed {
+		top:117px;
+		.large-hero {
+			height:415px;
+		}
+		.small-hero {
+			height:256px;
+		}
+		.container {
+			max-width:1300px;
+			width:auto;
+		}
+	}
+}
+
+@media screen and (max-width: $screen-sm) {
+	section.hero-static {
+		&.hero.gray-bb{ 
+			padding:45px 0;
+		}
+		.text-column, .text-column.text-left {
+			text-align:center;
+		}
+	}
+}

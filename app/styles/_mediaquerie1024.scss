@@ -1,0 +1,481 @@
+@media only screen and (max-device-width:1024px) {
+
+    .secondary-menu-fixed {
+        .options-menu {
+            position: static;
+        }
+        #secondary-menu-placeholder {
+            display: none;
+        }
+    }
+
+/**************************
+* Assign a Quiz
+**************************/
+  .assign-quiz{
+    .stepsContent{
+      width: 100%;
+    }
+    .step2{
+      #select-chapter{
+        width: 100%;
+      }
+    }
+  }
+  /**************************
+  * How my classes are doing?
+  **************************/
+  .hmcd{
+    width: 100%;
+    padding: 0;
+    .hmcd-content{
+      float: none;
+      width: 100%;
+      padding: 32px 0 0 0;
+      h2{
+        text-align: center;
+      }
+      .misconceptions-enroll{
+        margin: 0 15px 10px 15px;
+        h2{text-align: left;}
+      }
+      .small-link {
+        font-size: 12px;
+        float: left;
+        width: 100%;
+        margin: 15px 0 25px 0;
+      }
+      .assignmentResults-title,
+      .questionCollectionResults-title,
+      .student-usage-title {
+        text-align: center;
+      }
+    }
+    .options-menu{
+      text-align: center;
+      float: none;
+      width: 100%;
+      .divider{
+        background: url("../images/marketing_img/bg-header-border-bottom-clear.png") no-repeat scroll center bottom;
+        width: 120px;
+        margin: 0 auto;
+      }
+    }
+    .fixed-menu{
+      position: relative;
+      left: 0;
+    }
+    .fixed-content{
+      width: 100% !important;
+      float: none !important;
+      margin-left: 0 !important;
+      left: 0;
+    }
+    #strengthsWeaknesses{
+      padding: 0 15px;
+    }
+    .strengthsWeaknesses{
+      padding: 0 10px;
+      .gray{
+        text-align: center;
+      }
+    }
+
+    #assignmentResults,
+    #questionCollectionResults,
+    #studentUsage {
+      padding: 0 15px;
+    }
+
+    .studentUsage-table {
+
+      .sort_quizzesCompleted {
+        width: 155px;
+      }
+      .sort_masteryLevel {
+        width: 125px;
+      }
+    }
+
+  }
+
+#overall-usage {
+    $left-width: 200px;
+
+    .chart {
+        border: 0 none;
+
+        .header {
+            border-top: 1px solid $border-gray;
+            border-bottom: 1px solid $border-gray;
+
+            .primary {
+                width: $left-width;
+            }
+            .secondary {
+                left: $left-width;
+            }
+        }
+    }
+}
+
+  /**************************
+  * Header
+  **************************/
+  .login-header{
+    .navbar-header {
+      float: left;
+    }
+  }
+
+  .sub-header{
+    text-align: center;
+    padding-right: 0;
+
+    h1{
+      margin-top: 15px;
+    }
+    .menu-center{
+      margin-top: 0px;
+    }
+    .menu-mob{
+      display: block;
+    }
+    .collapse{
+      display: none !important;
+    }
+    .term-class{
+      .self-study-join-min{
+        display:none;
+      }
+    }
+    .self-study-join-max{
+      display:inline-block;
+    }
+  }
+
+  .haid-container{
+    .col-md-4{
+      margin-top: 30px;
+    }
+    #take-a-practice-quiz{
+      width: 100%;
+      max-width: none;
+      padding: 15px 40px;
+    }
+  }
+
+  /**************************
+  * Instructor Classes
+  **************************/
+  .class-container-instructor{
+    .col-sm-6{
+      width: 50%;
+      float: left;
+      a{
+        font-size: 12px;
+      }
+    }
+    .table{
+        font-size: 14px;
+      }
+  }
+
+  /**************************
+  * Assignment Info
+  **************************/
+  .assignment-info{
+    width: 100%;
+  }
+
+  /**************************
+  * Student Classes List
+  **************************/
+  .class-container{
+    .classes-list{
+        .no-classes{
+          width: 100%;
+        }
+    }
+  }
+  /**************************
+  * Question Library
+  **************************/
+  .question-library{
+
+    .question-information {
+      $stats-width: 26%;
+
+      .answer-choices li {
+        .stats {
+          width: $stats-width;
+          min-width: 190px;
+        }
+        .answer {
+
+          &.media {
+            min-width: 100% - $stats-width;
+          }
+          &.text {
+            width: 100% - $stats-width;
+          }
+        }
+      }
+    }
+
+    .menu{
+      .create-ql{
+          font-size: 13px;
+          font-weight: normal;
+          margin-left: 20px;
+      }
+      width: 100%;
+      float: none;
+      .left-menu{
+        display: none;
+      }
+      .form-group{
+        display: block;
+      }
+      .question-set-list{
+        display: block;
+      }
+
+    }
+    .content-ql{
+      width: 100%;
+      float: right;
+      .ql-title
+      {
+        .name{
+          width: 65%;
+        }
+        .menu-manage{
+          display: none;
+        }
+      }
+      .search-filter{
+        display: block; 
+        .btn-search{
+            display: none;
+        }
+        .menu-filter {
+            display: inline;
+            width: 22%;
+            float: right;
+            text-align: right;
+            .btn-default{
+                height: 50px;
+                min-width: 50px;
+                text-transform: uppercase;
+                font-size: 16px;
+            }
+            .dropdown-menu{
+                right: 0 !important;
+                left: auto !important;
+                text-align: left;
+            }
+        }
+
+        .search-criteria {
+          input{
+            width: 85%;
+          }
+        }
+      }
+    }
+  }
+ 
+  .assign-exam-container{
+    margin-bottom: 120px;
+    .instructions{
+      width:58%;
+    }
+    .assign-exam-form{
+      width: 100%;
+      .col-md-6{
+        width:40%;
+      }
+    }
+  }
+
+  .exam-reports{
+
+    .fixed-menu{
+      position: inherit;
+    }
+    .fixed-content{
+      width: 100%;
+      float: none;
+      margin-left: 0;
+    }
+    .exam-reports-content{
+      left: 0;
+      float: none;
+      margin-left: 0;
+      width: 100%;
+
+      div{
+        .title{
+          font-size: 16px;
+        }
+      }
+
+        .exam-reports-header{
+          padding: 20px;
+          .exams-average-ml{
+            width: 44%;
+          }
+        }
+    }
+
+    .options-menu{
+      float: none;
+      width: 100%;
+
+      .divider{
+        background: url('#{$img-path}/bg/bg-menu-border-full.png') no-repeat center;
+        width: 100%;
+      }
+
+      ul {
+        li{
+          text-align: center;
+        }
+      }
+    }
+
+    .graph-container {
+      .student-exam-performance-graph {
+        .passing-threshold {
+          .text {
+            width: 35%;
+          }
+          .line {
+            width: 60%;
+          }
+        }
+      }
+    }
+
+  }
+
+  .exam-summary{
+    .options-menu{
+      text-align: center;
+      float: none;
+      width: 100%;
+      ul {
+        li{
+          &.exam-action-title{
+            display:none;
+          }
+          text-align: center;
+        }
+      }
+      .divider{
+        background: url("../images/marketing_img/bg-header-border-bottom-clear.png") no-repeat scroll center bottom;
+        width: 120px;
+        margin: 0 auto;
+      }
+    }
+    .fixed-menu{
+      position: relative;
+      left: 0;
+    }
+    .exam-summary-content,
+    .fixed-content{
+      width: 100% !important;
+      float: none !important;
+      margin-left: 0 !important;
+      left: 0;
+    }
+    .exam-summary-content{
+      h2{
+        text-align: center;
+      }
+    }
+    .classPracticeExamResults{
+        .header-assignments{
+            small{
+                display: block;
+                text-align: center;
+            }
+        }
+    }
+  }
+  .assignments-container{
+    .hidden-sm {
+      display: none !important;
+    }
+    .visible-sm {
+        display: block !important;
+    }
+    tr.visible-sm {
+      display: table-row !important;
+    }
+    th.visible-sm, td.visible-sm {
+      display: table-cell !important;
+    }
+  }
+
+  .exam-summary{
+    .options-menu{
+      width: 100%;
+      ul{
+        li{
+          text-align: center;
+          font-size: 17px;
+        }
+      }
+      .divider {
+        background: url("../images/marketing_img/bg-header-border-bottom-clear.png") no-repeat scroll center bottom;
+        width: 120px;
+        margin: 0 auto;
+      }
+    }
+    .fixed-menu{
+      position: relative;
+    }
+    .exam-summary-content{
+      width: 100%;
+    }
+    .fixed-content{
+      left: 0;
+    }
+  }
+
+  .instructor-examSummary .bar-graph-container {
+      h3 {
+          text-align: center;
+      }
+      div > em {
+          display: block;
+      }
+
+      .header {
+          text-align: center;
+
+          h2 {
+              display: block;
+          }
+      }
+  }
+
+  .select_point_answer{
+    .glyphicon{
+      float: none;
+    }
+    .image{
+      float: none;
+      margin-top: 10px;
+    }
+  }
+
+  #specificMisconceptions{
+    .qc-wrapper {
+      border-left: none;
+      border-right: none;
+    }
+  }
+}

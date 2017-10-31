@@ -1,0 +1,21 @@
+.file-upload {
+
+    .file-name {
+        font-size: 16px;
+        margin-left: 10px;
+    }
+
+    .remove-link {
+        color: #444;
+        font-size: 16px;
+        margin: 0 10px;
+
+        i {
+            margin-right: 5px;
+        }
+
+        span {
+            text-decoration: underline;
+        }
+    }
+}

@@ -1,0 +1,164 @@
+.login-header{
+	background-color: white;
+	border-bottom: 1px solid $gray-lighter;
+	padding-bottom: 17px;
+	h1{
+		&#prepU{
+			margin-top: 23px;
+		}
+	}
+	.container{
+		position: relative;
+	}
+
+	&.admin-products{
+		.menu-dropdown{
+			.dropdown-menu{
+				max-height: 300px;
+				overflow: auto;
+			}
+		}
+	}
+}
+
+.menu-dropdown{
+	width: 210px;
+	font-size: 15px;
+	font-weight: 600;
+	color: $gray-darker !important;
+	&.menu-my-classes{
+		margin: 10px auto 0;
+		text-align: center;
+	}
+
+	&.menu-center{
+		margin: 12px auto 0;
+		text-align: center;
+	}
+
+	&.menu-username{
+		position: absolute;
+		right: 0px;
+		top: 12px;
+		text-align: left;
+		.name{
+			overflow: hidden;
+  			text-overflow: ellipsis;
+  			white-space: nowrap;
+  			width: 165px;
+  			float: left;
+  			text-align: right;
+  			margin-right: 5px;
+		}
+	}
+
+	.openMenu{
+		background-color: $brand-primary;
+		border-color: $brand-primary;
+		color: white;
+		.caret{
+			border-bottom-color: white;
+			border-top-color: white;
+		}
+	}
+
+	.open > a, .open > a:hover, .open > a:focus
+	{
+		@extend .openMenu;
+	}
+
+	.dropdown-toggle{
+		color: $gray-darker;
+		.caret{
+			border-bottom-color: $gray-darker;
+			border-top-color: $gray-darker;
+		}
+
+		&:hover{
+			@extend .openMenu;
+		}
+	}
+	.dropdown-menu{
+		width: 210px;
+		border: none;
+		border-radius: 0px;
+		box-shadow: none;
+		background: $brand-primary;
+		margin-top: 0px;
+		padding: 0px;
+
+		li{
+			a{
+				color: white;
+				white-space: normal;
+				padding: 10px 15px;
+				.class-term{
+					font-weight: lighter;
+					color: white;
+					display: block;
+					font-size: 11px;
+				}
+				&:hover{
+					background-color: $brand-dark-color;
+				}
+			}
+			&.divider{
+				background-color: $brand-dark-color;
+				margin: 0;
+			}
+		}
+	}
+}
+
+.sub-header{
+	background-color: $almost-white-container-color;
+	border-bottom: 1px solid $gray-lighter;
+
+	h1{
+		margin: 35px 0 3px 0;
+	}
+	.self-study-join-max{
+		display:inline-block;
+	}
+	.term-class{
+		margin-bottom: 6px;
+		a{
+			text-decoration: underline;
+		}
+		label{
+			display: inline-block;
+		}
+		.self-study-join-min{
+			display:none;
+		}
+		.student-name{
+			color: $copy-color;
+			font-weight: bold;
+		}
+	}
+	.navbar-collapse{
+		padding:0;
+		#menu-primary-navigation{
+          &.nav-student > li {
+            width: 160px;
+            margin-right: 5px;
+          }
+          li {
+            border-top: none;
+            padding: 0 0 0px 0;
+            border-bottom: 6px solid $almost-white-container-color;
+            &.active {
+              border-top: none;
+              border-bottom: 6px solid $brand-primary;
+            }
+            a {
+              padding: 10px 0 19px 0;
+            }
+          }
+        }
+    }
+
+	.menu-mob{
+		display: none;
+	}
+}

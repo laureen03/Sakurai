@@ -1,0 +1,248 @@
+body.page-template-template-study-area-php {
+	
+}
+
+.single-study_area {
+	&.college-biology, &.ap-chemistry, &.ap-psychology, &.ap-us-history {
+		.content-wrapper {
+			background:#fcfcfc;
+		}
+	}
+}
+
+.single-study_area {
+	article {
+		h2.section-header {
+			margin-top:0;
+		}
+		&.main-article p {
+			color:#666;
+		}
+	}
+	&.free-trial {
+		.hero {
+			p {
+				font-size:13px;
+			}
+			label span {
+				color:#ef6b35;
+			}
+			.font-12{
+				font-size:12px;
+			}
+			#landing-page-computer-screen {
+				margin-top:34px;
+			}
+		}
+	}
+	&.purchase {
+		.wrapper-with-line {
+			&.page-title {
+				h2 {
+					padding-right:30px;
+					background:#fff url('#{$assetMarketingPath}/purchase-page-title-circle.gif') no-repeat right center;
+				}
+				margin-top:66px;
+				margin-bottom:48px;
+			}
+			&.grey {
+				h4 {
+					background:#fff;
+					padding-right:8px;
+					color:#919191;
+				}
+				margin-bottom:18px;
+			}
+		}
+	}
+	div.wrapper-with-line {
+		background:transparent url('#{$assetMarketingPath}/grey_dot.gif') repeat-x center center;
+		> h1, > h2, > h3, > h4, > h5, > h6 {
+			background:#fff;
+			vertical-align:middle;
+			@include inline-block;
+			margin:0;
+		}
+	}
+}
+
+
+@media screen and (min-width:860px) {
+	section.features {
+		ul.block-grid-3 {
+			li {
+				&.first {
+					padding-right:17px;
+				}
+				&.second {
+					padding-right:17px;
+				}
+				&.third {
+					//padding-left:59px;
+				}
+			}
+		}
+	}
+}
+
+section.features {
+	ul.block-grid-3 {
+		> li {
+			padding-left: 42px;
+			position:relative;
+			margin-bottom:20px;
+			h4{
+				position:relative;
+			}
+			.check {
+				background: transparent url('#{$assetMarketingPath}/icon-small-orange-check.png') no-repeat left top;
+				height:32px;
+				width:32px;
+				position:absolute;
+				top:50%;
+				margin-top:-16px;
+				left:-38px;
+			}	
+		}
+	}
+}
+
+.book-list {
+	ul.block-grid-2 > li {
+		padding:10px;
+		article {
+			border:1px solid $gray;
+			padding:26px 28px;
+			h4{
+				margin-bottom:8px;
+			}
+			.meta {
+				margin-bottom:18px;
+				line-height:1em;
+			}
+			@include breakpoint($screen-xs) {
+				img {
+					margin-right:26px;
+					margin-bottom:10px;
+				}
+			}
+		}
+	}
+}
+
+@include breakpoint($screen-sm) {
+	.getting-started-table {
+		.price {
+			min-height: 132px;
+		}
+		.access {
+			height: 42px;
+		}
+	}
+}
+
+.access-list {
+	margin-top:171px;
+	li.horizontal-dotted-line-bottom {
+		line-height:42px;
+		color:#666;
+		margin-bottom:0;
+		padding-bottom:0;
+		&:last-child {
+			background:transparent url('#{$assetMarketingPath}/bg-horizontal-dotted-line.gif') repeat-x center bottom;
+		}
+	}
+}
+
+@include breakpoint($screen-sm) {
+	.app-area {
+		.styled-border-bottom {
+			margin-top:72px;
+		}
+	}
+}
+
+.app-area {
+	.styled-border-bottom {
+		margin-bottom:20px;
+	}
+}
+
+.quiz-topics {
+	li {
+		list-style-image:url('#{$assetMarketingPath}/quiz-bullet.png');
+		list-style-type:disc;
+	}
+	h6 {
+		color:#a0a0a0;
+		font-size:14px;
+		text-transform:uppercase;
+	}
+
+}
+
+@media screen and (max-width:$screen-sm) {
+	.quiz-topics, .quiz-topics li {
+		text-align:center;
+	}
+}
+
+.getting-started-table {
+	@include border-radius(3px);
+	border:1px solid #e1e1e1;
+	margin-bottom:1em;
+	> .title {
+		background:#7e7e7e;
+		color:#fff;
+		line-height:38px;
+	}
+	> .price {
+		background:#34a3b3;
+		color:#fff;
+		line-height:1em;
+		padding-top:48px;
+		padding-bottom:23px;
+		.large {
+			font-size:48px;
+			font-weight:600;
+			margin-bottom:10px;
+			display:block;
+		}
+		i {
+			font-size:16px;
+			font-weight:300;
+		}
+	}
+	> li {
+		border-bottom:1px solid #e1e1e1;
+		&:last-child {
+			border-bottom:none;
+		}
+	}
+	> .access {
+		padding:10px;
+		&:nth-child(even) {
+			background:#fcfcfc;
+		}
+	}
+	> .button {
+		padding:12px;
+		.btn {
+			margin:0;
+		}
+	}
+	.check, .x {
+		display:block;
+		margin:0 auto;
+	}
+	.check {
+		width:17px;
+		height:17px;
+		background:transparent url('#{$assetMarketingPath}/getting-started-check.png') no-repeat center center;
+	}
+	.x {
+		width:23px;
+		height:21px;
+		background:transparent url('#{$assetMarketingPath}/getting-started-x.png') no-repeat center center;
+	}
+}

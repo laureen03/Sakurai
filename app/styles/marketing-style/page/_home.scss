@@ -1,0 +1,65 @@
+section.streamline {
+	padding-bottom:0px!important;
+	h2.section-header, div.styled-border-bottom {
+		padding-bottom:46px;
+	}
+}
+
+section.explore {
+	article {
+		a {
+			font-size:16px;
+		}
+	}
+}
+
+section.available-subjects {
+
+	article.subject {
+		border:1px solid $gray;
+		padding:16px 18px 60px;
+		position:relative;
+		a.btn {
+			bottom: 16px;
+			left: 18px;
+			margin-bottom: 0;
+			position: absolute;
+			right: 18px;
+		}
+	}
+
+	ul.subject-list{
+		margin-top:54px;
+	}
+
+	h2 {
+		font-size:17px;
+	}
+	
+	.icon-background {
+		display:block;
+		margin:-54px auto 0;
+	}
+	
+	.subject-biology{
+
+	}
+	
+	.subject-chemistry{
+
+	}
+	
+	.subject-psychology{
+
+	}
+	
+	.subject-us-history{
+
+	}
+	
+	.subject-nursing-and-medical{
+
+	}
+
+}
+

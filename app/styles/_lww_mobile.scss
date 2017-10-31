@@ -1,0 +1,34 @@
+/*
+  The idea is to keep this file with minimal rules
+  so far lww iframe + tablet works like media 1024
+*/
+.lww_frame_mobile{
+
+  .container{
+    width: 100%;
+  }
+
+  .hmcd{
+    .options-menu{
+      position: relative;
+      top: 0 !important;
+      text-align: center;
+      float: none;
+      width: 100%;
+      .divider{
+        background: url("../images/marketing_img/bg-header-border-bottom-clear.png") no-repeat scroll center bottom;
+        width: 120px;
+        margin: 0 auto;
+      }
+    }
+    #secondary-menu-placeholder{
+      height: 0px !important;
+    }
+  }
+
+  .haid-container{
+    .self-student{
+      max-width: 80%;
+    }
+  }
+}
