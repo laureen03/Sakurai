@@ -32,6 +32,7 @@
     "calculator": "https://github.com/kbwood/calculator/zipball/2.0.1",
     "papaparse": "~4.1.1",
     "ckeditor": "~4.5.4",
-    "bootpag": "~1.0.7"
+    "bootpag": "~1.0.7",
+    "bootstrap-sass": "3.3.5"
   }
 }
