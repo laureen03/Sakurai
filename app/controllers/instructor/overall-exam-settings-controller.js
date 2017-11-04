@@ -1,13 +1,18 @@
-SakuraiWebapp.InstructorOverallExamSettingsController = Ember.Controller.extend(
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+
+export default Controller.extend(
     Ember.Evented,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,{
+    ControllerMixin,
+    FeatureMixin,{
         headerClasses: Ember.inject.controller(),
         instructor: Ember.inject.controller(),
         instructorController: Ember.computed.alias("instructor"),
 
         /**
-         * @property {SakuraiWebapp.Class} the class
+         * @property {Class} the class
          */
         class: null,
 
@@ -17,7 +22,7 @@ SakuraiWebapp.InstructorOverallExamSettingsController = Ember.Controller.extend(
         customize: "customize_setting",
 
         /**
-        * @property {SakuraiWebapp.ClassExamOverallSettings} Class Exam Overall Settings
+        * @property {ClassExamOverallSettings} Class Exam Overall Settings
         */
         classExamOverallSettings: null,
 
@@ -79,7 +84,7 @@ SakuraiWebapp.InstructorOverallExamSettingsController = Ember.Controller.extend(
 
                 classExamOverallSettings.save().then(function(){
                     controller.transitionToRoute("/instructor/customizeExam/" + controller.get("class").get("id"));
-                })
+                });
             },
 
             goBack: function(productId, classId){

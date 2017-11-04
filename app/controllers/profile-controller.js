@@ -1,7 +1,12 @@
-SakuraiWebapp.ProfileController = Ember.Controller.extend(
-    Ember.Evented,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.ProfileMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import ProfileMixin from 'mixins/profile';
+import User from "models/user";
+
+export default Controller.extend(
+    ControllerMixin, 
+    ProfileMixin,{
 
     user: null,
 
@@ -39,8 +44,9 @@ SakuraiWebapp.ProfileController = Ember.Controller.extend(
             this.set('lastName', userRecord.get('lastName'));
 
             this.cleanPasswordValues();
-            if(userRecord.get("isAdmin"))
+            if(userRecord.get("isAdmin")){
                 this.transitionToRoute("/admin/products/0");
+            }
     },
 
     actions: {
@@ -61,7 +67,7 @@ SakuraiWebapp.ProfileController = Ember.Controller.extend(
                     // Because we don't want the app to send back the password in the response,
                     // we rely on the errors info in the metadata to find out if something
                     // went wrong
-                    var errors = response.store.metadataFor(SakuraiWebapp.User).errors || [];
+                    var errors = response.store.metadataFor(User).errors || [];
 
                     if (errors.length) {
                         self.updateFail(errors);
@@ -81,18 +87,18 @@ SakuraiWebapp.ProfileController = Ember.Controller.extend(
 
                         userRecord.save().then( function(response) {
 
-                            var errors = response.store.metadataFor(SakuraiWebapp.User).errors || [];
+                            var errors = response.store.metadataFor(User).errors || [];
 
                             if (errors.length) {
                                 self.updateFail(errors);
                             } else {
                                 self.updateSuccess(false);
                             }
-                        }, function(reason) {
+                        }, function() {
                             self.updateFail();
                         });
                     }
-                }, function(reason) {
+                }, function() {
                     self.updateFail();
                 });
 
@@ -105,14 +111,14 @@ SakuraiWebapp.ProfileController = Ember.Controller.extend(
 
                 userRecord.save().then( function(response) {
 
-                    var errors = response.store.metadataFor(SakuraiWebapp.User).errors || [];
+                    var errors = response.store.metadataFor(User).errors || [];
 
                     if (errors.length) {
                         self.updateFail(errors);
                     } else {
                         self.updateSuccess(true);
                     }
-                }, function(reason) {
+                }, function() {
                     self.updateFail();
                 });
             }

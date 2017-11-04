@@ -1,6 +1,11 @@
-SakuraiWebapp.QuestionDragnDropController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.QuestionMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import QuestionMixin from 'utils/question';
+
+export default Controller.extend(
+    ControllerMixin,
+    QuestionMixin,{
 
     isQuestionChanged: Ember.observer('questionIndex', function(){
         this.set("isDisable", false);

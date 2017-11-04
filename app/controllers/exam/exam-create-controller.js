@@ -1,7 +1,15 @@
-SakuraiWebapp.ExamCreateController = Ember.Controller.extend(
-    Ember.Evented,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import Exam from 'models/exam';
+import context from 'utils/context-utils';
+import DateUtil from 'utils/date-util';
+
+export default Controller.extend(
+    ControllerMixin, 
+    FeatureMixin,{
+
     headerClasses: Ember.inject.controller(),
 
     /**
@@ -71,11 +79,11 @@ SakuraiWebapp.ExamCreateController = Ember.Controller.extend(
     *    Create a list of index available to order the questions.
     **/
     loadMinutesLimitList: Ember.observer('minutesLimit.[]', function(){
-        var dateUtil = new SakuraiWebapp.DateUtil();
+        var dateUtil = new DateUtil();
         var minutesLimitList = this.get("minutesLimitList");
         minutesLimitList.clear();
         var controller = this;
-        controller.get("minutesLimit").forEach(function(minutes, index){
+        controller.get("minutesLimit").forEach(function(minutes){
             minutesLimitList.pushObject({"value": minutes , "label": dateUtil.convertToTimeStringWithFormat(minutes, "minutes", "HM")});
         });
     }),
@@ -119,14 +127,14 @@ SakuraiWebapp.ExamCreateController = Ember.Controller.extend(
             var examLength = this.get("numQuestionsSelected");
             //Set Time Limit
             var selectedTimeLimit = $('.exam-content input[name=timeLimit]:checked').val();
-            var timeLimit = (selectedTimeLimit == '1') ? controller.get('minLimitSelected') : 0;
-            var inProgressAlert = ($('.exam-content input[name=inProgressAlert]:checked').val() == '1') ? true : false;
+            var timeLimit = (selectedTimeLimit === '1') ? controller.get('minLimitSelected') : 0;
+            var inProgressAlert = ($('.exam-content input[name=inProgressAlert]:checked').val() === '1') ? true : false;
 
 
             if (examLength > 0){
-                var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+                var authenticationManager = context.get('authenticationManager');
                 var user = authenticationManager.getCurrentUser();
-                var record = SakuraiWebapp.Exam.createExamRecord(store, {
+                var record = Exam.createExamRecord(store, {
                     examLength: examLength,
                     timeLimit: timeLimit,
                     student: user,

@@ -1,6 +1,16 @@
-SakuraiWebapp.InstructorAssignmentSummaryController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import DS from 'ember-data';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import SortableHelper from "mixins/sortable";
+import TermTaxonomy from 'models/term-taxonomy';
+import Product from 'models/product';
+
+
+export default Controller.extend(
+    ControllerMixin,
+    FeatureMixin, {
     headerClasses: Ember.inject.controller(),
 
     /**
@@ -40,7 +50,7 @@ SakuraiWebapp.InstructorAssignmentSummaryController = Ember.Controller.extend(
     nursingTaxonomyPerformances: function(){
         var controller = this;
         return DS.PromiseArray.create({
-            promise: new Ember.RSVP.Promise(function(resolve, reject){
+            promise: new Ember.RSVP.Promise(function(resolve){
                 controller.get("stats").get("termTaxonomyPerformances").then(function(termTaxonomyPerformances){
                     var promises = controller.get("stats").get("termTaxonomies");
 
@@ -49,14 +59,16 @@ SakuraiWebapp.InstructorAssignmentSummaryController = Ember.Controller.extend(
                     });
                 });
             })
-        })},
+        });},
 
     statsPerformance: Ember.computed('stats', function(){
         var controller = this;
-        if (controller.get("isMetadataAllowed") && !this.get('hasChapter'))
+        if (controller.get("isMetadataAllowed") && !this.get('hasChapter')){
             return controller.get("stats").get("termTaxonomyPerformances");
-        else
+        }
+        else{
             return controller.get("stats").get("chapterPerformances");
+        }
     }),
 
     /**
@@ -87,7 +99,7 @@ SakuraiWebapp.InstructorAssignmentSummaryController = Ember.Controller.extend(
 
     controllerSetup: function(){
         this.set("studentResultsSortable",
-            SakuraiWebapp.SortableHelper.create({ sort: "user.fullName", direction:true }));
+            SortableHelper.create({ sort: "user.fullName", direction:true }));
     }.on('init'),
 
     resetValues: function(){
@@ -139,11 +151,11 @@ SakuraiWebapp.InstructorAssignmentSummaryController = Ember.Controller.extend(
         var product = this.get("class").get("product");
         var assignment = this.get("assignment");
 
-        if (!assignment.get("hasTermTaxonomy")) return;
+        if (!assignment.get("hasTermTaxonomy")){ return; }
 
         var taxonomy = assignment.get("termTaxonomy");
-        var key = SakuraiWebapp.TermTaxonomy.getParentType(product, taxonomy);
-        var termTaxonomyAllowed = SakuraiWebapp.Product.termTaxonomyAllowedByKey(product, key);
+        var key = TermTaxonomy.getParentType(product, taxonomy);
+        var termTaxonomyAllowed = Product.termTaxonomyAllowedByKey(product, key);
         return termTaxonomyAllowed.label;
     }),
 

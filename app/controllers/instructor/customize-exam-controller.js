@@ -1,7 +1,12 @@
-SakuraiWebapp.InstructorCustomizeExamController = Ember.Controller.extend(
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+
+export default Controller.extend(
     Ember.Evented,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,{
+    ControllerMixin,
+    FeatureMixin,{
         //queryParams: ['classId'],
         headerClasses: Ember.inject.controller(),
         instructor: Ember.inject.controller(),
@@ -10,7 +15,7 @@ SakuraiWebapp.InstructorCustomizeExamController = Ember.Controller.extend(
         classId: null,
 
         /**
-         * @property {SakuraiWebapp.Class} the class
+         * @property {Class} the class
          */
         class: null,
 
@@ -28,11 +33,11 @@ SakuraiWebapp.InstructorCustomizeExamController = Ember.Controller.extend(
         }),
 
         actions:{
-            continueManageExam: function(data){
-                controller = this;
+            continueManageExam: function(){
+                var controller = this;
                 var nextStep = controller.get('customize');
 
-                if(nextStep == 'customize_setting') {
+                if(nextStep === 'customize_setting') {
                     controller.transitionToRoute("/instructor/overallExamSettings/" + controller.get("class").get("id"));
                 } else {
                     controller.transitionToRoute("/instructor/assignExam/" + controller.get("class").get("id"));

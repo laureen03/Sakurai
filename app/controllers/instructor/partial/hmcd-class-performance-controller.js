@@ -1,4 +1,8 @@
-SakuraiWebapp.InstructorPartialHmcdClassPerformanceController = Ember.Controller.extend(SakuraiWebapp.ControllerMixin, {
+import Controller from '@ember/controller';
+import ControllerMixin from 'mixins/controller';
+
+export default Controller.extend(
+    ControllerMixin, {
 	/**
      * @property {string}
      */

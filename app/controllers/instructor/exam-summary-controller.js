@@ -1,28 +1,36 @@
-SakuraiWebapp.InstructorExamSummaryController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import DateUtil from 'utils/date-util';
+import context from 'utils/context-utils';
+import SortableHelper from "mixins/sortable";
+
+export default Controller.extend(
+    ControllerMixin,
+    FeatureMixin,{
     headerClasses: Ember.inject.controller(),
     instructor: Ember.inject.controller(),
 
     instructorController: Ember.computed.alias("instructor"),
 
     /**
-     * @property {SakuraiWebapp.Class} the class
+     * @property {Class} the class
      */
     class: null,
 
     /**
-     * @property {SakuraiWebapp.StudentUsage[]}
+     * @property {StudentUsage[]}
      */
     studentUsage: null,
 
     /**
-     * @property {SakuraiWebapp.TermTaxonomyStat} the term taxonomy stats
+     * @property {TermTaxonomyStat} the term taxonomy stats
      */
     termTaxonomyStat: null,
 
     /**
-     * @property {SakuraiWebapp.chapterStats} the chapter (nursing topic) stats
+     * @property {chapterStats} the chapter (nursing topic) stats
      */
     chapterStats: null,
 
@@ -50,7 +58,7 @@ SakuraiWebapp.InstructorExamSummaryController = Ember.Controller.extend(
 
     /**
      * TODO: move to an individual controller
-     * @property {SortableHelper|SakuraiWebapp.StudentUsage[]} sortable for student usage
+     * @property {SortableHelper|StudentUsage[]} sortable for student usage
      */
     studentUsageSortable: null,
 
@@ -70,13 +78,13 @@ SakuraiWebapp.InstructorExamSummaryController = Ember.Controller.extend(
 
     controllerSetup: function(){
         this.set("examAssignmentResultsSortable",
-            SakuraiWebapp.SortableHelper.create({
+            SortableHelper.create({
                 sort: "timestampAvailableDate",
                 direction:true
             }));
 
         this.set("studentUsageSortable",
-            SakuraiWebapp.SortableHelper.create({
+            SortableHelper.create({
                 sort: "user.fullName",
                 direction:true
             }));
@@ -147,7 +155,7 @@ SakuraiWebapp.InstructorExamSummaryController = Ember.Controller.extend(
     showDetails:function(idx, examAssignment){
         $('#mob-details').remove();
         var assignment = examAssignment.get('assignment');
-        var dateUtil = new SakuraiWebapp.DateUtil();
+        var dateUtil = new DateUtil();
         var timezone = examAssignment.get("timeZone");
         var availableDate = dateUtil.format(assignment.get("availableDate"), 'lll', timezone, true);
         var dueDate = dateUtil.format(assignment.get("dueDate"), 'lll', timezone, true);
@@ -185,7 +193,7 @@ SakuraiWebapp.InstructorExamSummaryController = Ember.Controller.extend(
         openStudentView: function(studentId){
             var controller = this;
             var url = "/student/examReports/" + this.get("class").get("id") + "?studentId=" + studentId;
-            var isTesting = SakuraiWebapp.context.isTesting();
+            var isTesting = context.isTesting();
             var isInFrame = this.get("isInFrame");
             //checking for is testing because it is not possible to open a new window while testing
             if (isTesting || isInFrame){

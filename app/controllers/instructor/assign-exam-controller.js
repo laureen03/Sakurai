@@ -1,7 +1,14 @@
-SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import DateUtil from 'utils/date-util';
+import Assignment from 'models/assignment';
+
+export default Controller.extend(
     Ember.Evented,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,{
+    ControllerMixin,
+    FeatureMixin,{
     queryParams: ['assignmentId', 'action'],
     headerClasses: Ember.inject.controller(),
     instructor: Ember.inject.controller(),
@@ -19,17 +26,17 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
     action: null,
 
     /**
-     * @property {SakuraiWebapp.Class} the class
+     * @property {Class} the class
      */
     class: null,
 
     /**
-     * @property {SakuraiWebapp.Product} the class
+     * @property {Product} the class
      */
     product: null,
 
     /**
-     * @property {SakuraiWebapp.Assignment} the assignment
+     * @property {Assignment} the assignment
      */
     assignment: null,
 
@@ -143,7 +150,7 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
     * Available list of hours
     **/
     timeList: Ember.computed(function(){
-        return SakuraiWebapp.Assignment.availableHoursList()
+        return Assignment.availableHoursList();
     }),
 
     /**
@@ -151,10 +158,10 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
      **/
     loadMinutesLimitList: Ember.observer('minutesLimit.[]', function(){
         var controller = this;
-        var dateUtil = new SakuraiWebapp.DateUtil();
+        var dateUtil = new DateUtil();
         var minutesLimitList = controller.get("minutesLimitList");
         minutesLimitList.clear();
-        controller.get("minutesLimit").forEach(function(minutes, index){
+        controller.get("minutesLimit").forEach(function(minutes){
             minutesLimitList.pushObject({"value": minutes , "label": dateUtil.convertToTimeStringWithFormat(minutes, "minutes", "HM")});
         });
     }),
@@ -253,7 +260,7 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
 
     /**
      *
-     * @property {SakuraiWebapp.Class[]} My active classes for the current product
+     * @property {Class[]} My active classes for the current product
      */
     myClasses: Ember.computed('class.product.id', function(){
         var clazz = this.get('class');
@@ -263,7 +270,7 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
     }),
 
     /**
-     * @property {SakuraiWebapp.Assignment} Indicates if the
+     * @property {Assignment} Indicates if the
      *  at least one student has started the assignment
      */
    selectedClass: Ember.computed('assignment.isStarted', function(){
@@ -326,11 +333,11 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
         controller.set("assignmentCustomThreshold", controller.get("minimumThreshold"));
 
         //init timezone
-        var timeZone = SakuraiWebapp.DateUtil.getLocalTimeZone();
+        var timeZone = DateUtil.getLocalTimeZone();
         assignment.set('timeZone', timeZone);
 
         //init dates
-        var dateUtil = SakuraiWebapp.DateUtil.create({});
+        var dateUtil = DateUtil.create({});
         var availableDate = new Date();
         var dueDate = new Date();
         dueDate.setDate(availableDate.getDate()+7);
@@ -353,8 +360,8 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
         delete newAssignment.classes;
         delete newAssignment.studentResults;
         for (var key in newAssignment) {
-            if(key != 'classes') {
-                if (newAssignment[key] != assignment.get(key)) {
+            if(key !== 'classes') {
+                if (newAssignment[key] !== assignment.get(key)) {
                     newAssignment[key] = assignment.get(key);
                 }
             }
@@ -365,15 +372,15 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
             newAssignment.hideThresholdLabels = 0;
         }
 
-        //newAssignment = SakuraiWebapp.Assignment.copyAssignmentRecord(this.store, assignment);
+        //newAssignment = Assignment.copyAssignmentRecord(this.store, assignment);
         newAssignment = this.store.createRecord("assignment", newAssignment);
 
         //init timezone
-        var timeZone = SakuraiWebapp.DateUtil.getLocalTimeZone();
+        var timeZone = DateUtil.getLocalTimeZone();
         newAssignment.set("timeZone", timeZone);
 
         //init dates
-        var dateUtil = SakuraiWebapp.DateUtil.create({});
+        var dateUtil = DateUtil.create({});
         var availableDate = new Date();
         var dueDate = new Date();
         dueDate.setDate(availableDate.getDate()+7);
@@ -398,14 +405,16 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
         controller.set("assignment", assignment);
         controller.set("isEditMode", true);
 
-        if(assignment.get("targetMasteryLevel"))
+        if(assignment.get("targetMasteryLevel")){
             controller.set("assignmentCustomThreshold", assignment.get("targetMasteryLevel"));
-        else
+        }
+        else{
             controller.set("assignmentCustomThreshold", controller.get("minimumThreshold"));
+        }
 
 
         if(!controller.get("isCopyMode")) {
-            var dateUtil = new SakuraiWebapp.DateUtil(),
+            var dateUtil = new DateUtil(),
             availableDate = assignment.get("availableDate"),
             dueDate = assignment.get("dueDate"),
             availableHourStr,
@@ -430,11 +439,12 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
 
         }
 
-        if (!assignment.get("hasTimeLimit"))
+        if (!assignment.get("hasTimeLimit")){
              $('.assign-exam-form #noTimeLimitRadio').prop('checked', true);
-        else
+        }
+        else{
              $('.assign-exam-form #noTimeLimitRadio').prop('checked', false);
-
+        }
 
         //Set Classes Selected
         assignment.get("classes").then(function(classes){
@@ -448,7 +458,7 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
 
     /**
      * Gets selected classes
-     * @returns {SakuraiWebapp.Class[]} classes
+     * @returns {Class[]} classes
      */
     getSelectedClasses: function () {
         var controller = this;
@@ -461,7 +471,7 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
 
     hasTimeLimit: function(){
         var selectedTimeLimit = $('.assign-exam-form input[name=timeLimit]:checked').val();
-        return (selectedTimeLimit == '1');
+        return (selectedTimeLimit === '1');
     },
 
     /**
@@ -469,7 +479,7 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
      */
     listenDateRadio: Ember.observer('changeDatesRadio', function(){
         var controller = this;
-        if (controller.get("changeDatesRadio") == "changeDates") {
+        if (controller.get("changeDatesRadio") === "changeDates") {
             controller.set("changeDatesEnable", true);
         } else {
             controller.set("changeDatesEnable", false);
@@ -514,7 +524,7 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
                 return date.valueOf() <= checkin.getDate().valueOf() ? 'disabled' : '';
             }
         }).on('changeDate', function(ev) {
-            if (ev.date != null && (ev.date.valueOf() < checkin.getDate().valueOf())) {
+            if (ev.date !== null && (ev.date.valueOf() < checkin.getDate().valueOf())) {
                 var newDate = new Date(ev.date);
                 newDate.setDate(newDate.getDate() - 1);
                 checkin.setDate(newDate);
@@ -530,7 +540,7 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
             }
         }).on('changeDate', function(ev) {
 
-            if (ev.date != null && (ev.date.valueOf() > checkout.getDate().valueOf())) {
+            if (ev.date !== null && (ev.date.valueOf() > checkout.getDate().valueOf())) {
                 var newDate = new Date(ev.date);
                 newDate.setDate(newDate.getDate() + 1);
                 checkout.setDate(newDate);
@@ -547,8 +557,8 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
             datesOk = true,
             customDataByClass = [];
 
-        self.get("customClasses").forEach(function (clazz, index) {
-            var dateUtil = SakuraiWebapp.DateUtil.create({}),
+        self.get("customClasses").forEach(function (clazz) {
+            var dateUtil = DateUtil.create({}),
                 timeZone = $('#datesClass'+clazz.id +' #secondTimeZone'+clazz.id).data("timezone"),
                 startDate = $('#datesClass'+clazz.id+' .startDate').val(),
                 dueDate = $('#datesClass'+clazz.id+' .dueDate').val(),
@@ -587,7 +597,7 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
         var myAssignment = self.get("assignment"),
             datesOk = true,
             customDataByClass = [],
-            dateUtil = SakuraiWebapp.DateUtil.create({}),
+            dateUtil = DateUtil.create({}),
             timeZone = myAssignment.get("timeZone");
 
         var date = startDate + " " + startHour;
@@ -600,7 +610,7 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
 
         datesOk = moment(startDate).isBefore(moment(dueDate));
 
-        self.get("customClasses").forEach(function (clazz, index) {
+        self.get("customClasses").forEach(function (clazz) {
             var obj = {
                 "idClass" : clazz.get("id"),
                 "availableDate"  : startDate,
@@ -608,8 +618,9 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
                 "timeZone" : timeZone
                 };
 
-            if (datesOk)
+            if (datesOk){
                 customDataByClass.push(obj);
+            }
         });
         if (datesOk) {
             myAssignment.set("customDataByClass", JSON.stringify(customDataByClass));
@@ -628,7 +639,7 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
         var assignment = self.get("assignment");
         var store = this.store;
         self.get("classesAndDates").clear();
-        JSON.parse(assignment.get("customDataByClass")).forEach(function (dateByClass, index) {
+        JSON.parse(assignment.get("customDataByClass")).forEach(function (dateByClass) {
             store.find("class", dateByClass.idClass).then(function(clazz){
                 var obj = {
                     "idClass" : clazz.get("id"),
@@ -659,7 +670,7 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
             var selectedClasses = controller.getSelectedClasses();
             //validate classes
             var hasClasses = true,
-                isStaggered = (controller.get("changeDatesEnable") || assignment.get("staggered") == true);
+                isStaggered = (controller.get("changeDatesEnable") || assignment.get("staggered") === true);
 
             if(controller.get("isEditMode") && isStaggered && !controller.get("isCopyMode")){
                 hasClasses = (assignment.get("classes").get("length") > 0);
@@ -711,7 +722,7 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
                         }
 
                         // When thresholdLabels were not selected the target mastery level should be null
-                        if (assignment.get("hideThresholdLabels") == undefined || assignment.get("hideThresholdLabels")) {
+                        if (assignment.get("hideThresholdLabels") === undefined || assignment.get("hideThresholdLabels")) {
                             assignment.set("targetMasteryLevel", null);
                         } else if(!assignment.get("hideThresholdLabels")) {
                             assignment.set("targetMasteryLevel", controller.get("assignmentCustomThreshold"));
@@ -727,7 +738,7 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
                                 }
                                 controller.set("assignmentCreated", true);
                             }
-                        })
+                        });
                     });
                 } else {
                     controller.trigger('asyncButton.restore', data.component);
@@ -757,8 +768,9 @@ SakuraiWebapp.InstructorAssignExamController = Ember.Controller.extend(
             // });
             // var instructorController = controller.get("instructorController");
             var controller = this;
-            if ($("#check"+clazz.get("id")).prop("checked")) //Add to the list of classes
+            if ($("#check"+clazz.get("id")).prop("checked")){ //Add to the list of classes
                 controller.get("customClasses").pushObject(clazz);
+            }
             else{
                 var indexClass = controller.get("customClasses").indexOf(clazz);
                 if (indexClass > -1) {

@@ -1,6 +1,9 @@
-SakuraiWebapp.HeaderController = Ember.Controller.extend(SakuraiWebapp.ControllerMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
 
-
+export default Controller.extend(
+    ControllerMixin, {
     /**
      * @property string selected menu
      */

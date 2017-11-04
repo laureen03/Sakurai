@@ -1,6 +1,14 @@
-SakuraiWebapp.LibraryHomeController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import ChapterFilter from 'models/chapter-filter';
+import TermTaxonomy from 'models/term-taxonomy';
+import context from 'utils/context-utils';
+
+export default Controller.extend(
+    ControllerMixin,
+    FeatureMixin, {
 
     headerClasses: Ember.inject.controller(),
     library: Ember.inject.controller(),
@@ -143,7 +151,7 @@ SakuraiWebapp.LibraryHomeController = Ember.Controller.extend(
     Return question type, its depends of the user role
     **/
     typeFilter: Ember.computed(function(){
-        return (this.get("isAuthoringEnabled"))? SakuraiWebapp.ChapterFilter.HIDDEN_FILTER: SakuraiWebapp.ChapterFilter.QUIZ_FILTER;
+        return (this.get("isAuthoringEnabled"))? ChapterFilter.HIDDEN_FILTER: ChapterFilter.QUIZ_FILTER;
     }),
 
     /**
@@ -151,17 +159,18 @@ SakuraiWebapp.LibraryHomeController = Ember.Controller.extend(
      */
     termTaxonomyList: Ember.computed('allTermTaxonomies', 'termTaxonomiesConcepts', 'defaultDataType', function(){
         var controller = this;
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+        var authenticationManager = context.get('authenticationManager');
         var defaultTopic = controller.get('defaultDataType');
         var taxonomyTag = authenticationManager.get("taxonomyTag");
         var list = null;
 
-        if (SakuraiWebapp.TermTaxonomy.isConcepts(defaultTopic) && (taxonomyTag)) //Check if the param Exist and if Concepts is the default
+        if (TermTaxonomy.isConcepts(defaultTopic) && (taxonomyTag)){ //Check if the param Exist and if Concepts is the default
             list = controller.get("termTaxonomiesConcepts");
-        else
+        }else{
             list = controller.get('allTermTaxonomies');
+        }
 
-        return SakuraiWebapp.TermTaxonomy.convertToTree(list, defaultTopic);
+        return TermTaxonomy.convertToTree(list, defaultTopic);
 
     }),
 
@@ -197,7 +206,7 @@ SakuraiWebapp.LibraryHomeController = Ember.Controller.extend(
     searchWithFilter: function(modalId, inputsName, paramName){
         var queryParams, ids;
         ids = $("#"+ modalId + " input[name="+ inputsName +"]:checked").map(function () {
-            return $(this).val()
+            return $(this).val();
         }).toArray();
 
         $('#'+modalId).modal('hide');
@@ -209,7 +218,7 @@ SakuraiWebapp.LibraryHomeController = Ember.Controller.extend(
 
     actions: {
         searchByInstructor: function(){
-            var authenticationManager = SakuraiWebapp.context.get("authenticationManager");
+            var authenticationManager = context.get("authenticationManager");
             var userId = authenticationManager.getCurrentUserId();
             var paramName = authenticationManager.getCurrentUser().get("isAdmin")? "authorIds" : "instructorId";
 
@@ -283,7 +292,7 @@ SakuraiWebapp.LibraryHomeController = Ember.Controller.extend(
         filterByQuestionTypes: function (questionTypeArray) {
             var questionTypesStr, queryStr;
 
-            questionTypesStr = questionTypeArray.join('-'),
+            questionTypesStr = questionTypeArray.join('-');
             queryStr = this.addToQueryString("questionTypes", questionTypesStr);
 
             this.redirectToResults(queryStr);

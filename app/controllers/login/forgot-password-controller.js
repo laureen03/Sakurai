@@ -1,4 +1,10 @@
-SakuraiWebapp.LoginForgotPasswordController = Ember.Controller.extend(SakuraiWebapp.ControllerMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import User from 'models/user';
+
+export default Controller.extend(
+    ControllerMixin,{
     header: Ember.inject.controller(),
 
   	/* V A R  */
@@ -24,7 +30,7 @@ SakuraiWebapp.LoginForgotPasswordController = Ember.Controller.extend(SakuraiWeb
             var controller = this;
   			if ($("#forgot-password-form").valid()){
                 var email = this.get('email');
-                SakuraiWebapp.User.forgotPassword(email).then(function(sent) {
+                User.forgotPassword(email).then(function(sent) {
                     if (sent){
                         controller.set("showMessage", true);
                     }

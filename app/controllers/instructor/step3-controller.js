@@ -1,7 +1,15 @@
-SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import Assignment from 'models/assignment';
+import DateUtil from 'utils/date-utils';
+
+
+export default Controller.extend(
     Ember.Evented,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin, {
+    ControllerMixin,
+    FeatureMixin, {
 
     instructor: Ember.inject.controller(),
     instructorManageAssignment: Ember.inject.controller(),
@@ -249,8 +257,6 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
 
     initValidatorForm: function(){
 
-        var validator;
-
         $.validator.addMethod(
             "regex",
             function(value, element, regexp) {
@@ -262,13 +268,14 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
 
         $.validator.addMethod(
             "dateCheck",
-            function(value, element, selector) {
+            function() {
                 var start = $('#startDate').val(),
                     end = $('#dueDate').val();
-                if (start== undefined || (end== undefined))
+                if (start === undefined || (end === undefined)){
                     return true; //If Element are missing don't show error
+                }
                 else{
-                    if(start != '' && end != ''){
+                    if(start !== '' && end !== ''){
                         return new Date(start) <= new Date(end);
                     }
                     return true;
@@ -281,7 +288,7 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
             onsubmit: false,
             onkeyup: function(element) { $(element).valid(); },
             errorPlacement: function(error, element) {
-                if (element.attr("name") == "completeInMinutes") {
+                if (element.attr("name") === "completeInMinutes") {
                     error.insertAfter($(element).parent());
                 } else {
                     error.insertAfter(element);
@@ -306,12 +313,12 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
                 },
                 completeInMinutes:{
                     required: {
-                        depends: function(element) {
+                        depends: function() {
                             return $("#completeInMinutesRadio:checked").length > 0;
                         }
                     },
                     regex: {
-                        depends: function(element) {
+                        depends: function() {
                             var formatOk = /^[1-9]{1}([0-9]{1,2})?$/.test($("#completeInMinutes").val());
                             var checked = $("#completeInMinutesRadio:checked").length > 0;
                             return checked && !formatOk;
@@ -411,8 +418,9 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
             if (this.get("assignment.isQuestionCollectionAssignment")){
                 canEditPoints = !controller.get("isAssignmentCompleted");
             }
-            else
+            else{
                 canEditPoints = !controller.get("isAssignmentStarted");
+            }
 
             canEditPoints = !controller.get("assignment.hasPassedDueDate");
         }
@@ -456,11 +464,11 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
     }),
 
     isMLReadOnly: Ember.computed(function(){
-        return ((this.get('isAssignmentStarted')) || (this.get("isEditMode")))
+        return ((this.get('isAssignmentStarted')) || (this.get("isEditMode")));
     }),
 
     timeList: Ember.computed(function(){
-        return SakuraiWebapp.Assignment.availableHoursList()
+        return Assignment.availableHoursList();
     }),
     /*------------------------------------------------
 	* O B S E R V E S
@@ -485,12 +493,13 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
      */
     listenDateRadio: Ember.observer('changeDatesRadio', function(){
         var controller = this;
-        if (controller.get("changeDatesRadio") == "changeDates"){
+        if (controller.get("changeDatesRadio") === "changeDates"){
             controller.set("changeDatesEnable", true);
-            if (controller.get("assignment.isQuestionCollectionAssignment"))
+            if (controller.get("assignment.isQuestionCollectionAssignment")){
                 Ember.run.later((function () {
                     $('.custom-dates:eq(0) .whatisthis').show();
                 }), 100);
+            }
         }
         else{
             controller.set("changeDatesEnable", false);
@@ -526,7 +535,7 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
      */
 	initStep3: function(questionSet){
 		var controller = this,
-			dateUtil = new SakuraiWebapp.DateUtil(),
+			dateUtil = new DateUtil(),
 			availableDate = new Date(),
 			dueDate = new Date(),
 			assignment = this.get("assignment");
@@ -541,13 +550,13 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
 		// Set due date to be a week from today
 		dueDate.setDate(dueDate.getDate()+7);
 
-		var timeZone = SakuraiWebapp.DateUtil.getLocalTimeZone();
+		var timeZone = DateUtil.getLocalTimeZone();
 
 		assignment.set('points', '100');
 		assignment.set('timeZone', timeZone);
 		assignment.set('autoSubmit', assignment.get("autoSubmit"));
 
-		controller.set('timezones', SakuraiWebapp.DateUtil.getTimeZones());
+		controller.set('timezones', DateUtil.getTimeZones());
 		//converting to assignment timezone
 		controller.set("startDate", dateUtil.format(availableDate, dateUtil.slashedShortDateFormat, timeZone));
 		controller.set("dueDate", dateUtil.format(dueDate, dateUtil.slashedShortDateFormat, timeZone));
@@ -560,7 +569,7 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
 
         $('#startDate').datepicker('update', new Date());
 
-        var dueDate = new Date();
+        dueDate = new Date();
         dueDate.setDate(dueDate.getDate() + 7);
         $('#dueDate').datepicker('update', dueDate);
 
@@ -598,7 +607,7 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
 
 	/**
 	* Gets selected classes
-	* @returns {SakuraiWebapp.Class[]} classes
+	* @returns {Class[]} classes
 	*/
     getSelectedClasses: function () {
 		var controller = this;
@@ -613,46 +622,45 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
         Set assignment if is Edit Mode
      */
     setAssignment: function(assignment) {
-        var controller = this;
+        var controller = this, availableDate = null, dueDate = null, timeZone = null; 
         controller.set("isEditMode", true);
        // controller.set("isCopyMode", controller.get("instructorManageAssignment").get("isCopyMode"));
         if(controller.get("isCopyMode")) {
-            var dateUtil = new SakuraiWebapp.DateUtil(),
-            availableDate = new Date(),
+            availableDate = new Date();
             dueDate = new Date();
 
             dueDate.setDate(dueDate.getDate()+7);
-            var timeZone = SakuraiWebapp.DateUtil.getLocalTimeZone();
+            timeZone = DateUtil.getLocalTimeZone();
             assignment.set('timeZone', timeZone);
             controller.set('startHour', "08,00");
             controller.set('dueHour', "08,00");
 
         } else {
-            var dateUtil = new SakuraiWebapp.DateUtil(),
-            availableDate = assignment.get("availableDate"),
-            dueDate = assignment.get("dueDate"),
-            availableHourStr,
-            dueHourStr;
+            var availableHourStr, dueHourStr;
 
-            var timeZone = assignment.get("timeZone");
+            availableDate = assignment.get("availableDate");
+            dueDate = assignment.get("dueDate");
+
+            timeZone = assignment.get("timeZone");
             // Extract hour values and change them to format expected by select field i.e. "hh,mm"
 
-            availableHourStr = dateUtil.format(assignment.get("availableDateRound"), "HH,mm", timeZone);
-            dueHourStr = dateUtil.format(assignment.get("dueDateRound"), "HH,mm", timeZone);
+            availableHourStr = DateUtil.format(assignment.get("availableDateRound"), "HH,mm", timeZone);
+            dueHourStr = DateUtil.format(assignment.get("dueDateRound"), "HH,mm", timeZone);
 
             controller.set('startHour', availableHourStr);
             controller.set('dueHour', dueHourStr);
         }
 
-        controller.set('timezones', SakuraiWebapp.DateUtil.getTimeZones());
+        controller.set('timezones', DateUtil.getTimeZones());
         //converting to assignment timezone
-        controller.set("startDate", dateUtil.format(availableDate, dateUtil.slashedShortDateFormat, timeZone));
-        controller.set("dueDate", dateUtil.format(dueDate, dateUtil.slashedShortDateFormat, timeZone));
+        controller.set("startDate", DateUtil.format(availableDate, DateUtil.slashedShortDateFormat, timeZone));
+        controller.set("dueDate", DateUtil.format(dueDate, DateUtil.slashedShortDateFormat, timeZone));
 
         controller.set("assignment", assignment);
         if (assignment.get("isQuestionCollectionAssignment")){
-            if (assignment.get("questionSet").get("content"))
+            if (assignment.get("questionSet").get("content")){
                 controller.set("questionSet", assignment.get("questionSet"));
+            }
             controller.set("autoSubmit", assignment.get("autoSubmit"));
         }
         controller.set("completeInMinutes", assignment.get("hasTimeLimit") ? assignment.get("timeLimit") : "");
@@ -673,27 +681,28 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
         var controller = this;
         var myAssignment = controller.get("assignment"),
             datesOk = true,
-            customDataByClass = [];
+            customDataByClass = [],
+            autoSubmit = false, dueHour, startHour, dueDate, startDate, timeZone;
 
-        controller.get("customClasses").forEach(function (clazz, index) {
-            var dateUtil = SakuraiWebapp.DateUtil.create({}),
-                timeZone = $('#datesClass'+clazz.id +' #secondTimeZone'+clazz.id).data("timezone"),
-                startDate = $('#datesClass'+clazz.id+' .startDate').val(),
-                dueDate = $('#datesClass'+clazz.id+' .dueDate').val(),
-                startHour = $('#datesClass'+clazz.id+' .startHour').val(),
-                dueHour = $('#datesClass'+clazz.id+' .endHour').val(),
+        controller.get("customClasses").forEach(function (clazz) {
+                timeZone = $('#datesClass'+clazz.id +' #secondTimeZone'+clazz.id).data("timezone");
+                startDate = $('#datesClass'+clazz.id+' .startDate').val();
+                dueDate = $('#datesClass'+clazz.id+' .dueDate').val();
+                startHour = $('#datesClass'+clazz.id+' .startHour').val();
+                dueHour = $('#datesClass'+clazz.id+' .endHour').val();
                 autoSubmit = false;
 
-            if (myAssignment.get('isQuestionCollectionAssignment'))
+            if (myAssignment.get('isQuestionCollectionAssignment')){
                 autoSubmit = $('#autoSubmit'+clazz.id).prop('checked');
+            }
 
             var date = startDate + " " + startHour;
             //dates are handle in local time, they are converted to UTC before sending the request
-            startDate = dateUtil.toLocal(date, "MM-DD-YYYY HH,mm", timeZone);
+            startDate = DateUtil.toLocal(date, "MM-DD-YYYY HH,mm", timeZone);
 
             date = dueDate + " " + dueHour;
             //dates are handle in local time, they are converted to UTC before sending the request
-            dueDate = dateUtil.toLocal(date, "MM-DD-YYYY HH,mm", timeZone);
+            dueDate = DateUtil.toLocal(date, "MM-DD-YYYY HH,mm", timeZone);
 
             datesOk = moment(startDate).isBefore(moment(dueDate));
 
@@ -720,24 +729,24 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
         var myAssignment = controller.get("assignment"),
             datesOk = true,
             customDataByClass = [],
-            dateUtil = SakuraiWebapp.DateUtil.create({}),
             timeZone = myAssignment.get("timeZone"),
             autoSubmit = false;
 
-        if (myAssignment.get('isQuestionCollectionAssignment'))
+        if (myAssignment.get('isQuestionCollectionAssignment')){
             autoSubmit = controller.get("autoSubmit");
+        }
 
         var date = startDate + " " + startHour;
         //dates are handle in local time, they are converted to UTC before sending the request
-        startDate = dateUtil.toLocal(date, "MM-DD-YYYY HH,mm", timeZone);
+        startDate = DateUtil.toLocal(date, "MM-DD-YYYY HH,mm", timeZone);
 
         date = dueDate + " " + dueHour;
         //dates are handle in local time, they are converted to UTC before sending the request
-        dueDate = dateUtil.toLocal(date, "MM-DD-YYYY HH,mm", timeZone);
+        dueDate = DateUtil.toLocal(date, "MM-DD-YYYY HH,mm", timeZone);
 
         datesOk = moment(startDate).isBefore(moment(dueDate));
 
-        controller.get("customClasses").forEach(function (clazz, index) {
+        controller.get("customClasses").forEach(function (clazz) {
             var obj = {
                 "idClass" : clazz.get("id"),
                 "availableDate"  : startDate,
@@ -746,8 +755,9 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
                 "autoSubmit": autoSubmit
                 };
 
-            if (datesOk)
+            if (datesOk){
                customDataByClass.push(obj);
+            }
         });
         if (datesOk) {
             myAssignment.set("customDataByClass", JSON.stringify(customDataByClass));
@@ -810,7 +820,7 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
 
             var hasClasses = true;
 
-            if(controller.get("isEditMode") && myAssignment.get("staggered") == true && !controller.get("isCopyMode")){
+            if(controller.get("isEditMode") && myAssignment.get("staggered") === true && !controller.get("isCopyMode")){
                 hasClasses = (myAssignment.get("classes").get("length") > 0);
             }else{
                 hasClasses = (selectedClasses.get("length") > 0);
@@ -821,7 +831,7 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
 
             if (validationOk) {
                 var datesOk = true;
-                if (controller.get("changeDatesRadio") == "changeDates") {
+                if (controller.get("changeDatesRadio") === "changeDates") {
                     controller.getDatesInfo();
                     myAssignment.set("staggered", true);
                 }else{
@@ -851,17 +861,17 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
                         myAssignment.set("autoSubmit", controller.get("autoSubmit"));
                         myAssignment.set("answerKeyView", $('.qc-step3 input[name=answerKey]:checked').val());
                         var selectedStartAssignment = $('.qc-step3 input[name=startA]:checked').val();
-                        var timeLimit = (selectedStartAssignment == 'starts-at') ? controller.get('completeInMinutes') : 0;
+                        var timeLimit = (selectedStartAssignment === 'starts-at') ? controller.get('completeInMinutes') : 0;
                         myAssignment.set("timeLimit", timeLimit);
                     }
 
-                    if(controller.get("isEditMode") && myAssignment.get("staggered") == true && !controller.get("isCopyMode")){
-                        controller.get("manageAssignment").saveAssignment(myAssignment)
+                    if(controller.get("isEditMode") && myAssignment.get("staggered") === true && !controller.get("isCopyMode")){
+                        controller.get("manageAssignment").saveAssignment(myAssignment);
                     }else{
                         var promise = myAssignment.get('classes');
                         promise.then(function(classes){
                             classes.clear();
-                            selectedClasses.forEach(function (clazz, index) {
+                            selectedClasses.forEach(function (clazz) {
                                 classes.pushObject(clazz);
                             });
 
@@ -907,15 +917,16 @@ SakuraiWebapp.InstructorAssignStep3Controller = Ember.Controller.extend(
             if (controller.get("assignment.name").length > 0 && controller.get("assignment.name").length < 51){
                 controller.set("activePencil", true);
                 controller.set("nameError", false);
-            }else
+            }else{
                 controller.set("nameError", true);
+            }
         },
 
         selectClass: function(clazz){
             var controller = this;
-            if ($("#check"+clazz.get("id")).prop("checked")) //Add to the list of classes
+            if ($("#check"+clazz.get("id")).prop("checked")){ //Add to the list of classes
                 controller.get("customClasses").pushObject(clazz);
-            else{
+            }else{
                 var indexClass = controller.get("customClasses").indexOf(clazz);
                 if (indexClass > -1) {
                     controller.get("customClasses").removeAt(indexClass, 1);

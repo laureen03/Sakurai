@@ -1,6 +1,13 @@
-SakuraiWebapp.AdminRrSettingsController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import Product from 'models/product';
+
+export default Controller.extend(
+    ControllerMixin, 
+    FeatureMixin,{
+
 	admin: Ember.inject.controller(),
 	headerClasses: Ember.inject.controller(),
 
@@ -47,12 +54,12 @@ SakuraiWebapp.AdminRrSettingsController = Ember.Controller.extend(
 
 		saveSettings: function() {
             var controller = this;
-            var object = new Object();
+            var object = new Object({});
             object.reviewRefreshEnabled = this.get("isActive");
             object.reviewRefreshML = this.get("targetMasteryLevel");
 
             var valueJson = JSON.stringify(object);
-            SakuraiWebapp.Product.updateReviewRefreshSettings(controller.get("product"), "reviewRefresh", valueJson).then(function(value){
+            Product.updateReviewRefreshSettings(controller.get("product"), "reviewRefresh", valueJson).then(function(value){
             	if (value){
             		controller.set("rrSettings", valueJson);
             		toastr.success(I18n.t('rrSettings.successMessage'));
@@ -60,7 +67,7 @@ SakuraiWebapp.AdminRrSettingsController = Ember.Controller.extend(
                         $('.toast-top-full-width').css("top", (controller.get("mouseY") - 50) + "px");
                     }
             	}else{
-            		toastr.error(I18n.t('rrSettings.errorMessage'))
+            		toastr.error(I18n.t('rrSettings.errorMessage'));
 	                if (controller.get("isInFrame")){
 	                    $('.toast-top-full-width').css("top", (controller.get("mouseY") - 50) + "px");
 	                }

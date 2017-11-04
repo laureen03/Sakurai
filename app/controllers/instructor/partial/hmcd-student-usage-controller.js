@@ -1,6 +1,15 @@
-SakuraiWebapp.InstructorPartialHmcdStudentUsageController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import MobileUtil from 'utils/mobile-util';
+import SortableHelper from 'utils/sortable';
+import Enrollment from 'models/enrollment';
+import context from 'utils/context-utils';
+
+export default Controller.extend(
+    ControllerMixin,
+    FeatureMixin,
     {
     instructorHmcd: Ember.inject.controller(),
     instructorPartialHmcdMisconceptions: Ember.inject.controller(),
@@ -33,7 +42,7 @@ SakuraiWebapp.InstructorPartialHmcdStudentUsageController = Ember.Controller.ext
 
 	controllerSetup: function(){
         this.set("studentUsageSortable",
-            SakuraiWebapp.SortableHelper.create({ sort: "user.lastName", direction:true }));
+            SortableHelper.create({ sort: "user.lastName", direction:true }));
     }.on('init'),
 
     /**
@@ -85,7 +94,7 @@ SakuraiWebapp.InstructorPartialHmcdStudentUsageController = Ember.Controller.ext
     loginModalDataRange: null,
 
     /**
-     * @property {SakuraiWebapp.Login} login information for a specific user
+     * @property {Login} login information for a specific user
      */
     loginModalData: {},
 
@@ -96,7 +105,7 @@ SakuraiWebapp.InstructorPartialHmcdStudentUsageController = Ember.Controller.ext
 
         dateRange = this.parseDateRange(dateRange);
 
-        if (dateRange && dateRange.length == 2) {
+        if (dateRange && dateRange.length === 2) {
             self.store.query("login", {  userId: user.get('id'),
                                         productId: self.get('product').get('id'),
                                         startDate: moment(dateRange[0]).format('YYYY-MM-DD'),
@@ -117,11 +126,11 @@ SakuraiWebapp.InstructorPartialHmcdStudentUsageController = Ember.Controller.ext
         var dateRange;
 
         if (dateRangeString) {
-            Ember.Logger.assert(typeof dateRangeString == 'string');
+            Ember.Logger.assert(typeof dateRangeString === 'string');
 
             dateRange = dateRangeString.split(':');
 
-            Ember.Logger.assert(dateRange.length == 2);
+            Ember.Logger.assert(dateRange.length === 2);
 
             dateRange[0] = moment(dateRange[0], 'YYYY-MM-DD');
             dateRange[1] = moment(dateRange[1], 'YYYY-MM-DD');
@@ -167,13 +176,13 @@ SakuraiWebapp.InstructorPartialHmcdStudentUsageController = Ember.Controller.ext
      */
     removeStudentUsage: function(studentId){
         var studentUsage = this.get("studentUsageSortable").get("collection");
-        studentUsage.forEach(function(item, index){
+        studentUsage.forEach(function(item){
             item.get("user").then(function(user){
-                if (user.get("id") == studentId){
+                if (user.get("id") === studentId){
                     studentUsage.removeAt(studentUsage.indexOf(item), 1);
                 }
             });
-        })
+        });
     },
 
     /* Clean Values */
@@ -232,7 +241,7 @@ SakuraiWebapp.InstructorPartialHmcdStudentUsageController = Ember.Controller.ext
         openStudentView: function(studentId){
             var controller = this;
             var url = "/student/haid/" + this.get("class").get("id") + "?studentId=" + studentId;
-            var isTesting = SakuraiWebapp.context.isTesting();
+            var isTesting = context.isTesting();
             var isInFrame = this.get("isInFrame");
             //checking for is testing because it is not possible to open a new window while testing
             if (isTesting || isInFrame){
@@ -249,7 +258,7 @@ SakuraiWebapp.InstructorPartialHmcdStudentUsageController = Ember.Controller.ext
                 studentId   = controller.get('studentId'),
                 store       = controller.store;
 
-            var promise = SakuraiWebapp.Enrollment.deleteEnrollmentRecord(store,
+            var promise = Enrollment.deleteEnrollmentRecord(store,
                 {
                     classId: classId,
                     studentId: studentId
@@ -276,17 +285,18 @@ SakuraiWebapp.InstructorPartialHmcdStudentUsageController = Ember.Controller.ext
             var clazz = this.get("class");
             var promise = store.query("remediationLinkView", { classId: clazz.get("id"), userId: userId });
             promise.then(function(remediationLinkViews){
-                referenceViews = store.query("referenceView", {userId: userId, productId: controller.get("product").get("id")}).then(function(data){
+                store.query("referenceView", {userId: userId, productId: controller.get("product").get("id")}).then(function(data){
                     controller.get("remediationLinkViews").clear();
-                    if(controller.get("isRemediationLinkAllowed"))
+                    if(controller.get("isRemediationLinkAllowed")){
                         controller.get("remediationLinkViews").pushObjects(remediationLinkViews.toArray());
+                    }
                     if(controller.get("isReferenceLinksAllowed")){
                         controller.get("remediationLinkViews").pushObjects(data.toArray());
                     }
                     controller.set("isFullQuestionRemediation", false);
                     $("#remediation-link-views-mdl").modal("show");
 
-                SakuraiWebapp.MobileUtil.reDrawModalPositionIfNecessary('.remediation-link-views','.studentUsage-table')
+                MobileUtil.reDrawModalPositionIfNecessary('.remediation-link-views','.studentUsage-table');
                 });                
             });
         },
@@ -302,7 +312,7 @@ SakuraiWebapp.InstructorPartialHmcdStudentUsageController = Ember.Controller.ext
 
         /**
          *
-         * @see SakuraiWebapp.InstructorPartialHmcdStudentUsageView
+         * @see InstructorPartialHmcdStudentUsageView
          */
         onCloseRemediationLinkModal: function(){
             /*

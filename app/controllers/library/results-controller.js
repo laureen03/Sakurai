@@ -1,9 +1,20 @@
 //noinspection CommaExpressionJS
-SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import QuestionPartialMixin from 'mixins/question-partial';
+import Question from 'models/question';
+import QuestionSet from 'models/question-set';
+import QuestionFilter from 'models/question-filter';
+import TermTaxonomy from 'models/term-taxonomy';
+import context from 'utils/context-utils';
+
+export default Controller.extend(
     Ember.Evented,
-    SakuraiWebapp.FeatureMixin,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.QuestionPartialMixin, {
+    FeatureMixin,
+    ControllerMixin,
+    QuestionPartialMixin, {
     headerClasses: Ember.inject.controller(),
     library: Ember.inject.controller(),
     libraryCreateQuestionCollection: Ember.inject.controller(),
@@ -117,7 +128,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
     /**
      * Alias of current instructor products from injected admin controller
      * This var is not defined for instructors
-     * @property {SakuraiWebapp.Product[]} products
+     * @property {Product[]} products
      */
     products : Ember.computed.alias("admin.products"),
 
@@ -201,7 +212,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
     }),
 
     instructor_filter: Ember.computed(function(){
-        return SakuraiWebapp.QuestionFilter.INSTRUCTOR_FILTER
+        return QuestionFilter.INSTRUCTOR_FILTER;
     }),
 
         /**
@@ -340,7 +351,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
 
     /**
      * Products for the current subject
-     * @property {SakuraiWebapp.Product[]}
+     * @property {Product[]}
      */
     subjectProducts: Ember.computed("products.[]", "product", function(){
         var subjectId = this.get("product.subject"),
@@ -350,8 +361,9 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
 
     onSortChanged: Ember.observer('sortId', function(){
         var sortId = this.get('sortId');
-        if(typeof sortId === 'string')
+        if(typeof sortId === 'string'){
             this.doSearch();
+        }
     }),
 
     onPreviewChange: Ember.observer('preview', function () {
@@ -379,7 +391,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
     deleteColModalContent: I18n.t("questionLibrary.messages.deleteBody"),
 
     searchLibrarySelected: Ember.computed("questionSet", "hideQuestionSetList", function(){
-        return this.get("questionSet") == null && this.get("hideQuestionSetList");
+        return this.get("questionSet") === null && this.get("hideQuestionSetList");
     }),
 
     hasQuestionSetsToImport: Ember.computed("questionSets", "questionSetsEnabledForCurrentSubject", function(){
@@ -429,11 +441,6 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
     showFilterByDifficulty: Ember.computed.alias("library.showFilterByDifficulty"),
 
     /**
-     * Difficulty range levels
-     */
-    difficultyRangeLevels: Ember.computed.alias("library.difficultyRangeLevels"),
-
-    /**
      * array to store co instructors selected
      * @property {Ember} array
      */
@@ -450,7 +457,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
      * @property {Ember} array
      */
     coInstructors: Ember.computed("class", function(){
-        var currentUserId = SakuraiWebapp.context.get('authenticationManager').getCurrentUserId();
+        var currentUserId = context.get('authenticationManager').getCurrentUserId();
         var instructors = this.get("class").get("instructors");
         return instructors.removeObject(instructors.findBy("id", currentUserId)).sortBy("lastName");
     }),
@@ -460,12 +467,14 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
      * @property {Ember} array
      */
     sharedWithCoInstructors: Ember.computed("questionSet", {
-        get: function(key) {
+        get: function() {
             var questionSet = this.get("questionSet");
-            if (questionSet)
+            if (questionSet){
                 return questionSet.get("sharedWith").mapBy("id");
-            else
+            }
+            else{
                 return [];
+            }
         },
         set: function(key, value) {
             return value;
@@ -474,8 +483,9 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
 
     shareQCBtnClass: Ember.computed("sharedWithCoInstructors", "coInstructors", function() {
         var btnClass = "btn btn-blue share-qc-button";
-        if (this.get("sharedWithCoInstructors").length == this.get("coInstructors").length)
+        if (this.get("sharedWithCoInstructors").length === this.get("coInstructors").length){
             btnClass += " disabled";
+        }
         return btnClass;
     }),
 
@@ -511,8 +521,9 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
      */
     updateMetadataQC: function(metadata){
         var controller = this;
-        if (metadata.pagination.totalResults)
+        if (metadata.pagination.totalResults){
             controller.set('totalResults', metadata.pagination.totalResults);
+        }
         controller.set('currentPage', parseInt(metadata.pagination.currentPage));
         controller.set('pageSize', metadata.pagination.pageSize);
     },
@@ -521,7 +532,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
         var controller = this;
         var totalPages = Math.ceil(controller.get('totalResults') / controller.get('pageSize'));
 
-        totalPages = (controller.get('totalResults') == 0)? 1 : totalPages;
+        totalPages = (controller.get('totalResults') === 0)? 1 : totalPages;
 
         $(".qc-pagination").off(); //Remove all event listener
         //Init Pagination
@@ -543,8 +554,9 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
      */
     updateMetadata: function(metadata){
         var controller = this;
-        if (metadata.pagination.totalResults)
+        if (metadata.pagination.totalResults){
             controller.set('totalResults', metadata.pagination.totalResults);
+        }
         controller.set('currentPage', parseInt(metadata.pagination.currentPage));
         controller.set('criteria', metadata.criteria);
 
@@ -576,7 +588,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
             controller.loadOtherProductsFilters(metadata.criteria.otherProducts);
         }
         //Show Instructor
-        if ((metadata.criteria.instructors) && (metadata.criteria.instructors.length != 0)){
+        if ((metadata.criteria.instructors) && (metadata.criteria.instructors.length !== 0)){
             controller.loadInstructorsFilters(metadata.criteria.instructors);
         }
 
@@ -659,7 +671,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
         var options = this.get("sortOptions");
         var option = null;
         $.each(options, function(i, opt){
-            if (opt.id == id){
+            if (opt.id === id){
                 option = opt;
                 return false;
             }
@@ -718,7 +730,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
         var controller = this;
         var store = controller.store;
         $("html, body").animate({ scrollTop: 0 }, "slow");
-        SakuraiWebapp.context.set("isLoading", true);
+        context.set("isLoading", true);
         if (controller.get("questionSet")) {
             var result = store.query("questionSet", controller.buildQCParameter(page));
             result.then(function(questionSet){
@@ -728,8 +740,8 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
                 questions.then(function(data_questions){
                     controller.set("questions", data_questions);
                     controller.setOrderQuestionList();
-                    SakuraiWebapp.context.set("isLoading", false);
-                })
+                    context.set("isLoading", false);
+                });
             });
         }
     },
@@ -797,7 +809,6 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
      */
     loadQuestionTypeFilters: function(questionTypes){
         var self = this,
-            store = this.store,
             i18nQuestionTypeNames = self.sakuraiConfig.get('questionTypesMap');
 
         this.get("filterQuestionTypes").clear();
@@ -872,7 +883,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
         var controller = this,
             store = controller.store;
 
-        if (instructorId.length!=0){
+        if (instructorId.length!==0){
             controller.get("filterInstructorId").removeObjects(controller.get("filterInstructorId"));
             controller.set("instructorId", instructorId[0]);
             store.find("user", instructorId).then(function(data){
@@ -886,8 +897,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
      * @param questionStatus
      */
     loadQuestionStatusFilters: function(questionStatus){
-        var controller = this,
-            store = controller.store;
+        var controller = this; 
 
         controller.get("filterQuestionStatus").removeObjects(controller.get("filterQuestionStatus"));
         controller.set("questionStatus", questionStatus.join('-'));
@@ -904,8 +914,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
      * @param difficulty
      */
     loadDifficultyFilters: function(difficulty){
-        var controller = this,
-            store = controller.store;
+        var controller = this;
 
         controller.get("filterDifficulty").removeObjects(controller.get("filterDifficulty"));
         controller.set("difficulty", difficulty.join('-'));
@@ -940,7 +949,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
     removeQuestion: function(question){
         var controller = this;
         var questionSetId = controller.get("questionSet.id");
-        SakuraiWebapp.QuestionSet.removeQuestionFromQC(questionSetId, question.get('id')).then(function(response){
+        QuestionSet.removeQuestionFromQC(questionSetId, question.get('id')).then(function(){
             controller.getPageQuestionCollectionResults(controller.get('currentPage'));
             controller.decreaseOrderList();
         });
@@ -953,10 +962,10 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
         var controller = this;
         var successMessage = I18n.t('questionLibrary.messages.success') + ' ' + questionSet.get("name");
         var errorMessage = I18n.t('questionLibrary.messages.error') + ' ' + questionSet.get("name");
-        SakuraiWebapp.QuestionSet.fetch(questionSet).then(function(data){
+        QuestionSet.fetch(questionSet).then(function(data){
             var existing = data.get("questions").findBy('id', question.get('id'));
             if(existing === undefined) {
-                SakuraiWebapp.QuestionSet.addQuestionToQC(questionSet.get('id'), question.get('id'), questionSet.get('totalQuestions')).then(function(response){
+                QuestionSet.addQuestionToQC(questionSet.get('id'), question.get('id'), questionSet.get('totalQuestions')).then(function(){
                     questionSet.set("totalQuestions", questionSet.get("totalQuestions")+1); //Inc the total Question
                     toastr.success(successMessage); //Show success message
                     if (controller.get("isInFrame")){
@@ -964,7 +973,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
                     }
                 });
             } else {
-                toastr.error(errorMessage)
+                toastr.error(errorMessage);
                 if (controller.get("isInFrame")){
                     $('.toast-top-full-width').css("top", (controller.get("mouseY") - 50) + "px");
                 }
@@ -1008,7 +1017,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
         var questionSetList = controller.get('library').get('questionSets');
         for (var i = 0; i < questionSetList.content.length; i++) {
             var qcName = questionSetList.content[i]._data.name;
-            if (name.toLowerCase().trim() === qcName.toLowerCase().trim() && questionSetList.nextObject(i).get("parentOwner").get("id") == undefined) {
+            if (name.toLowerCase().trim() === qcName.toLowerCase().trim() && questionSetList.nextObject(i).get("parentOwner").get("id") === undefined) {
                 controller.set("invalidQCName", true);
                 return false;
             }
@@ -1034,8 +1043,9 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
         controller.set("questionSet", null);
         controller.set("classMisconception", null);
 
-        if (controller.get("scrollTo") == null)
+        if (controller.get("scrollTo") === null){
             controller.set("sortId", 1);
+        }
 
         controller.get("filterSections").clear();
         controller.get("filterTaxonomies").clear();
@@ -1056,7 +1066,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
      */
     deleteColModalTitle: Ember.computed('questionSet.name', function(){
         var questions = this.get('questionSet');
-        return (questions != null )? I18n.t("questionLibrary.messages.deleteHeader") + " '" + questions.get("name")  + "'?" : "";
+        return (questions !== null )? I18n.t("questionLibrary.messages.deleteHeader") + " '" + questions.get("name")  + "'?" : "";
 
     }),
 
@@ -1070,12 +1080,13 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
         var errorMessage =  questionSet.get("name") + ' deleted';
         questionSet.set("mode", "info");
         questionSet.set('enabled',false);
-        questionSet.save().then(function(questionSet){
+        questionSet.save().then(function(){
             $('#delete-modal').modal('hide');
             toastr.error(errorMessage,function(){
                 controller.transitionToRoute("/instructor/library/home/" + controller.get("class").get("id"));
-                if (controller.get("isInFrame"))
+                if (controller.get("isInFrame")){
                     $('.toast-top-full-width').css("top", (controller.get("mouseY")-50) + "px");
+                }
             });
         });
     },
@@ -1092,7 +1103,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
                 !((criteria.otherProducts) && (criteria.otherProducts.length > 0)) &&
                 !((criteria.instructors) && (criteria.instructors.length > 0)) &&
                 !((this.get("showQuestionStatusFilters")) && (criteria.questionStatus) && (criteria.questionStatus.length > 0)) &&
-                !((criteria.difficulty) && (criteria.difficulty.length > 0)))
+                !((criteria.difficulty) && (criteria.difficulty.length > 0)));
 
     },
 
@@ -1102,8 +1113,9 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
      */
      hasQuestions: Ember.computed('questionSet.totalQuestions', function(){
         var questionSet =  this.get('questionSet');
-        if (!questionSet)
+        if (!questionSet){
             return false;
+        }
         var totalQuestions = questionSet.get('totalQuestions');
         return totalQuestions>0;
     }),
@@ -1132,7 +1144,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
 
     /**
      * Indicates the results are shown for a class
-     * @see SakuraiWebapp.QuestionPartialMixin
+     * @see QuestionPartialMixin
      * @property {bool}
      */
     classView: Ember.computed.bool("classIds.length"),
@@ -1147,56 +1159,60 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
     },
 
     changeQuestionStatus: function(question, status){
-        var controller = this;
+        var controller = this, currentUserId;
         var store = controller.store;
-        var promise = SakuraiWebapp.Question.changeQuestionStatus(store, question, status);
+        var promise = Question.changeQuestionStatus(store, question, status);
         var questions = this.get("questions");
         promise.then(function(changed){
             if (changed){
-                if(status == SakuraiWebapp.Question.ACTIVE && question.get("difficulty") == null) {
-                    status = SakuraiWebapp.Question.CALIBRATING;
+                if(status === Question.ACTIVE && question.get("difficulty") === null) {
+                    status = Question.CALIBRATING;
                 }
                 question.set("status", status);
                 if (question.get("retired")){
-                    if (controller.qsId=="") {
+                    if (controller.qsId==="") {
                         questions.removeObject(question);
                         controller.decreaseTotalResults();
                     }
-                    var currentUserId = SakuraiWebapp.context.get('authenticationManager').getCurrentUserId();
+                    currentUserId = context.get('authenticationManager').getCurrentUserId();
                     if (question.get("instructor")) {
                         question.get("instructor").then(function(owner){
-                            if (owner && owner.get("id")==currentUserId)
+                            if (owner && owner.get("id")===currentUserId){
                                 controller.get("library").decTotalCreatedQuestions();
+                            }
                         });
                     }
                     if (question.get("author")) {
                         question.get("author").then(function(owner){
-                            if (owner && owner.get("id")==currentUserId)
+                            if (owner && owner.get("id")===currentUserId){
                                 controller.get("library").decTotalCreatedQuestions();
+                            }
                         });
                     }
                 } else if (question.get("active") || question.get("onHold")){
-                    if (controller.qsId=="") {
+                    if (controller.qsId==="") {
                         questions.addObject(question);
                         controller.increaseTotalResults();
                     }
-                    var currentUserId = SakuraiWebapp.context.get('authenticationManager').getCurrentUserId();
+                    currentUserId = context.get('authenticationManager').getCurrentUserId();
                     if (question.get("instructor")) {
                         question.get("instructor").then(function(owner){
-                            if (owner && owner.get("id")==currentUserId)
+                            if (owner && owner.get("id")===currentUserId){
                                 controller.get("library").incTotalCreatedQuestions();
+                            }
                         });
                     }
                     if (question.get("author")) {
                         question.get("author").then(function(owner){
-                            if (owner && owner.get("id")==currentUserId)
+                            if (owner && owner.get("id")===currentUserId){
                                 controller.get("library").incTotalCreatedQuestions();
+                            }
                         });
                     }
                 }
             }
             else{
-                Ember.Logger.warn("Can't change question status")
+                Ember.Logger.warn("Can't change question status");
             }
         });
     },
@@ -1220,7 +1236,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
         },
 
         searchByInstructor: function(){
-            var authenticationManager = SakuraiWebapp.context.get("authenticationManager");
+            var authenticationManager = context.get("authenticationManager");
             var userId = authenticationManager.getCurrentUserId();
             var paramName = authenticationManager.getCurrentUser().get("isAdmin")? "authorIds" : "instructorId";
             this.transitionToRoute("/instructor/library/results/" + this.get("class").get("id") + "?"+paramName+"=" + userId);
@@ -1250,7 +1266,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
 
         filterByChapter: function(){
             var ids = $(".question-library .units-chapter input[name=chapters]:checked").map(function () {
-                return $(this).val()
+                return $(this).val();
             }).toArray();
             this.get("criteria").sections = ids;
             this.doSearch();
@@ -1259,7 +1275,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
 
         filterByClassData: function(){
             var ids = $(".question-library .class-data input[name=class_data]:checked").map(function () {
-                return $(this).val()
+                return $(this).val();
             }).toArray();
             this.get("criteria").classes = ids;
             this.doSearch();
@@ -1269,7 +1285,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
         filterByDifficulty: function () {
             if ($("#difficulty-mdl input[name=difficulty]:checked").length > 0) {
                 var ids = $(".question-library .difficulty input[name=difficulty]:checked").map(function () {
-                    return $(this).val()
+                    return $(this).val();
                 }).toArray();
                 this.get("criteria").difficulty = ids;
                 this.doSearch();
@@ -1279,7 +1295,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
 
         filterByAuthor: function(){
             var ids = $(".question-library .authors-content input[name=author_checks]:checked").map(function () {
-                return $(this).val()
+                return $(this).val();
             }).toArray();
             this.get("criteria").authors = ids;
             this.doSearch();
@@ -1288,7 +1304,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
 
         filterByQuestionStatus: function () {
              var ids = $("#status-mdl input[name=status_checks]:checked").map(function () {
-                return $(this).val()
+                return $(this).val();
             }).toArray();
 
             this.get("criteria").questionStatus = ids;
@@ -1299,13 +1315,13 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
         filterByTermTaxonomy: function(type){
             //current taxonomy ids selected by type
             var ids = $(".question-library .units-chapter input[name=taxonomy]:checked").map(function () {
-                    return $(this).val()
+                    return $(this).val();
                 }).toArray();
 
             var filterTaxonomies = this.get('filterTaxonomies');
 
             //previously taxonomies selected by type, so they are not included anymore, ids has the new version
-            var taxonomiesByType = SakuraiWebapp.TermTaxonomy.filterByType(filterTaxonomies, type);
+            var taxonomiesByType = TermTaxonomy.filterByType(filterTaxonomies, type);
             var taxonomyByTypeIds = taxonomiesByType.map(function(taxonomy){
                 return taxonomy.get("id");
             }).toArray();
@@ -1346,7 +1362,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
         },
 
         filterByOtherProduct: function(productId, currentProductId) {
-            if (productId != currentProductId) {
+            if (productId !== currentProductId) {
                 this.get('criteria').otherProducts = [productId];
                 this.doSearch();
             }
@@ -1471,7 +1487,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
             var controller = this;
 
             var filterTaxonomies = controller.get("filterTaxonomies");
-            var taxonomiesByType = SakuraiWebapp.TermTaxonomy.filterByType(filterTaxonomies, type);
+            var taxonomiesByType = TermTaxonomy.filterByType(filterTaxonomies, type);
 
             //remove from filters
             filterTaxonomies.removeObjects(taxonomiesByType);
@@ -1585,25 +1601,23 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
                 questionSelected = controller.get("questionSelected"),
                 questionIdFamily = controller.get("questionIdFamily");
             if (questionIdFamily.trim()!==""){
-                var promise = SakuraiWebapp.Question.updateFamily(store, questionSelected.get("id"), questionIdFamily);
+                var promise = Question.updateFamily(store, questionSelected.get("id"), questionIdFamily);
                 promise.then(function(question){
                     if (question){
                         controller.set("questionSelected.parentId", question.parentId);
                         controller.set("questionSelected.hasVariant", question.hasVariant);
 
                         //Case 3
-                        if (question.parentId == controller.get("questionIdFamily")){
+                        if (question.parentId === controller.get("questionIdFamily")){
                             var questionVariant =  controller.get("questions").findBy("id", controller.get("questionIdFamily"));
                             questionVariant.set("hasVariant", true);
                         }
 
-                        var successMessage = I18n.t("questionLibrary.addToFamily.question") + question.id + " "
-                                            + I18n.t("questionLibrary.addToFamily.andQuestion") + controller.get("questionIdFamily") + " "
-                                            + I18n.t("questionLibrary.addToFamily.andQuestion") + question.parentId;
+                        var successMessage = I18n.t("questionLibrary.addToFamily.question") + question.id + " " + I18n.t("questionLibrary.addToFamily.andQuestion") + controller.get("questionIdFamily") + " " + I18n.t("questionLibrary.addToFamily.andQuestion") + question.parentId;
 
                         controller.set("addFamilyNoteMessage", successMessage);
                     }
-                }, function(reason) {
+                }, function() {
                     controller.set("addFamilyNoteMessage", I18n.t("questionLibrary.addToFamily.errorAddFamily"));
                 });
             }else{
@@ -1622,7 +1636,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
 
         onAddQuestionNote: function(){
              var controller = this,
-                store = controller.store
+                store = controller.store,
                 questionNoteDetail = controller.get("questionNoteDetail");
             if (questionNoteDetail.trim()!==""){
                 var note = store.createRecord("questionNote",{
@@ -1630,7 +1644,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
                     detail: questionNoteDetail
                 });
 
-                note.save().then(function(note){
+                note.save().then(function(){
                     var successMessage  = I18n.t("questionLibrary.addNote.confirmationMessage") + controller.get("questionSelected.id");
                     controller.set("addFamilyNoteMessage", successMessage);
                 });
@@ -1681,7 +1695,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
             var questionSet = controller.get("questionSet");
             var customCoInstructors = controller.get("customCoInstructors");
             if (customCoInstructors.length){
-                SakuraiWebapp.QuestionSet.shareQuestionSet(questionSet.get('id'), customCoInstructors.mapBy("id").join(",")).then(function(response){
+                QuestionSet.shareQuestionSet(questionSet.get('id'), customCoInstructors.mapBy("id").join(",")).then(function(){
                     controller.trigger('asyncButton.restore', data.component);
                     $("#shareqc-mdl").modal('hide');
                     $("#shareqc-mdl-success").modal('show');
@@ -1701,9 +1715,9 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
 
         selectCoInstructor: function(instructor){
             var controller = this;
-            if ($("#share_qc_instructor_"+instructor.get("id")).prop("checked")) //Add to the list of classes
+            if ($("#share_qc_instructor_"+instructor.get("id")).prop("checked")){ //Add to the list of classes
                 controller.get("customCoInstructors").pushObject(instructor);
-            else{
+            }else{
                 var indexCoInstructor = controller.get("customCoInstructors").indexOf(instructor);
                 if (indexCoInstructor > -1) {
                     controller.get("customCoInstructors").removeAt(indexCoInstructor, 1);
@@ -1739,7 +1753,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
         onOrderList: function(question, newPosition){
             var controller = this;
             var questionSetId = controller.get("questionSet.id");
-            SakuraiWebapp.QuestionSet.changeOrderOfQuestion(questionSetId, question.get('id'), newPosition).then(function(response){
+            QuestionSet.changeOrderOfQuestion(questionSetId, question.get('id'), newPosition).then(function(){
                 controller.getPageQuestionCollectionResults(controller.get('currentPage'));
             });
         },
@@ -1768,8 +1782,8 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
         },
 
         showImportModal: function() {
-            var self = this;
-                userId = SakuraiWebapp.context.get('authenticationManager').getCurrentUserId();
+            var self = this,
+                userId = context.get('authenticationManager').getCurrentUserId();
 
             this.set('isImportModalVisible', true);
 
@@ -1786,17 +1800,18 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
         },
 
         openExportWindow: function(){
-            var controller = this;
             var url = "/instructor/library/export/"+this.get('class.id')+"/"+this.get('questionSet.id');
             window.open("#" + url, "_blank");
         },
 
         openShareQCModal: function() {
             $("#shareqc-mdl .custom-error").hide();
-            if(this.get('coInstructors').get("length"))
+            if(this.get('coInstructors').get("length")){
                 $('#shareqc-mdl').modal('show');
-            else
+            }
+            else{
                 $('#shareqc-mdl-no-instructors').modal('show');
+            }
         },
 
         redirectToImport: function(questionSetId) {
@@ -1842,7 +1857,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
         },
 
         /**
-         * @see SakuraiWebapp.LibraryResultsController
+         * @see LibraryResultsController
          * @param question
          */
         createVariantQuestion: function(question){
@@ -1890,7 +1905,7 @@ SakuraiWebapp.LibraryResultsController = Ember.Controller.extend(
                 questionList = this.get('questions'),
 
                 variants = questionList.filter( function(question) {
-                    return question.get('parentId') == questionId;
+                    return question.get('parentId') === questionId;
                 });
 
             $variantContainer.addClass("loading");

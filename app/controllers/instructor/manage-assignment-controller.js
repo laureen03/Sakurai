@@ -1,7 +1,17 @@
-SakuraiWebapp.InstructorManageAssignmentController = Ember.Controller.extend(
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import Product from 'models/product';
+import Assignment from 'models/assignment';
+import TermTaxonomy from 'models/term-taxonomy';
+import context from 'utils/context-utils';
+
+
+export default Controller.extend(
     Ember.Evented,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,{
+    ControllerMixin,
+    FeatureMixin,{
 
     headerClasses: Ember.inject.controller(),
     instructor: Ember.inject.controller(),
@@ -91,7 +101,7 @@ SakuraiWebapp.InstructorManageAssignmentController = Ember.Controller.extend(
      * @property
      */
     isQuestionCollectionPreSelected: Ember.computed('qsId', function(){
-        return this.get("qsId") != null;
+        return this.get("qsId") !== null;
     }),
 
     /**
@@ -100,7 +110,7 @@ SakuraiWebapp.InstructorManageAssignmentController = Ember.Controller.extend(
      *
      */
     isChapterPreSelected: Ember.computed('chapterId', function(){
-        return this.get("chapterId") != null;
+        return this.get("chapterId") !== null;
     }),
 
     /**
@@ -130,7 +140,7 @@ SakuraiWebapp.InstructorManageAssignmentController = Ember.Controller.extend(
     termTaxonomyLabel: Ember.computed("selectedTermTaxonomy", "product", function(){
         var product = this.get("product");
         var key = this.get("selectedTermTaxonomy");
-        var termTaxonomyAllowed = SakuraiWebapp.Product.termTaxonomyAllowedByKey(product, key);
+        var termTaxonomyAllowed = Product.termTaxonomyAllowedByKey(product, key);
         return termTaxonomyAllowed.label;
     }),
 
@@ -157,8 +167,8 @@ SakuraiWebapp.InstructorManageAssignmentController = Ember.Controller.extend(
         delete newAssignment.classes;
         delete newAssignment.studentResults;
         for (var key in newAssignment) {
-            if(key != 'classes') {
-                if (newAssignment[key] != assignment.get(key)) {
+            if(key !== 'classes') {
+                if (newAssignment[key] !== assignment.get(key)) {
                     newAssignment[key] = assignment.get(key);
                 }
             }
@@ -182,7 +192,7 @@ SakuraiWebapp.InstructorManageAssignmentController = Ember.Controller.extend(
         var product = this.get("product");
         if (assignment.get("hasTermTaxonomy")){
             assignment.get("termTaxonomy").then(function(taxonomy){
-                var parentType = SakuraiWebapp.TermTaxonomy.getParentType(product, taxonomy);
+                var parentType = TermTaxonomy.getParentType(product, taxonomy);
                 controller.set("selectedTermTaxonomy", parentType);
             });
         }
@@ -223,10 +233,9 @@ SakuraiWebapp.InstructorManageAssignmentController = Ember.Controller.extend(
     setClassesAndDates: function(){
         var self = this;
         var assignment = self.get("assignment");
-        var array = [];
         var store = this.store;
         self.get("classesAndDates").clear();
-        JSON.parse(assignment.get("customDataByClass")).forEach(function (dateByClass, index) {
+        JSON.parse(assignment.get("customDataByClass")).forEach(function (dateByClass) {
             store.find("class", dateByClass.idClass).then(function(clazz){
                 var obj = {
                     "idClass" : clazz.get("id"),
@@ -248,14 +257,16 @@ SakuraiWebapp.InstructorManageAssignmentController = Ember.Controller.extend(
         var promise = myAssignment.save();
         promise.then(function (assignment) {
             controller.resolveAssignment(assignment).then(function(){
-                if (controller.get("isEditMode") && !controller.get("isCopyMode"))
+                if (controller.get("isEditMode") && !controller.get("isCopyMode")){
                     controller.transitionToRoute("/instructor/assignments/"+controller.get("product").get("id")+'/'+controller.get("class").get("id"));
+                }
                 else{
-                    if (assignment.get("staggered")) //create a list with classes and Dates
+                    if (assignment.get("staggered")){ //create a list with classes and Dates
                         controller.setClassesAndDates();
+                    }
                     controller.set("assignmentCreated", true);
                 }
-            })
+            });
         }, function(reason){
             myAssignment.rollbackAttributes(); //rolling back changes since it is affecting a data ember model
             controller.send('error', {
@@ -273,7 +284,7 @@ SakuraiWebapp.InstructorManageAssignmentController = Ember.Controller.extend(
      */
     resolveAssignment: function(assignment){
         return assignment.get("classes").then(function(classes){
-            var products = classes.map(function(clazz, index){
+            var products = classes.map(function(clazz){
                 return clazz.get("product");
             });
             return Ember.RSVP.all(products);
@@ -286,10 +297,12 @@ SakuraiWebapp.InstructorManageAssignmentController = Ember.Controller.extend(
      * comes from Question Library Assign Button
      */
     nextStep: function(){
-        if (this.get("isQuestionCollectionPreSelected"))
-            this.set("assigmentType",SakuraiWebapp.Assignment.QUESTION_COLLECTION);
-        else if (this.get("isChapterPreSelected"))
-            this.set("assigmentType", SakuraiWebapp.Assignment.MASTERY_LEVEL);
+        if (this.get("isQuestionCollectionPreSelected")){
+            this.set("assigmentType",Assignment.QUESTION_COLLECTION);
+        }
+        else if (this.get("isChapterPreSelected")){
+            this.set("assigmentType", Assignment.MASTERY_LEVEL);
+        }
 
         this.send('continueStepOne');
     },
@@ -310,19 +323,16 @@ SakuraiWebapp.InstructorManageAssignmentController = Ember.Controller.extend(
             var isQuestionCollectionAssignment =  this.get('isQuestionCollectionPreSelected');
             var qsId = this.get('qsId');
 
-            //Default value comes from QC Library
-            var selectedValue;
-
-            if(this.get("assigmentType") == 'existing_assignment') {
+            if(this.get("assigmentType") === 'existing_assignment') {
                 this.transitionToRoute("/instructor/assignments/"+product.get("id")+'/'+this.get("class").get("id")+'?prevPage=manageAssignment');
-            } else if (this.get("assigmentType") == 'change_settings') {
+            } else if (this.get("assigmentType") === 'change_settings') {
                 this.set('activeReviewAndRefreshSettings', true);
             } else {
                 //Sets the Assignment Type
                 assignment.set("type", controller.get("assigmentType"));
 
                 if (assignment.get("isQuestionCollectionAssignment")){
-                    var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+                    var authenticationManager = context.get('authenticationManager');
                     var user = authenticationManager.getCurrentUser();
                     store.query("questionSet", { "userId": user.get("id"), "productId": product.get("id")})
                         .then(function(questionSets){

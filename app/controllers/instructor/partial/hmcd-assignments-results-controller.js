@@ -1,4 +1,11 @@
-SakuraiWebapp.InstructorPartialHmcdAssignmentsResultsController = Ember.Controller.extend(SakuraiWebapp.ControllerMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import DateUtil from 'utils/date-util';
+import SortableHelper from 'utils/sortable';
+
+export default Controller.extend(
+    ControllerMixin, {
     instructorHmcd: Ember.inject.controller(),
     
     class: Ember.computed.alias("instructorHmcd.class"),
@@ -14,11 +21,11 @@ SakuraiWebapp.InstructorPartialHmcdAssignmentsResultsController = Ember.Controll
 
     controllerSetup: function(){
     	this.set("assignmentResultsSortable",
-            SakuraiWebapp.SortableHelper.create({   sort: "timestampAvailableDate",
+            SortableHelper.create({   sort: "timestampAvailableDate",
                                                     direction:true,
                                                     mandatoryProperty: 'isMasteryLevelAssignment' }));
     	 this.set("questionCollectionResultsSortable",
-            SakuraiWebapp.SortableHelper.create({ sort: "timestampAvailableDate",
+            SortableHelper.create({ sort: "timestampAvailableDate",
                                                   direction:true,
                                                   mandatoryProperty: 'isQuestionCollectionAssignment' }));
     }.on('init'),
@@ -53,7 +60,7 @@ SakuraiWebapp.InstructorPartialHmcdAssignmentsResultsController = Ember.Controll
     showDetails:function(idx, assignment, isQuestionCollectionAssignment){
         $('#mob-details').remove();
 
-        var dateUtil = new SakuraiWebapp.DateUtil();
+        var dateUtil = new DateUtil();
         var timezone = assignment.get("timeZone");
         var availableDate = dateUtil.format(assignment.get("availableDate"), 'lll', timezone, true);
         var dueDate = dateUtil.format(assignment.get("dueDate"), 'lll', timezone, true);

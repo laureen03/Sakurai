@@ -1,7 +1,17 @@
-SakuraiWebapp.InstructorAssignStep2Controller = Ember.Controller.extend(
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import QuestionSet from 'models/question-set';
+import TermTaxonomy from 'models/term-taxonomy';
+import Section from 'models/section';
+import context from 'utils/context-utils';
+
+
+export default Controller.extend(
     Ember.Evented,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin, {
+    ControllerMixin,
+    FeatureMixin, {
     instructorManageAssignment: Ember.inject.controller(),
     instructorAssignStep3: Ember.inject.controller(),
   	manageAssignment: Ember.computed.alias('instructorManageAssignment'),
@@ -159,13 +169,13 @@ SakuraiWebapp.InstructorAssignStep2Controller = Ember.Controller.extend(
     metadataSubCategory: Ember.observer('selectedTermTaxonomy', function(){
         var isEditMode = this.get("isEditMode");
         var selectedTermTaxonomy = this.get("selectedTermTaxonomy");
-        if (isEditMode || !selectedTermTaxonomy) return; //when editing there is no need to load the taxonomies
+        if (isEditMode || !selectedTermTaxonomy){ return; }//when editing there is no need to load the taxonomies
 
         var controller = this;
         var store = controller.get("store");
         var type = controller.get('selectedTermTaxonomy');
 
-        if (type == SakuraiWebapp.Section.NURSING_TOPICS){
+        if (type === Section.NURSING_TOPICS){
             controller.set('isSectionAssignment',true);
             this.onChapterChange();
             Ember.run.later((function () {
@@ -177,15 +187,15 @@ SakuraiWebapp.InstructorAssignStep2Controller = Ember.Controller.extend(
         else{
             controller.set('isSectionAssignment',false);
 
-            var taxonomyTag = SakuraiWebapp.context.get('authenticationManager').get("taxonomyTag");
+            var taxonomyTag = context.get('authenticationManager').get("taxonomyTag");
             if (this.validateTaxonomyTagConcepts(type))
             { //Find by GuID
-                SakuraiWebapp.TermTaxonomy.findTermTaxonomyByTaxonomyTag(store, taxonomyTag, null)
+                TermTaxonomy.findTermTaxonomyByTaxonomyTag(store, taxonomyTag, null)
                     .then(function(metadata){
                         controller.transformAndSetFirst(metadata, type);
                     });
             }else{
-                SakuraiWebapp.TermTaxonomy.findTermTaxonomyByParentName(store, type, null)
+                TermTaxonomy.findTermTaxonomyByParentName(store, type, null)
                 .then(function(metadata){
                     controller.transformAndSetFirst(metadata, type);
                 });
@@ -241,7 +251,7 @@ SakuraiWebapp.InstructorAssignStep2Controller = Ember.Controller.extend(
                         "name" :  metadata.get('name'),
                         "id": metadata.get('id'),
                         "group": parent.get("name")
-                    })
+                    });
                 });
             });
         }
@@ -261,10 +271,12 @@ SakuraiWebapp.InstructorAssignStep2Controller = Ember.Controller.extend(
     }),
 
     enableContinueBtn: Ember.computed('questionSetsEnabled', "assignment.type", function(){
-        if (this.get("assignment").get("isQuestionCollectionAssignment") && (this.get("questionSetsEnabled").length == 0))
+        if (this.get("assignment").get("isQuestionCollectionAssignment") && (this.get("questionSetsEnabled").length === 0)){
             return false;
-        else
+        }
+        else{
             return true;
+        }
     }),
 
     /**
@@ -275,7 +287,7 @@ SakuraiWebapp.InstructorAssignStep2Controller = Ember.Controller.extend(
         var questionSets = this.get('questionSets');
         var enabled = questionSets.filterBy('enabled', true);
 
-        enabled.forEach(function(obj,idx){
+        enabled.forEach(function(obj){
             //Show QC that have more than 1 question
             if(obj.get('totalQuestions') > 0){
                 options.pushObject({
@@ -294,7 +306,7 @@ SakuraiWebapp.InstructorAssignStep2Controller = Ember.Controller.extend(
      */
     sectionGroups: Ember.computed('sections.[]', function(){
         var options = Ember.A();
-        this.get('sections').forEach(function(section, index) {
+        this.get('sections').forEach(function(section) {
             section.get('children').then(function(children){
                 var optionGroup = children.map(function(kid){
                     return Ember.Object.create(
@@ -438,12 +450,11 @@ SakuraiWebapp.InstructorAssignStep2Controller = Ember.Controller.extend(
      */
     getSelectedChapter: function(id){
         var sections = this.get("sections");
-        return new Ember.RSVP.Promise(function (resolve, reject) {
-            sections.forEach(function(section, index) {
+        return new Ember.RSVP.Promise(function (resolve) {
+            sections.forEach(function(section) {
                 section.get('children').then(function(children){
-                    children.forEach(function(kid, index) {
-                        if (kid.get("id") == id){
-                            found = true;
+                    children.forEach(function(kid) {
+                        if (kid.get("id") === id){
                             kid.set("parentName", section.get("name"));
                             resolve(kid);
                         }
@@ -461,7 +472,7 @@ SakuraiWebapp.InstructorAssignStep2Controller = Ember.Controller.extend(
     getSelectedTermTaxonomy: function(id){
         var controller = this;
         var store = controller.store;
-        return new Ember.RSVP.Promise(function (resolve, reject) {
+        return new Ember.RSVP.Promise(function (resolve) {
             var promise = store.find('termTaxonomy',id);
                 promise.then(function(metadata){
                     resolve(metadata);
@@ -508,9 +519,11 @@ SakuraiWebapp.InstructorAssignStep2Controller = Ember.Controller.extend(
                         controller.get("assignment").set("chapter", undefined);
                         controller.get("assignment").set("termTaxonomy", undefined);
 
-                        (isSectionAssignment) ?
-                            controller.get("assignment").set("chapter", data) :
-                            controller.get("assignment").set("termTaxonomy", data) ;
+                        if (isSectionAssignment){
+                            controller.get("assignment").set("chapter", data);
+                        }else{
+                            controller.get("assignment").set("termTaxonomy", data);
+                        }
 
 
                         //Change step3
@@ -527,7 +540,7 @@ SakuraiWebapp.InstructorAssignStep2Controller = Ember.Controller.extend(
             var questionSets = this.get('questionSets');
             var found = questionSets.filterBy('id', selectedQuestionSetId);
 
-            SakuraiWebapp.QuestionSet.fetch(found.nextObject(0)).then(function(questionSet){
+            QuestionSet.fetch(found.nextObject(0)).then(function(questionSet){
 
                 var questions = questionSet.get("questions");
                 questions.then(function(_questions) {

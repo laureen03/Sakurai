@@ -1,6 +1,13 @@
-SakuraiWebapp.LibraryCreateQuestionController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import Question from 'models/question';
+import context from 'utils/context-utils';
+
+export default Controller.extend(
+    ControllerMixin,
+    FeatureMixin,{
         queryParams: ['type', 'variant'],
         //Reference another contoller
         library: Ember.inject.controller(),
@@ -30,7 +37,7 @@ SakuraiWebapp.LibraryCreateQuestionController = Ember.Controller.extend(
 
         /**
          * All product term taxonomies
-         * @property {SakuraiWebapp.TermTaxonomy[]}
+         * @property {TermTaxonomy[]}
          */
         allTermTaxonomies: Ember.computed.alias("library.allTermTaxonomies"),
 
@@ -42,7 +49,7 @@ SakuraiWebapp.LibraryCreateQuestionController = Ember.Controller.extend(
 
         /**
          * Product learning objectives
-         * @property {SakuraiWebapp.LearningObjective[]}
+         * @property {LearningObjective[]}
          */
         learningObjectives: null,
 
@@ -92,7 +99,7 @@ SakuraiWebapp.LibraryCreateQuestionController = Ember.Controller.extend(
          */
         isMultipleChoice: Ember.computed('type', function(){
             var type = this.get("type");
-            return !type || type === SakuraiWebapp.Question.MULTIPLE_CHOICE;
+            return !type || type === Question.MULTIPLE_CHOICE;
         }),
 
         /**
@@ -100,28 +107,28 @@ SakuraiWebapp.LibraryCreateQuestionController = Ember.Controller.extend(
          */
         isFillInTheBlank: Ember.computed('type', function(){
             var type = this.get("type");
-            return type === SakuraiWebapp.Question.FILL_IN_THE_BLANK;
+            return type === Question.FILL_IN_THE_BLANK;
         }),
 
         isChoiceMultiple: Ember.computed('type', function(){
-            return this.get("type") === SakuraiWebapp.Question.CHOICE_MULTIPLE;
+            return this.get("type") === Question.CHOICE_MULTIPLE;
         }),
 
         isGraphicOption: Ember.computed('type', function(){
-            return this.get("type") === SakuraiWebapp.Question.GRAPHIC_OPTION;
+            return this.get("type") === Question.GRAPHIC_OPTION;
         }),
 
         isDragNDrop: Ember.computed('type', function(){
-            return this.get("type") === SakuraiWebapp.Question.DRAG_AND_DROP;
+            return this.get("type") === Question.DRAG_AND_DROP;
         }),
 
         isHotSpot: Ember.computed('type', function(){
-            return this.get("type") === SakuraiWebapp.Question.HOT_SPOT;
+            return this.get("type") === Question.HOT_SPOT;
         }),
 
         goBackToResults: function(creating){
             var controller = this;
-            if (!SakuraiWebapp.context.isTesting()){ //back is not supported on tests 
+            if (!context.isTesting()){ //back is not supported on tests 
                 var steps = (creating && controller.get("isAuthoringEnabled")) ? -2 : -1;
                 window.history.go(steps); //PhantomJS doesn't support Web Components
             }
@@ -131,7 +138,7 @@ SakuraiWebapp.LibraryCreateQuestionController = Ember.Controller.extend(
             saveQuestion: function(question, isMajorEdit, isCreatingVariant, saveButton, onSaveCallback){
                 var controller = this,
                     store = controller.store,
-                    authenticationManager = SakuraiWebapp.context.get('authenticationManager'),
+                    authenticationManager = context.get('authenticationManager'),
                     user = authenticationManager.getCurrentUser(),
                     userId = user.get("id"),
                     productId = controller.get("class.product.id"),
@@ -172,7 +179,7 @@ SakuraiWebapp.LibraryCreateQuestionController = Ember.Controller.extend(
 
                 };
                 if (copyQuestion){
-                    var promise = SakuraiWebapp.Question.copyQuestionRecord(store, question);
+                    var promise = Question.copyQuestionRecord(store, question);
                     promise.then(function(copiedQuestion){
                         copiedQuestion.set("variant", isCreatingVariant);
                         if(isMajorEdit) {

@@ -1,11 +1,20 @@
-SakuraiWebapp.InstructorAssignmentsController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import SortableHelper from "mixins/sortable";
+import Assignment from 'models/assignment';
+import DateUtil from 'utils/date-util';
+
+
+export default Controller.extend(
+    ControllerMixin,
+    FeatureMixin,{
     queryParams: ['prevPage'],
     prevPage: 'hmcd',
     isPrevHMCD: Ember.computed('prevPage', function(){
         var prevPage = this.get('prevPage');
-        if(prevPage == 'hmcd') {
+        if(prevPage === 'hmcd') {
             return true;
         } else {
             return false;
@@ -52,7 +61,7 @@ SakuraiWebapp.InstructorAssignmentsController = Ember.Controller.extend(
 
     controllerSetup: function(){
         this.set("assignmentsSortable",
-            SakuraiWebapp.SortableHelper.create({ sort: "dueDate", direction:false }));
+            SortableHelper.create({ sort: "dueDate", direction:false }));
     }.on('init'),
 
     /**
@@ -105,7 +114,7 @@ SakuraiWebapp.InstructorAssignmentsController = Ember.Controller.extend(
     showDetails:function(idx, assignment){
         $('#mob-details').remove();
 
-        var dateUtil = new SakuraiWebapp.DateUtil();
+        var dateUtil = new DateUtil();
         var timezone = assignment.get("timeZone");
         var availableDate = dateUtil.format(assignment.get("availableDate"), 'lll', timezone, true);
         var dueDate = dateUtil.format(assignment.get("dueDate"), 'lll', timezone, true);
@@ -149,7 +158,7 @@ SakuraiWebapp.InstructorAssignmentsController = Ember.Controller.extend(
         var collection = this.get("assignmentsSortable").get("collection");
         var assignments = collection.filterBy('id', id);
 
-        SakuraiWebapp.Assignment.fetch(assignments.nextObject(0)).then(function(assignment){
+        Assignment.fetch(assignments.nextObject(0)).then(function(assignment){
             assignment.set('deleted', true);
             assignment.save().then(function(){
                 var sortable = controller.get("assignmentsSortable"),
@@ -188,7 +197,7 @@ SakuraiWebapp.InstructorAssignmentsController = Ember.Controller.extend(
         showDeleteModal: function(assignmentId, assignmentName){
             this.set("selectedAssignmentName",assignmentName);
             this.set("selectedAssignmentId",assignmentId);
-            $('#deleteAssignment-mdl').modal('show')
+            $('#deleteAssignment-mdl').modal('show');
         },
 
         removeAssignment: function(){
@@ -197,10 +206,12 @@ SakuraiWebapp.InstructorAssignmentsController = Ember.Controller.extend(
 
         editAssignment: function(id, isExam){
             var controller= this;
-            if (!isExam)
+            if (!isExam){
                 controller.transitionToRoute("/instructor/manageAssignment/" + controller.get("classId") + "/" + id);
-            else
+            }
+            else{
                 controller.transitionToRoute("/instructor/assignExam/" + controller.get("classId") + "?assignmentId=" + id);
+            }
         },
 
         selectAssignment: function(assignment){
@@ -218,13 +229,15 @@ SakuraiWebapp.InstructorAssignmentsController = Ember.Controller.extend(
         copyAssignment: function(){
             var controller = this;
             var copyAssignments = controller.get("copyAssignments");
-            if(copyAssignments.length == 1) {
+            if(copyAssignments.length === 1) {
                 // TO-DO if there is only one assignment selected
                 var assignment = copyAssignments.objectAt(0);
-                if (!assignment.get("isExamAssignment"))
+                if (!assignment.get("isExamAssignment")){
                     controller.transitionToRoute("/instructor/manageAssignment/" + controller.get("classId") + "/" + assignment.get("id") + "?action=copy");
-                else
+                }
+                else{
                     controller.transitionToRoute("/instructor/assignExam/" + controller.get("classId") + "?assignmentId=" + assignment.get("id") + "&action=copy");
+                }
             } else {
                 // TO-DO if there are multiple assignments selected
                 var ids =  copyAssignments.map(function(assignment){

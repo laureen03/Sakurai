@@ -1,5 +1,11 @@
-SakuraiWebapp.ApplicationController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import context from 'utils/context-utils';
+import MobileUtil from 'utils/mobile-util';
+
+export default Controller.extend(
+    ControllerMixin, {
 
     /**
     * Function to detect id is into the Iframe
@@ -9,10 +15,10 @@ SakuraiWebapp.ApplicationController = Ember.Controller.extend(
          * @see css_lww_instructor_interaction_spec.js
          * @see test_utils.js#enableFrame
          */
-        if (SakuraiWebapp.context.isTesting()){
+        if (context.isTesting()){
             //tests modifies this property manually to reproduce the desired behavior
-            return SakuraiWebapp.context.get("isInFrame");
-        };
+            return context.get("isInFrame");
+        }
 
         //if not testing check for
         try {
@@ -26,12 +32,12 @@ SakuraiWebapp.ApplicationController = Ember.Controller.extend(
      * Function to detect if the app is in a mobile device
      */
     checkMobile: function(){
-        if (SakuraiWebapp.context.isTesting()){
+        if (context.isTesting()){
             //tests modifies this property manually to reproduce the desired behavior
-            return SakuraiWebapp.context.get("isInMobile");
-        };
+            return context.get("isInMobile");
+        }
 
-        return SakuraiWebapp.MobileUtil.isMobile();
+        return MobileUtil.isMobile();
     },
 
     /**
@@ -40,7 +46,7 @@ SakuraiWebapp.ApplicationController = Ember.Controller.extend(
     currentPathDidChange: Ember.observer('currentPath', function() {
         var currentPath = this.get('currentPath');
         this.get('history').push(currentPath);
-        var context = SakuraiWebapp.context;
+        var context = context;
         context.set("prevApplicationModule", context.get("applicationModule"));
         context.set("applicationModule", currentPath.replace(".", "-"));
     }),
@@ -63,8 +69,8 @@ SakuraiWebapp.ApplicationController = Ember.Controller.extend(
         };
 
         //Check if the App is running into Iframe
-        SakuraiWebapp.context.set("isInFrame", this.checkFrame());
-        SakuraiWebapp.context.set("isInMobile", this.checkMobile());
+        context.set("isInFrame", this.checkFrame());
+        context.set("isInMobile", this.checkMobile());
         this.verifyEnableDisableFrame();
 
     }.on('init'),

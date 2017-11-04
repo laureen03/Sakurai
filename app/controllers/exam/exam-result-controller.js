@@ -1,8 +1,17 @@
-SakuraiWebapp.ExamResultController = Ember.Controller.extend(
-    Ember.Evented,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,
-    SakuraiWebapp.QuestionPartialMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import QuestionPartialMixin  from 'question-partial';
+import MobileUtil from 'utils/mobile-util';
+import Question from 'models/question';
+
+export default Controller.extend(
+    ControllerMixin, 
+    FeatureMixin,
+    QuestionPartialMixin,
+    Ember.Evented,{
+
     headerClasses: Ember.inject.controller(),
 
     /**
@@ -115,12 +124,12 @@ SakuraiWebapp.ExamResultController = Ember.Controller.extend(
      * @property {bool}
      */
     displayChart: Ember.computed(function(){
-        return !SakuraiWebapp.MobileUtil.xSmall();
+        return !MobileUtil.xSmall();
     }),
 
     /**
      * @property {bool} indicates if it can increment the remediation link view
-     * @see SakuraiWebapp.QuestionPartialMixin
+     * @see QuestionPartialMixin
      */
     canIncRemediationLinkView: Ember.computed(function(){
         return true;
@@ -140,11 +149,13 @@ SakuraiWebapp.ExamResultController = Ember.Controller.extend(
     			controller.set("currentQuestion", value);
     			//Check if is choice if is multiple or single choice
     			value.get("interactions").forEach(function(item) {
-       	       		if (item.type === SakuraiWebapp.Question.CHOICE){
-       	          		if ((item.maxChoices == 1) && (item.maxChoices == 1))
+       	       		if (item.type === Question.CHOICE){
+       	          		if ((item.maxChoices === 1) && (item.maxChoices === 1)){
     				        controller.set("isMultiple", false);
-    				    else
+                        }
+    				    else{
     				        controller.set("isMultiple", true);
+                        }
     				}
     			});
 
@@ -166,15 +177,14 @@ SakuraiWebapp.ExamResultController = Ember.Controller.extend(
         },
 
         goToAnswerKey: function(index){
-            var $this = $(this),
-                scrollTo = 'answer-key-' + index;
+            var scrollTo = 'answer-key-' + index;
 
             if ($('#' + scrollTo).hasClass('hide')){
-                if (this.get("radioFilterVal") == "incorrect"){
-                    $('.filter-questions input[type="radio"]:eq(2)').prop("checked",true)
+                if (this.get("radioFilterVal") === "incorrect"){
+                    $('.filter-questions input[type="radio"]:eq(2)').prop("checked",true);
                     this.set("radioFilterVal", "correct");
                 }else{
-                    $('.filter-questions input[type="radio"]:eq(1)').prop("checked",true)
+                    $('.filter-questions input[type="radio"]:eq(1)').prop("checked",true);
                     this.set("radioFilterVal", "incorrect");
                 }
             }

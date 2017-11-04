@@ -1,4 +1,12 @@
-SakuraiWebapp.LoginSsoController = Ember.Controller.extend(SakuraiWebapp.ControllerMixin, SakuraiWebapp.LoginMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import LoginMixin from 'mixins/login';
+import DeepLinkingHelper from "utils/deep-linking-util";
+
+export default Controller.extend(
+    ControllerMixin, 
+    LoginMixin, {
 	queryParams: ['token', "product", "deepLinkingKey", "chapterId", "classId", "studentId", "viewMode", "templateId"],
 
     /**
@@ -57,7 +65,7 @@ SakuraiWebapp.LoginSsoController = Ember.Controller.extend(SakuraiWebapp.Control
      * @property {bool}
      */
     isStudentView: Ember.computed('viewMode', function(){
-        return this.get("viewMode") == "student";
+        return this.get("viewMode") === "student";
     }),
 
     /**
@@ -75,7 +83,7 @@ SakuraiWebapp.LoginSsoController = Ember.Controller.extend(SakuraiWebapp.Control
             student : data.student
         };
 
-        var helper = SakuraiWebapp.DeepLinkingHelper.create({});
+        var helper = DeepLinkingHelper.create({});
         var deepLinkingKey = controller.get("deepLinkingKey");
         var route = helper.getRoute(deepLinkingKey, params);
         if (route) {
@@ -93,7 +101,7 @@ SakuraiWebapp.LoginSsoController = Ember.Controller.extend(SakuraiWebapp.Control
      */
     afterAuthenticateStudentView: function(classes){
         var controller = this;
-        var context = SakuraiWebapp.context;
+        var context = context;
         var authenticationManager = context.get('authenticationManager');
 
         var classId = authenticationManager.getClassFromStorage();

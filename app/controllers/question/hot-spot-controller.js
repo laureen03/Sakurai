@@ -1,6 +1,11 @@
-SakuraiWebapp.QuestionHotSpotController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.QuestionMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import QuestionMixin from 'utils/question';
+
+export default Controller.extend(
+    ControllerMixin,
+    QuestionMixin,{
     
     //isFullQuestion: false,
     x_pos: -1,
@@ -13,7 +18,7 @@ SakuraiWebapp.QuestionHotSpotController = Ember.Controller.extend(
 
     hotspotQuestionText: Ember.computed("model.questionText", function(){    
     	//Get image size real and proportional
-    	that.get('controller').getSizeofImage();
+    	this.getSizeofImage();
 
     	return this.get("model.questionText");
     }),

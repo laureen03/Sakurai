@@ -1,5 +1,14 @@
-SakuraiWebapp.InstructorPartialHmcdMisconceptionsController = Ember.Controller.extend(SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import RemediationLinkView from 'models/remediation-linl-view';
+import Question from 'models/question';
+import context from 'utils/context-utils';
+
+export default Controller.extend(
+    ControllerMixin,
+    FeatureMixin, {
 
     instructorHmcd: Ember.inject.controller(),
 
@@ -33,14 +42,14 @@ SakuraiWebapp.InstructorPartialHmcdMisconceptionsController = Ember.Controller.e
      * Refreshes the misconception data, this shouldn't be necessary using the
      * unbound block helper which is not yet implemented by ember
      * Check PUSAK-1041
-     * @see SakuraiWebapp.InstructorPartialHmcdStudentUsageController#showRemediationLinkViews
+     * @see InstructorPartialHmcdStudentUsageController#showRemediationLinkViews
      */
     refreshMisconceptions: function(){
         var controller = this;
         var store = controller.store;
         var classId = controller.get("class.id");
         var productId = controller.get("class.product.id");
-        SakuraiWebapp.Question.getClassMisconceptions(store, classId, productId)
+        Question.getClassMisconceptions(store, classId, productId)
             .then(function(questions){
                 controller.set("classMisconceptions", questions);
             });
@@ -55,12 +64,12 @@ SakuraiWebapp.InstructorPartialHmcdMisconceptionsController = Ember.Controller.e
             the class using this mixin should have a property 'canIncRemediationLinkView'
             indicating if it can inc the remediation link view
          */
-        if (!this.get("canIncRemediationLinkView")) return;
+        if (!this.get("canIncRemediationLinkView")) {return;}
 
         var store = this.store;
-        var authenticationManager = SakuraiWebapp.context.get("authenticationManager");
+        var authenticationManager = context.get("authenticationManager");
         var userId = authenticationManager.getCurrentUserId();
-        SakuraiWebapp.RemediationLinkView.incRemediationLinkViews(store, remediationLink.get("id"), userId);
+        RemediationLinkView.incRemediationLinkViews(store, remediationLink.get("id"), userId);
     },
 
     actions: {

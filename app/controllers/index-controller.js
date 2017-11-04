@@ -1,4 +1,13 @@
-SakuraiWebapp.IndexController = Ember.Controller.extend(SakuraiWebapp.ControllerMixin, SakuraiWebapp.LoginMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import LoginMixin from 'mixins/login';
+import context from 'utils/context-utils';
+
+export default Controller.extend(
+    ControllerMixin, 
+    LoginMixin,{
+
 	/* V A R */
     header: Ember.inject.controller(),
 
@@ -28,7 +37,6 @@ SakuraiWebapp.IndexController = Ember.Controller.extend(SakuraiWebapp.Controller
 	_authenticate: function(){
 		var controller = this;
 		var store = controller.store;
-		var context = SakuraiWebapp.context;
 		var authenticationManager = context.get('authenticationManager');
 
 		var publisherName = controller.get("publisherName");
@@ -45,7 +53,7 @@ SakuraiWebapp.IndexController = Ember.Controller.extend(SakuraiWebapp.Controller
 			else{
 				controller.set("errorLogin", true);
 			}
-		},function(reason) {
+		},function() {
 			controller.set("errorLogin", true);
 		});
 	},

@@ -1,9 +1,14 @@
-SakuraiWebapp.QuestionChoiceController = Ember.Controller.extend(
-  SakuraiWebapp.ControllerMixin,
-  SakuraiWebapp.QuestionMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import QuestionMixin from 'utils/question';
+
+export default Controller.extend(
+  ControllerMixin,
+  QuestionMixin,{
 
     isMultiple: Ember.computed('model', function(){
-      if ((this.get("model.interactions")) && (this.get("model.interactions").get('firstObject').maxChoices == 1) && (this.get("model.interactions").get('firstObject').maxChoices == 1)){
+      if ((this.get("model.interactions")) && (this.get("model.interactions").get('firstObject').maxChoices === 1) && (this.get("model.interactions").get('firstObject').maxChoices === 1)){
         $('.question-container input[name=singleq-radio]').prop('checked', false);
         return false;
       }
@@ -27,7 +32,7 @@ SakuraiWebapp.QuestionChoiceController = Ember.Controller.extend(
           $('.question-container input:checked').each(function() {
   		      answer.push($(this).data('id'));
   		    });
-  		    if (answer.length != 0){
+  		    if (answer.length !== 0){
             controller.get("quizzer").saveResult(answer);
             controller.set("isDisable", true);
           }
@@ -37,7 +42,7 @@ SakuraiWebapp.QuestionChoiceController = Ember.Controller.extend(
         }else{
           var selectedItem = $('.question-container input[name=singleq-radio]:checked');
         
-          if (selectedItem.length != 0){
+          if (selectedItem.length !== 0){
               answer.push(selectedItem.data('id'));
               controller.get("quizzer").saveResult(answer);
               controller.set("isDisable", true);

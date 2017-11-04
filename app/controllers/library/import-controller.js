@@ -1,8 +1,15 @@
 //noinspection CommaExpressionJS
-SakuraiWebapp.LibraryImportController = Ember.Controller.extend(
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import QuestionPartialMixin from 'mixins/question-partial';
+import QuestionSet from 'models/question-set';
+import context from 'utils/context-utils';
+
+export default Controller.extend(
     Ember.Evented,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.QuestionPartialMixin, {
+    ControllerMixin,
+    QuestionPartialMixin, {
 
     headerClasses: Ember.inject.controller(),
     library: Ember.inject.controller(),
@@ -121,11 +128,11 @@ SakuraiWebapp.LibraryImportController = Ember.Controller.extend(
         if ($("#edit-qc").valid()) {
             var questionSet = controller.get("sourceQuestionSet.questionSet");
             var name = controller.get("questionSetName");
-            SakuraiWebapp.QuestionSet.fetch(questionSet)
+            QuestionSet.fetch(questionSet)
                 .then(function(questionSet){
                     questionSet.set("mode", "info");
                     questionSet.set("name", name);
-                    questionSet.save().then(function(questionSet){
+                    questionSet.save().then(function(){
                         controller.set("questionSetEditMode", false);
                     });
             });
@@ -149,7 +156,7 @@ SakuraiWebapp.LibraryImportController = Ember.Controller.extend(
         },
 
         searchByInstructor: function(){
-            var authenticationManager = SakuraiWebapp.context.get("authenticationManager");
+            var authenticationManager = context.get("authenticationManager");
             var userId = authenticationManager.getCurrentUserId();
             var paramName = authenticationManager.getCurrentUser().get("isAdmin")? "authorIds" : "instructorId";
             this.transitionToRoute("/instructor/library/results/" + this.get("class.id") + "?" + paramName + "=" + userId);
@@ -182,7 +189,7 @@ SakuraiWebapp.LibraryImportController = Ember.Controller.extend(
                 question;
 
             question = questions.find( function(question) {
-                return question.get('id') == id;
+                return question.get('id') === id;
             });
             questions.removeObject(question);
         },
@@ -192,7 +199,7 @@ SakuraiWebapp.LibraryImportController = Ember.Controller.extend(
             var self = this,
                 targetQuestionSet = this.get('targetQuestionSet.questionSet');
 
-            Em.RSVP.hash({
+            Ember.RSVP.hash({
                 product: targetQuestionSet.get('product'),
                 user: targetQuestionSet.get('user'),
                 questions: targetQuestionSet.get('questions')
@@ -207,7 +214,7 @@ SakuraiWebapp.LibraryImportController = Ember.Controller.extend(
                 }).filter( function(question) {
 
                     // Filter out questions that already exist in the target
-                    return targetQuestions.indexOf(question) == -1;
+                    return targetQuestions.indexOf(question) === -1;
 
                 });
 

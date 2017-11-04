@@ -1,7 +1,14 @@
-SakuraiWebapp.InstructorCopyAssignmentsController = Ember.Controller.extend(
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import DateUtil from 'utils/date-util';
+import Assignment from 'models/assignment';
+
+export default Controller.extend(
     Ember.Evented,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,{
+    ControllerMixin,
+    FeatureMixin,{
     queryParams: ['assignmentIds'],
     headerClasses: Ember.inject.controller(),
     instructor: Ember.inject.controller(),
@@ -13,12 +20,12 @@ SakuraiWebapp.InstructorCopyAssignmentsController = Ember.Controller.extend(
     assignmentIds: null,
 
     /**
-     * @property {SakuraiWebapp.Class} the class
+     * @property {Class} the class
      */
     class: null,
 
     /**
-     * @property {SakuraiWebapp.Product} the product
+     * @property {Product} the product
      */
     product: null,
     
@@ -84,7 +91,7 @@ SakuraiWebapp.InstructorCopyAssignmentsController = Ember.Controller.extend(
             var promise = record.get('classes');
             promise.then(function(classes){
                 classes.clear();
-                selectClass.forEach(function (clazz, index) {
+                selectClass.forEach(function (clazz) {
                     classes.pushObject(clazz);
                 });
             });
@@ -93,7 +100,7 @@ SakuraiWebapp.InstructorCopyAssignmentsController = Ember.Controller.extend(
 
     /**
      *
-     * @property {SakuraiWebapp.Class[]} My active classes for the current product
+     * @property {Class[]} My active classes for the current product
      */
     myClasses: Ember.computed('class.product.id', function(){
         var clazz = this.get('class');
@@ -125,7 +132,7 @@ SakuraiWebapp.InstructorCopyAssignmentsController = Ember.Controller.extend(
     * Available list of hours
     **/
     timeList: Ember.computed(function(){
-        return SakuraiWebapp.Assignment.availableHoursList()
+        return Assignment.availableHoursList();
     }),
 
     /**
@@ -144,10 +151,10 @@ SakuraiWebapp.InstructorCopyAssignmentsController = Ember.Controller.extend(
         var copyAssignments = [];
         var controller = this,
             store = controller.store;
-        controller.set('timezones', SakuraiWebapp.DateUtil.getTimeZones());
+        controller.set('timezones', DateUtil.getTimeZones());
         //init dates
-        var dateUtil = SakuraiWebapp.DateUtil.create({});
-        var timeZone = SakuraiWebapp.DateUtil.getLocalTimeZone();
+        var dateUtil = DateUtil.create({});
+        var timeZone = DateUtil.getLocalTimeZone();
         var availableDate = new Date();
         var dueDate = new Date();
         dueDate.setDate(availableDate.getDate()+7);
@@ -162,7 +169,7 @@ SakuraiWebapp.InstructorCopyAssignmentsController = Ember.Controller.extend(
                             });
         assignmentIds.forEach(function(assignmentId){
             var assignment = assignments.findBy("id", assignmentId);
-            var copyAssignment = SakuraiWebapp.Assignment.copyAssignmentRecord(store, assignment);
+            var copyAssignment = Assignment.copyAssignmentRecord(store, assignment);
             copyAssignment.set("timeZone", timeZone);
             copyAssignments.pushObject(copyAssignment);
         });
@@ -179,7 +186,7 @@ SakuraiWebapp.InstructorCopyAssignmentsController = Ember.Controller.extend(
                 promises.push(record.save());
             });
 
-            Ember.RSVP.all(promises).then( function(promises_resolved) {
+            Ember.RSVP.all(promises).then( function() {
                 Ember.Logger.debug(controller.toString() + ': all records were successfully copied');
                 // Make sure all async side-effects are run before resolving the promise
                 Ember.run(null, resolve);
@@ -211,7 +218,7 @@ SakuraiWebapp.InstructorCopyAssignmentsController = Ember.Controller.extend(
                 var datesOk = false;
                 copyAssignments.forEach(function(assignment){
                     var customDataByClass = [],
-                        dateUtil = SakuraiWebapp.DateUtil.create({}),
+                        dateUtil = DateUtil.create({}),
                         timeZone = assignment.get("timeZone"),
                         startDate = $('#datesAssignment'+assignment.get("parentAssignment").get("id")+' .startDate').val(),
                         dueDate = $('#datesAssignment'+assignment.get("parentAssignment").get("id")+' .dueDate').val(),

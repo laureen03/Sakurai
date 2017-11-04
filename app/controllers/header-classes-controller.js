@@ -1,4 +1,11 @@
-SakuraiWebapp.HeaderClassesController = Ember.Controller.extend(SakuraiWebapp.ControllerMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import context from 'utils/context-utils';
+
+export default Controller.extend(
+    ControllerMixin, {
+
     instructor: Ember.inject.controller(),
     student: Ember.inject.controller(),
     /**
@@ -18,7 +25,7 @@ SakuraiWebapp.HeaderClassesController = Ember.Controller.extend(SakuraiWebapp.Co
         var instructorClasses = this.get("instructorClasses");
         var studentClasses = this.get("studentClasses");
 
-        if (!this.get("user")) return Ember.A();
+        if (!this.get("user")){ return Ember.A();}
 
         return (this.get("user").get("isInstructor")) ? instructorClasses : studentClasses;
     }),
@@ -84,14 +91,13 @@ SakuraiWebapp.HeaderClassesController = Ember.Controller.extend(SakuraiWebapp.Co
             }
         },
         logout: function () {
-            var context = SakuraiWebapp.context;
             var authenticationManager = context.get('authenticationManager');
             authenticationManager.reset();
             this.transitionToRoute("index");
 
             // Karma does not support full page reload in its tests so we avoid
             // reloading the document if we're in the testing environment
-            if (!SakuraiWebapp.context.isEnvironment('test')) {
+            if (!context.isEnvironment('test')) {
                 // Reload the document to reset the app instead of doing app.reset()
                 // Faster and less prone to errors, per:
                 // http://discuss.emberjs.com/t/is-application-reset-the-recommended-way-to-clear-caches-of-private-data-on-logout/5642/3

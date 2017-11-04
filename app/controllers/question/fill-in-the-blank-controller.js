@@ -1,6 +1,12 @@
-SakuraiWebapp.QuestionFillInTheBlankController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.QuestionMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import QuestionMixin from 'utils/question';
+import Question from 'models/question';
+
+export default Controller.extend(
+    ControllerMixin,
+    QuestionMixin,{
     quizQuizzer: Ember.inject.controller(),
   	answer: null,
 
@@ -10,7 +16,7 @@ SakuraiWebapp.QuestionFillInTheBlankController = Ember.Controller.extend(
         controller.set('answer', null);
         controller.set("isDisable", false);
 
-        if ($.inArray(SakuraiWebapp.Question.TOOLS.CALCULATOR, controller.get('model.interactions').objectAt(0).tools) >= 0) {
+        if ($.inArray(Question.TOOLS.CALCULATOR, controller.get('model.interactions').objectAt(0).tools) >= 0) {
             // Make sure the calculator is set to 0
             $('.question-answer .calculator').calculator('option', 'value', 0);
 

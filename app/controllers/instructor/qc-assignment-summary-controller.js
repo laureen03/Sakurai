@@ -1,8 +1,16 @@
-SakuraiWebapp.InstructorQcAssignmentSummaryController = Ember.Controller.extend(
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import QuestionPartialMixin from 'mixins/question-partial';
+import SortableHelper from 'utils/sortable';
+
+
+export default Controller.extend(
     Ember.Evented,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,
-    SakuraiWebapp.QuestionPartialMixin,
+    ControllerMixin,
+    FeatureMixin,
+    QuestionPartialMixin,
     {
 
     /**
@@ -53,7 +61,7 @@ SakuraiWebapp.InstructorQcAssignmentSummaryController = Ember.Controller.extend(
 
     controllerSetup: function(){
         this.set("studentResultsSortable",
-            SakuraiWebapp.SortableHelper.create({ sort: "user.fullName", direction:true }));
+            SortableHelper.create({ sort: "user.fullName", direction:true }));
     }.on('init'),
 
     resetValues: function(){
@@ -86,8 +94,9 @@ SakuraiWebapp.InstructorQcAssignmentSummaryController = Ember.Controller.extend(
      */
     updateMetadata: function(metadata){
         var controller = this;
-        if (metadata.pagination.totalResults)
+        if (metadata.pagination.totalResults){
             controller.set('totalResults', metadata.pagination.totalResults);
+        }
         controller.set('currentPage', parseInt(metadata.pagination.currentPage));
         controller.set('criteria', metadata.criteria);
     },

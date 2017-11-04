@@ -1,4 +1,14 @@
-SakuraiWebapp.InstructorAddEditClassController = Ember.Controller.extend(Ember.Evented, SakuraiWebapp.ControllerMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import DateUtil from 'utils/date-util';
+import Class from 'models/class';
+import context from 'utils/context-utils';
+
+export default Controller.extend(
+    Ember.Evented, 
+    ControllerMixin, {
+
     instructor: Ember.inject.controller(),
 
     isClassCreate: false,
@@ -40,7 +50,7 @@ SakuraiWebapp.InstructorAddEditClassController = Ember.Controller.extend(Ember.E
         this.set("currentClass", newClass);
         this.set("editMode", false);
         this.set("isClassCreate", false);
-        this.set("schoolId",null)
+        this.set("schoolId",null);
     },
 
     setClass: function(clazz){
@@ -54,7 +64,7 @@ SakuraiWebapp.InstructorAddEditClassController = Ember.Controller.extend(Ember.E
         controller.set("isClassCreate", false);
         controller.set("changeActive", false);
 
-        var dateUtil = new SakuraiWebapp.DateUtil();
+        var dateUtil = new DateUtil();
         controller.set("startDate", dateUtil.format(clazz.get("startDate"), dateUtil.shortDateFormat));
         controller.set("endDate", dateUtil.format(clazz.get("endDate"), dateUtil.shortDateFormat));
 
@@ -62,7 +72,7 @@ SakuraiWebapp.InstructorAddEditClassController = Ember.Controller.extend(Ember.E
     },
 
     searchSchools: function(searchTerm){
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+        var authenticationManager = context.get('authenticationManager');
         var publisher = authenticationManager.getCurrentPublisher();
         var store = this.store;
         return store.query("school", {publisherId: publisher.get("id"), search: searchTerm});
@@ -71,7 +81,7 @@ SakuraiWebapp.InstructorAddEditClassController = Ember.Controller.extend(Ember.E
     actions:{
         createClass: function (data) {
             var controller = this;
-            var dateUtil = new SakuraiWebapp.DateUtil();
+            var dateUtil = new DateUtil();
             var clazz = controller.get("currentClass");
 
             clazz.set("startDate", dateUtil.parse(controller.get("startDate"), dateUtil.shortDateFormat));
@@ -79,10 +89,10 @@ SakuraiWebapp.InstructorAddEditClassController = Ember.Controller.extend(Ember.E
 
             if ($("#add-edit-class").valid()) {
                 var store = this.store;
-                var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+                var authenticationManager = context.get('authenticationManager');
                 var user = authenticationManager.getCurrentUser();
                 clazz.set("name", controller.get("className"));
-                var record = SakuraiWebapp.Class.createClassRecord(store, {
+                var record = Class.createClassRecord(store, {
                     class: clazz,
                     productId: controller.get("productId"),
                     schoolId: controller.get("schoolId"),

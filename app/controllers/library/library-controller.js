@@ -1,6 +1,12 @@
-SakuraiWebapp.LibraryController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import Question from 'models/question';
+
+export default Controller.extend(
+    ControllerMixin,
+    FeatureMixin,{
         
     //Reference to another controller
     instructor: Ember.inject.controller(),
@@ -90,8 +96,8 @@ SakuraiWebapp.LibraryController = Ember.Controller.extend(
         var difficultyRangeLevels = this.get('product').get('difficultyRangeLevels');
         var ranges = [];
         for (var i = 0; i < difficultyRangeLevels.length - 1; i++) {
-            ranges.pushObject(Ember.Object.create({keyCode: (i == 0 ? difficultyRangeLevels[i] : difficultyRangeLevels[i] + 1) + '|' + difficultyRangeLevels[i + 1],
-                                                   display: (i == 0 ? difficultyRangeLevels[i] : difficultyRangeLevels[i] + 1) + ' - ' + difficultyRangeLevels[i + 1]}));
+            ranges.pushObject(Ember.Object.create({keyCode: (i === 0 ? difficultyRangeLevels[i] : difficultyRangeLevels[i] + 1) + '|' + difficultyRangeLevels[i + 1],
+                                                   display: (i === 0 ? difficultyRangeLevels[i] : difficultyRangeLevels[i] + 1) + ' - ' + difficultyRangeLevels[i + 1]}));
         }
         return ranges;
     }),
@@ -111,20 +117,21 @@ SakuraiWebapp.LibraryController = Ember.Controller.extend(
      * @property {question Status} List of question Status
      */
     questionStatusList: Ember.computed(function(){
-        return SakuraiWebapp.Question.questionStatuses();
+        return Question.questionStatuses();
     }),
 
     /**
      * @property to show chapter or Nursing Topics
      */
     filterChapterTitle: Ember.computed('product', function(){
-        var settings = this.get("product.settings");
         var chapterTerminology = this.get('terminologyTermPlural');
         var defaultTerminology = I18n.t('chapters', { count: 2 });
-        if (chapterTerminology)
+        if (chapterTerminology){
             return chapterTerminology;
-        else
+        }
+        else{
             return defaultTerminology;
+        }
     }),
 
     /**

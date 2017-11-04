@@ -54,9 +54,18 @@ SakuraiWebapp.FilterObject = Ember.Object.extend({
     }
 });
 
-SakuraiWebapp.LibraryDataTypeFiltersController = Ember.Controller.extend(Ember.Evented,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import Product from 'models/product';
+import Section from 'models/section';
+import TermTaxonomy from 'models/term-taxonomy';
+
+export default Controller.extend(
+    Ember.Evented,
+    ControllerMixin,
+    FeatureMixin,{
     library: Ember.inject.controller(),
     headerClasses: Ember.inject.controller(),
 
@@ -148,19 +157,19 @@ SakuraiWebapp.LibraryDataTypeFiltersController = Ember.Controller.extend(Ember.E
         var type = controller.get('selectedTermTaxonomy') || controller.get("defaultDataType");
         var product = controller.get("class").get("product");
 
-        if (type && type != SakuraiWebapp.Section.NURSING_TOPICS){
+        if (type && type !== Section.NURSING_TOPICS){
             var list = controller.get("allTermTaxonomies");
             //Check if taxonomy tag exist
             if (this.validateTaxonomyTagConcepts(type)) {
                 list = controller.get("termTaxonomiesConcepts");
-                var filterTag = SakuraiWebapp.TermTaxonomy.filterByType(list, type);
-                controller.set("termTaxonomies", SakuraiWebapp.TermTaxonomy.convertTaxonomyTagToTree(filterTag, type));
+                var filterTag = TermTaxonomy.filterByType(list, type);
+                controller.set("termTaxonomies", TermTaxonomy.convertTaxonomyTagToTree(filterTag, type));
             } else {
-                var filter = SakuraiWebapp.TermTaxonomy.filterByType(list, type);
-                controller.set("termTaxonomies", SakuraiWebapp.TermTaxonomy.convertToTree(filter, type));
+                var filter = TermTaxonomy.filterByType(list, type);
+                controller.set("termTaxonomies", TermTaxonomy.convertToTree(filter, type));
             }
             controller.set("termTaxonomyActive", true);
-            controller.set("textTaxonomies", SakuraiWebapp.Product.termTaxonomyAllowedByKey(product, type).label);
+            controller.set("textTaxonomies", Product.termTaxonomyAllowedByKey(product, type).label);
         }
         else{
             controller.set("textTaxonomies", this.get('terminologyTermPlural'));

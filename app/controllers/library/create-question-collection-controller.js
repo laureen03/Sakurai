@@ -1,6 +1,12 @@
-SakuraiWebapp.LibraryCreateQuestionCollectionController = Ember.Controller.extend(
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import QuestionSet from 'models/question-set';
+import context from 'utils/context-utils';
+
+export default Controller.extend(
     Ember.Evented,
-    SakuraiWebapp.ControllerMixin, {
+    ControllerMixin, {
 
 	//Reference another contoller
 	library: Ember.inject.controller(),
@@ -24,8 +30,9 @@ SakuraiWebapp.LibraryCreateQuestionCollectionController = Ember.Controller.exten
 
 	setQCName: Ember.observer('questionSet', function(){
 		var questionSet = this.get("questionSet");
-		if (questionSet != null)
+		if (questionSet != null){
 			this.set("qcName", questionSet.get("name") + " copy");
+		}
 
 	}),
 
@@ -72,7 +79,7 @@ SakuraiWebapp.LibraryCreateQuestionCollectionController = Ember.Controller.exten
                 $('#add-qc').bind("keypress", function(e) {
                   var KEYCODE = ( document.all ? window.event.keyCode : e.which) ;
                     self.set("invalidQCName", false);
-                  if (KEYCODE == 13) {
+                  if (KEYCODE === 13) {
                     e.preventDefault();
                     e.stopPropagation();
                   }
@@ -102,7 +109,7 @@ SakuraiWebapp.LibraryCreateQuestionCollectionController = Ember.Controller.exten
 	createNewQC: function(data){
 		var controller = this;
 		var store = this.store;
-		var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+		var authenticationManager = context.get('authenticationManager');
 		var user = authenticationManager.getCurrentUser();
 		var question = controller.get("question");
 		user.then(function(user){
@@ -134,7 +141,7 @@ SakuraiWebapp.LibraryCreateQuestionCollectionController = Ember.Controller.exten
 			$('#createql-mdl').modal('hide');
 			controller.resetValues();
 			//Have a question
-			if (qcCreated.get("totalQuestions") == 1){
+			if (qcCreated.get("totalQuestions") === 1){
 				toastr.success(I18n.t('questionLibrary.messages.success') + ' ' + qcCreated.get("name"));
 			}
 		});
@@ -150,8 +157,7 @@ SakuraiWebapp.LibraryCreateQuestionCollectionController = Ember.Controller.exten
 		var store = this.store;
 		if ($("#add-qc").valid() && controller.isQCNameValid(controller.get("qcName"))) {
 			var questionSet = controller.get("questionSet");
-			var name = controller.get("questionSetName");
-			SakuraiWebapp.QuestionSet.fetch(questionSet)
+			QuestionSet.fetch(questionSet)
 				.then(function(questionSet){
 					var newQC = store.createRecord("questionSet",{
 						name: controller.get("qcName"),
@@ -178,7 +184,7 @@ SakuraiWebapp.LibraryCreateQuestionCollectionController = Ember.Controller.exten
 		var questionSetList = controller.get('library').get('questionSets');
 		for (var i = 0; i < questionSetList.content.length; i++) {
             var qcName = questionSetList.content[i]._data.name;
-			if (name.toLowerCase().trim() === qcName.toLowerCase().trim() && questionSetList.content[i]._data.enabled && questionSetList.nextObject(i).get("parentOwner").get("id") == undefined) {
+			if (name.toLowerCase().trim() === qcName.toLowerCase().trim() && questionSetList.content[i]._data.enabled && questionSetList.nextObject(i).get("parentOwner").get("id") === undefined) {
 				controller.set("invalidQCName", true);
 				return false;
 			}
@@ -187,7 +193,7 @@ SakuraiWebapp.LibraryCreateQuestionCollectionController = Ember.Controller.exten
 	},
 
 	resolveQuestionSet: function(questionSet, newQC){
-		return new Ember.RSVP.Promise(function(resolve, reject){
+		return new Ember.RSVP.Promise(function(resolve){
 			Ember.RSVP.Promise.all([
 				questionSet.get("product"),
 				questionSet.get("user"),
@@ -208,10 +214,12 @@ SakuraiWebapp.LibraryCreateQuestionCollectionController = Ember.Controller.exten
 		create_qc: function(data){
             var controller = this;
 			if ($("#add-qc").valid() && controller.isQCNameValid(controller.get("qcName"))) {
-				if (this.get("isCopyQc"))
+				if (this.get("isCopyQc")){
 					this.copyQC(data);
-				else
+				}
+				else{
 					this.createNewQC(data);
+				}
 			}
             else{
                 controller.trigger('asyncButton.restore', data.component);

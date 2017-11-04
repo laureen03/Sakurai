@@ -1,8 +1,14 @@
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import DS from 'ember-data';
+import ControllerMixin from 'mixins/controller';
+
 /**
  * Base Instructor Controller for all sub route in the instructor module
  * @type {*}
  */
-SakuraiWebapp.InstructorController = Ember.Controller.extend(SakuraiWebapp.ControllerMixin, {
+export default Controller.extend(
+    ControllerMixin, {
 
     /**
      * It contains the current user classes
@@ -69,17 +75,17 @@ SakuraiWebapp.InstructorController = Ember.Controller.extend(SakuraiWebapp.Contr
     /**
      * Return the classes associated with the ids
      * @param ids
-     * @return {SakuraiWebapp.Class[]} classes found
+     * @return {Class[]} classes found
      */
     getClassesByIds: function(ids){
         var found = Ember.A();
         var classes = this.get("classes");
-        classes.forEach(function(clazz, index){
+        classes.forEach(function(clazz){
             var id = clazz.get("id");
             if ($.inArray(id, ids) >= 0){
                 found.addObject(clazz);
             }
-        })
+        });
         return found;
     },
 
@@ -87,19 +93,19 @@ SakuraiWebapp.InstructorController = Ember.Controller.extend(SakuraiWebapp.Contr
      *
      * Retrieve the active classes by product
      * @param {number} productId
-     * @return {Promise} Full fills SakuraiWebapp.Class[]
+     * @return {Promise} Full fills Class[]
      */
     getActiveClassesByProduct: function(productId) {
         var activeClasses = this.get('activeClasses');
         var promises = activeClasses.map(function (clazz) {
-            return clazz.get("product")
+            return clazz.get("product");
         });
 
         return DS.PromiseArray.create({
             promise :
                 Ember.RSVP.all(promises).then(function(){
                     return activeClasses.filter(function(clazz){
-                        return clazz.get("product").get("id") == productId;
+                        return clazz.get("product").get("id") === productId;
                     });
                 })
         });

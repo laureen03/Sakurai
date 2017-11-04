@@ -1,4 +1,10 @@
-SakuraiWebapp.InstructorCoInstructorController = Ember.Controller.extend(SakuraiWebapp.ControllerMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import Enrollment from 'models/enrollment';
+
+export default Controller.extend(
+    ControllerMixin, {
     headerClasses: Ember.inject.controller(),
     instructor: Ember.inject.controller(),
 
@@ -31,7 +37,7 @@ SakuraiWebapp.InstructorCoInstructorController = Ember.Controller.extend(Sakurai
 
             if (classCode) {
 
-                SakuraiWebapp.Enrollment.createEnrollmentRecord(this.store, {
+                Enrollment.createEnrollmentRecord(this.store, {
                     code : classCode,
                     user : instructorId
                 }).then( function(result){
@@ -44,7 +50,7 @@ SakuraiWebapp.InstructorCoInstructorController = Ember.Controller.extend(Sakurai
                             self.set('classCode','');
                         });
                     }, function(reason){
-                        if (reason.status == 400){
+                        if (reason.status === 400){
                             self.set("errorMessage", I18n.t('coInstructor.error.alreadyExists'));
                             Ember.Logger.warn('Code already exists');
                         } else {

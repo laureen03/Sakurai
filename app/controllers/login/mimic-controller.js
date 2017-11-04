@@ -1,6 +1,11 @@
-SakuraiWebapp.LoginMimicController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.LoginMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import LoginMixin from 'mixins/login';
+
+export default Controller.extend(
+    ControllerMixin,
+    LoginMixin, {
     queryParams: ['refresh_token', 'publisher_name'],
 
     /**
