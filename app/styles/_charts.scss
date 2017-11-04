@@ -1,0 +1,20 @@
+/** mastery level chart */
+.mastery-level-distribution{
+}
+
+/** Overall performance chart */
+.overall-performance{
+  p{
+    text-align: center;
+    font-size: 13px;
+  }
+  .performance-sub-title{
+    font-size: 16px;
+    span{
+      color: $brand-primary;
+      font-weight: 600;
+    }
+  }
+}
+
+

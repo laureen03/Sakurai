@@ -1,0 +1,104 @@
+  .access-area{
+	position: relative;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center top;
+	background-image: url('../images/bg/bg-student-no-pattern.png');
+}
+
+.error{
+	color:red;
+    /*margin-bottom: 20px;*/
+}
+
+input[type="text"],input[type="email"]{
+	margin-bottom: 16px;
+}
+
+.accordion-one{
+	text-decoration: none;
+}
+
+.accordion-one:hover{
+	text-decoration: none;
+}
+
+.panel-group .panel + .panel{
+	border: 0;
+	margin: 0;
+}
+
+.panel{
+	border-radius: 0px;
+}
+
+
+/*-------------------------------------
+ Sign in Images
+---------------------------------------*/
+.get-started {
+    .border-radius.grey-border {
+        padding-top: 45px;
+    }
+
+    .ap-large{
+        background: url('../images/icons/icon-ap-large.png') no-repeat;
+        display: block;
+        height: 52px;
+        margin: 20px auto 10px;
+        width: 86px;
+    }
+
+    .bio-large{
+        background: url('../images/icons/icon-biology-large.png') no-repeat;
+        display: block;
+        height: 72px;
+        margin: 0 auto 10px;
+        width: 54px;
+    }
+
+    .med-large{
+        background: url('../images/icons/icon-nursing-medical-large.png') no-repeat;
+        display: block;
+        height: 57px;
+        margin: 15px auto 10px;
+        width: 57px;
+    }
+
+}
+
+.need-help{
+    .ap-small{
+        background: url('../images/icons/icon-ap.png') no-repeat;
+        display: block;
+        height: 21px;
+        margin: 0 auto;
+        width: 35px;
+    }
+
+    .bio-small{
+        background: url('../images/icons/icon-biology-small.png') no-repeat;
+        display: block;
+        height: 28px;
+        margin: 0 auto;
+        width: 21px;
+    }
+
+    .med-small{
+        background: url('../images/icons/icon-nursing-and-medical.png') no-repeat;
+        display: block;
+        height: 24px;
+        margin: 0 auto 3px;
+        width: 24px;
+    }
+}
+
+
+#login-form{
+  input{
+    margin-bottom: 0px !important;
+  }
+  button[type="submit"]{
+    margin-top: 20px;
+  }
+}

@@ -15,7 +15,6 @@ export default Ember.Mixin.create(
          return Context;
      }),
 
-
     applicationModule: Ember.computed.alias('context.applicationModule'),
 
     /**

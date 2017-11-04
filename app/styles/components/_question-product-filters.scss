@@ -1,0 +1,36 @@
+.question-product-filters{
+  span.filter{
+    margin-left: 8px;
+  }
+  span.filter::after{
+    content: ",";
+  }
+  span.filter:last-child::after{
+      content: "";
+  }
+  .question-product-filters-modal{
+	  .modal-body{
+	  	padding: 0px !important;
+	  }
+
+	  .modal-footer{
+	  	margin-top: 0;
+	  }
+	  .product-filter-table{
+	  	width: 100%;
+	  	thead{
+	  		background-color: $lighter-gray;
+	  		th{ 
+	  			padding: 10px;
+	  		}	
+	  	}
+	  	tbody{
+	  		td{ 
+	  			padding: 7px 10px;
+	  			border: solid 1px $lighter-gray;
+	  		}
+	  	}
+	  }	
+  }
+  
+}
