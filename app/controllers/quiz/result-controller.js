@@ -1,7 +1,16 @@
-SakuraiWebapp.QuizResultController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,
-    SakuraiWebapp.QuestionPartialMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import DS from 'ember-data';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import QuestionPartialMixin from 'mixins/question-partial';
+import Question from 'models/question';
+import Section from 'models/section';
+
+export default Controller.extend(
+    ControllerMixin,
+    FeatureMixin,
+    QuestionPartialMixin,{
 //
     queryParams: ["quizHistory", "isReviewRefresh", "categoryId", "subcategoryId", "chapterId"],
 
@@ -40,7 +49,7 @@ SakuraiWebapp.QuizResultController = Ember.Controller.extend(
     stats: null,
 
     isNotTypeQC: Ember.computed('assignment', function(){
-        return !(this.get('assignment') && this.get('assignment').get('isQuestionCollectionAssignment'))
+        return !(this.get('assignment') && this.get('assignment').get('isQuestionCollectionAssignment'));
     }),
 
     hasTimeLimit: Ember.computed('assignment', function(){
@@ -118,7 +127,7 @@ SakuraiWebapp.QuizResultController = Ember.Controller.extend(
     nursingTaxonomyPerformances: function() {
         var controller = this;
         return DS.PromiseArray.create({
-            promise: new Ember.RSVP.Promise(function (resolve, reject) {
+            promise: new Ember.RSVP.Promise(function (resolve) {
                 controller.get("stats").get("termTaxonomyPerformances").then(function (termTaxonomyPerformances) {
                     var promises = controller.get("stats").get("termTaxonomies");
 
@@ -166,7 +175,7 @@ SakuraiWebapp.QuizResultController = Ember.Controller.extend(
         var controller = this;
         var link;
         return DS.PromiseObject.create({
-            promise: new Ember.RSVP.Promise(function(resolve, reject){
+            promise: new Ember.RSVP.Promise(function(resolve){
                 if (controller.get("isMetadataAllowed") && !controller.get('hasChapters') && controller.get("quiz")){
                     controller.get("stats").get("nursingTaxonomyPerformances")
                         .then(function(performances){
@@ -174,7 +183,7 @@ SakuraiWebapp.QuizResultController = Ember.Controller.extend(
 
                             var termTaxonomy =  ((isNursing) ? I18n.t('haid.nursingConcepts') : I18n.t('haid.clientNeeds'));
                             var title = I18n.t('common.performanceBy')+ ' ' + termTaxonomy;
-                            var link = I18n.t('common.viewPerformance')+ ' ' + termTaxonomy;
+                            link = I18n.t('common.viewPerformance')+ ' ' + termTaxonomy;
                             var whatsthisTitle = "What is " + title + "?";
                             resolve({
                                 title:title,
@@ -184,7 +193,7 @@ SakuraiWebapp.QuizResultController = Ember.Controller.extend(
                         });
 
                 }else{
-                    var link = I18n.t('common.viewPerformance') + ' ' + controller.get("terminologyTermPlural");
+                    link = I18n.t('common.viewPerformance') + ' ' + controller.get("terminologyTermPlural");
                     var title = I18n.t('common.performanceBy') + ' ' + controller.get("terminologyTermSingular");
                     var whatsthisTitle = "What is " + title + "?";
                     resolve({
@@ -199,7 +208,7 @@ SakuraiWebapp.QuizResultController = Ember.Controller.extend(
 
     /**
      * @property {bool} indicates if it can increment the remediation link view
-     * @see SakuraiWebapp.QuestionPartialMixin
+     * @see QuestionPartialMixin
      */
     canIncRemediationLinkView: Ember.computed(function(){
         return true;
@@ -221,7 +230,7 @@ SakuraiWebapp.QuizResultController = Ember.Controller.extend(
             if(!metadata.pagination) {
                 metadata.pagination = {
                     pageSize: 10
-                }
+                };
             }
             var totalResults = metadata.pagination.totalResults ? metadata.pagination.totalResults : 0;
             var totalPages = Math.ceil(totalResults / metadata.pagination.pageSize);
@@ -261,7 +270,7 @@ SakuraiWebapp.QuizResultController = Ember.Controller.extend(
 
     getDefaultValue: function (name, defaultValue) {
         var value = this.get(name);
-        return value ? (value == "undefined" ? defaultValue : value) : defaultValue
+        return value ? (value === "undefined" ? defaultValue : value) : defaultValue;
     },
     /*
         Update Quizzes list with another Criteria
@@ -269,11 +278,11 @@ SakuraiWebapp.QuizResultController = Ember.Controller.extend(
     updateList: function(type, metadata){
         var controller = this,
             store = controller.store;
-        var chapterId = controller.getDefaultValue("currentChapter") != -1 ? controller.getDefaultValue("currentChapter", null) : null;
+        var chapterId = controller.getDefaultValue("currentChapter") !== -1 ? controller.getDefaultValue("currentChapter", null) : null,
             termId = controller.getDefaultValue("currentSubcategory", null);
         var filterId = chapterId ? chapterId : termId;
         //If category is NURSING_TOPICS the filter will go to 'chapterId' otherwise to 'termId'
-        if( controller.get("categoryId") == SakuraiWebapp.Section.NURSING_TOPICS) {
+        if( controller.get("categoryId") === Section.NURSING_TOPICS) {
             chapterId = filterId;
             termId = null;
         } else {
@@ -347,11 +356,13 @@ SakuraiWebapp.QuizResultController = Ember.Controller.extend(
     			controller.set("currentQuestion", value);
     			//Check if is choice if is multiple or single choice
     			value.get("interactions").forEach(function(item) {
-       	       		if (item.type === SakuraiWebapp.Question.CHOICE){
-       	          		if ((item.maxChoices == 1) && (item.maxChoices == 1))
+       	       		if (item.type === Question.CHOICE){
+       	          		if ((item.maxChoices === 1) && (item.maxChoices === 1)){
     				        controller.set("isMultiple", false);
-    				    else
+                        }
+    				    else{
     				        controller.set("isMultiple", true);
+                        }
     				}
     			});
 
@@ -402,7 +413,7 @@ SakuraiWebapp.QuizResultController = Ember.Controller.extend(
         },
 
         toggleQuizzesList: function() {
-            controller = this;
+            var controller = this;
             var assignmentId = controller.get("quizResult").get("assignments").objectAt(0) ? controller.get("quizResult").get("assignments").objectAt(0).get("id") : null;
 
             var quizParams = {
@@ -420,8 +431,7 @@ SakuraiWebapp.QuizResultController = Ember.Controller.extend(
             promise.then(function(quizzes) {
                 controller.set('quizzesML', quizzes);
 
-                if (quizzes.content.get("length")!=0){
-                    var store = controller.store;
+                if (quizzes.content.get("length")!==0){
                     controller.updateMetadata(quizzes.get('meta'), "metadataML");
                     controller.setPagination('ML');
                 }

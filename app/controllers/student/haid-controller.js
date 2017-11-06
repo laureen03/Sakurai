@@ -1,6 +1,13 @@
-SakuraiWebapp.StudentHaidController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import Section from "models/section";
+import TermTaxonomy from "models/term-taxonomy";
+
+export default Controller.extend(
+    ControllerMixin,
+    FeatureMixin,{
     headerClasses: Ember.inject.controller(),
     queryParams: ['studentId'],
 
@@ -87,7 +94,8 @@ SakuraiWebapp.StudentHaidController = Ember.Controller.extend(
      * {bool} Indicates if the ccm view student roster is enabled
      */
     ccmViewStudentRosterEnabled: Ember.computed('isCCMAllowed', function(){
-        var context = SakuraiWebapp.context;
+        var context = 
+        context;
         var manager = context.get("authenticationManager");
         return this.get("isCCMAllowed") && !manager.get("deepLinking");
     }),
@@ -105,7 +113,8 @@ SakuraiWebapp.StudentHaidController = Ember.Controller.extend(
      * {bool} Indicates if the go back button is enabled
      */
     ccmGoBackEnabled: Ember.computed(function(){
-        var context = SakuraiWebapp.context;
+        var context = 
+        context;
         var manager = context.get("authenticationManager");
 
         return !manager.get("deepLinking");
@@ -150,32 +159,39 @@ SakuraiWebapp.StudentHaidController = Ember.Controller.extend(
 
         preSelect:function(id, type){
             var controller = this;
-            if (this.get("isMetadataAllowed"))
-                if (type != SakuraiWebapp.Section.NURSING_TOPICS)
+            if (this.get("isMetadataAllowed")){
+                if (type !== Section.NURSING_TOPICS){
                     controller.transitionToRoute("/student/metadata/" + controller.get("class").get("id") + "?type="+type+"&ms=" + id);
-                else
+                }
+                else{
                     controller.transitionToRoute("/student/section/" + controller.get("class").get("id") + "?type="+type+"&cs=" + id);
-            else
+                }
+            }
+            else{
                 controller.transitionToRoute("/student/section/" + controller.get("class").get("id") + "?cs=" + id);
+            }
         },
 
         selectWeakest: function(type){
             var controller = this;
             if (this.get("isMetadataAllowed")){
-                if (type == SakuraiWebapp.Section.NURSING_TOPICS)
+                if (type ===  Section.NURSING_TOPICS){
                      controller.goToSectionWeaknest(); //By Nursing Topics
-                else if (type == SakuraiWebapp.TermTaxonomy.CLIENT_NEEDS)
+                } else if (type === TermTaxonomy.CLIENT_NEEDS){
                     controller.goToMetadataWeaknest("clientNeedsWeaknesses", type); //By Client Needs
-                else
+                }
+                else{
                     controller.goToMetadataWeaknest("nursingConceptsWeaknesses", type); //By Nursing Concepts
+                }
             }
-            else
+            else{
                 controller.goToSectionWeaknest(); //By Chapter
+            }
         },
 
         openModalWhatisThis: function(modalId, labelTitle){
             var controller = this;
-            this.set("whatIsThisPerformanceTitle", I18n.t("haid.titlePerformanceModalCustom") + labelTitle + "?")
+            controller.set("whatIsThisPerformanceTitle", I18n.t("haid.titlePerformanceModalCustom") + labelTitle + "?");
             $('#'+modalId).modal("show");
         }
     }

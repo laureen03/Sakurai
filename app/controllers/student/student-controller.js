@@ -2,7 +2,12 @@
  * Base Student Controller for all sub route in the student module
  * @type {*}
  */
-SakuraiWebapp.StudentController = Ember.Controller.extend(SakuraiWebapp.ControllerMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+
+export default Controller.extend(
+    ControllerMixin, {
 
     /**
      * It contains the current student active classes
@@ -27,7 +32,7 @@ SakuraiWebapp.StudentController = Ember.Controller.extend(SakuraiWebapp.Controll
         for (var i=0; i < classes.get("length"); i++){
             var currentClass = classes.nextObject(i);
             if (currentClass && currentClass.get("internal")) {
-                if (currentClass.get("product").get("id") == productId){
+                if (currentClass.get("product").get("id") === productId){
                     classes.removeAt(i, 1);
                 }
                 

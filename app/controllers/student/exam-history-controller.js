@@ -1,9 +1,15 @@
-SakuraiWebapp.StudentExamHistoryController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import SortableHelper from 'utils/sortable';
+
+export default Controller.extend(
+    ControllerMixin,
+    FeatureMixin, {
     headerClasses: Ember.inject.controller(),
     /**
-     * @property {SakuraiWebapp.Class} the class
+     * @property {Class} the class
      */
     class: null,
 
@@ -14,7 +20,7 @@ SakuraiWebapp.StudentExamHistoryController = Ember.Controller.extend(
 
     controllerSetup: function(){
         this.set("examHistorySortable",
-            SakuraiWebapp.SortableHelper.create({ sort: "startedOnTimeStamp", direction:false }));
+            SortableHelper.create({ sort: "startedOnTimeStamp", direction:false }));
 
     }.on('init'),
 

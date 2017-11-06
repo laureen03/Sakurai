@@ -1,7 +1,17 @@
-SakuraiWebapp.StudentSectionController = Ember.Controller.extend(
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import ReviewRefreshQuiz from "models/review-refresh-quiz";
+import Section from "models/section";
+import Quiz from "models/quiz";
+import context from 'utils/context-utils';
+
+
+export default Controller.extend(
     Ember.Evented,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,{
+    ControllerMixin,
+    FeatureMixin,{
 
     queryParams: ["cs", "activeRR"],
 
@@ -109,9 +119,8 @@ SakuraiWebapp.StudentSectionController = Ember.Controller.extend(
      */
     updateMetadata: Ember.observer('selectedTermTaxonomy', function(){
         var controller = this;
-        var store = controller.get("store");
         var type = controller.get('selectedTermTaxonomy');
-        if (type != SakuraiWebapp.Section.NURSING_TOPICS){
+        if (type !== Section.NURSING_TOPICS){
             var clazz = this.get("class");
             controller.transitionToRoute("/student/metadata/" + clazz.get('id') + "?type=" + type + "&activeRR=" + controller.get("activeRR"));
         }
@@ -129,7 +138,7 @@ SakuraiWebapp.StudentSectionController = Ember.Controller.extend(
      */
     getSelectedChapters: function () {
         var ids = $("#chapters input[name=chapters]:checked").map(function () {
-            return $(this).val()
+            return $(this).val();
         });
 
         var units = this.get("sections");
@@ -159,9 +168,9 @@ SakuraiWebapp.StudentSectionController = Ember.Controller.extend(
             rules = controller.get("rapidML_rules"),
             isValid = true;
 
-        rules.forEach(function(currentValue,index,arr){
-            if (amountQuestions == currentValue.questions && lengthTopics> currentValue.maxTopics){
-                controller.set("rapidML_message", I18n.t("quiz.failedRapidML", {count:currentValue.maxTopics, amount : currentValue.maxTopics, questions : currentValue.questions}))
+        rules.forEach(function(currentValue){
+            if (amountQuestions === currentValue.questions && lengthTopics> currentValue.maxTopics){
+                controller.set("rapidML_message", I18n.t("quiz.failedRapidML", {count:currentValue.maxTopics, amount : currentValue.maxTopics, questions : currentValue.questions}));
                 $('.chapters-container input[type=checkbox]').prop('checked', false);
                 isValid = false;
             } 
@@ -171,8 +180,9 @@ SakuraiWebapp.StudentSectionController = Ember.Controller.extend(
 
     actions: {
         createQuiz: function (data) {
-            var controller = this;
-            var store = controller.store;
+            var controller = this,
+                store = controller.store,
+                record = null;
             
             controller.set("noChaptersSelectedError", false);
 
@@ -180,18 +190,18 @@ SakuraiWebapp.StudentSectionController = Ember.Controller.extend(
             var validAmountQuestion = controller.validate_rapid_ML(selectedChapters.length, controller.get("numQuestionsSelected"));
 
             if ((selectedChapters.length)> 0 && (validAmountQuestion))  {
-                var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+                var authenticationManager = context.get('authenticationManager');
                 var user = authenticationManager.getCurrentUser();
                 
                 if (controller.get("isReviewRefresh")) {
-                    var record = SakuraiWebapp.ReviewRefreshQuiz.createQuizRecord(store, {
+                    record = ReviewRefreshQuiz.createQuizRecord(store, {
                         quizLength: controller.get("numQuestionsSelected"),
                         chapters: selectedChapters,
                         student: user,
                         class: controller.get('class')
                     });
                 }else{
-                    var record = SakuraiWebapp.Quiz.createQuizRecord(store, {
+                    record = Quiz.createQuizRecord(store, {
                     quizLength: controller.get("numQuestionsSelected"),
                         chapters: selectedChapters,
                         student: user,
@@ -205,23 +215,25 @@ SakuraiWebapp.StudentSectionController = Ember.Controller.extend(
                         if (quiz.get('id')) {
                             controller.trigger('asyncButton.restore', data.component);
                             controller.set("failedMessage", "");
-                            if (!controller.get('isReviewRefresh'))
+                            if (!controller.get('isReviewRefresh')){
                                 controller.transitionToRoute("/quiz/quizzer/" + quiz.get('id') + "/" + controller.get("class.id"));
-                            else
+                            }
+                            else{
                                 controller.transitionToRoute("/quiz/quizzer/" + quiz.get('id') + "/" + controller.get("class.id") + "?isReviewRefresh=true");
+                            }
                         }
                     },function(reason){
                         controller.trigger('asyncButton.restore', data.component);
-                        if ((reason.status == 400) && ($.parseJSON(reason.responseText).errors[0].code=="missing_questions")) {
+                        if ((reason.status === 400) && ($.parseJSON(reason.responseText).errors[0].code==="missing_questions")) {
                             var message = $.parseJSON(reason.responseText).errors[0].info; 
                             var n = message.lastIndexOf(" ");
                             var code = message.substr(n + 1, message.length-1); 
-                            var section = controller.store.find("section", code).then(function(section){
+                            controller.store.find("section", code).then(function(){
                                 controller.set("failedMessage", controller.get("numQuestionsSelected") > 5 ? I18n.t('quiz.failedMessage') : I18n.t('quiz.failedFiveQuestionMessage'));
                                 controller.set("numQuestionsSelected", 5);
                                 $('.questions-desc select').attr('disabled', true);
                                 var ids = $("#chapters input[name=chapters]:checked").map(function () {
-                                    return $(this).val()
+                                    return $(this).val();
                                 });
                                 var ids_str = ids.get().sort().join();
                                 var hasChapters = controller.get("notEnoughQuestions").findBy('ids', ids_str);
@@ -235,10 +247,12 @@ SakuraiWebapp.StudentSectionController = Ember.Controller.extend(
             }
             else{
                 controller.trigger('asyncButton.restore', data.component);
-                if (!validAmountQuestion)
+                if (!validAmountQuestion){
                     $("#rapidMLErrorPopUp").modal("show");
-                else
+                }
+                else{
                     controller.set("noChaptersSelectedError", true);
+                }
             }
         },
 
@@ -252,17 +266,19 @@ SakuraiWebapp.StudentSectionController = Ember.Controller.extend(
                 controller.set("cs", null);
             }
             
-            if (inactiveTopics.length > 0)
+            if (inactiveTopics.length > 0){
                 inactiveTopics.forEach(function(topicId) {
                     $('.item_' + topicId).addClass("disabled");
                 });
-            else
+            }    
+            else{
                 $('.chapters-container .disabled').removeClass("disabled");
+            }
         },
 
         selectChapter: function() {
             var ids = $("#chapters input[name=chapters]:checked").map(function () {
-                return $(this).val()
+                return $(this).val();
             });
             var ids_str = ids.get().sort().join();
             var hasChapters = this.get("notEnoughQuestions").findBy('ids', ids_str);

@@ -1,4 +1,10 @@
-SakuraiWebapp.StudentEnrollController = Ember.Controller.extend(SakuraiWebapp.ControllerMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import Enrollment from 'models/enrollment';
+
+export default Controller.extend(
+    ControllerMixin, {
     headerClasses: Ember.inject.controller(),
     student: Ember.inject.controller(),
 
@@ -42,15 +48,15 @@ SakuraiWebapp.StudentEnrollController = Ember.Controller.extend(SakuraiWebapp.Co
 
     	saveCode:function(){
 
-            var   classCode = this.get('classCode')
-                , studentId = this.get('studentId')
-                , controller = this
-                , store = this.store;
+            var classCode = this.get('classCode'), 
+                studentId = this.get('studentId'),
+                controller = this,
+                store = this.store;
 
 
-            if(classCode != '' && classCode != 'null'){
+            if(classCode !== '' && classCode !== 'null'){
 
-                var record = SakuraiWebapp.Enrollment.createEnrollmentRecord(store, {
+                var record = Enrollment.createEnrollmentRecord(store, {
                     "code":classCode,
                     "user":studentId
                 });
@@ -79,7 +85,7 @@ SakuraiWebapp.StudentEnrollController = Ember.Controller.extend(SakuraiWebapp.Co
                         }
                         controller.set('classCode','');
                     },function(reason){
-                        if (reason.status == 400){
+                        if (reason.status === 400){
                             controller.set("failedMessage", I18n.t('classes.enrollmentAlreadyExists'));
                             Ember.Logger.warn('Code already exists');
                         }else {

@@ -1,6 +1,12 @@
-SakuraiWebapp.StudentClassController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import Enrollment from 'models/enrollment';
+
+export default Controller.extend(
+    ControllerMixin,
+    FeatureMixin, {
     headerClasses: Ember.inject.controller(),
     student: Ember.inject.controller(),
 
@@ -21,7 +27,7 @@ SakuraiWebapp.StudentClassController = Ember.Controller.extend(
 
     hasClasses: Ember.computed('classes.[]', function(){
         var controller =  this;
-        return controller.get("classes").get("length") != 0;
+        return controller.get("classes").get("length") !== 0;
     }),
     
     //Control Success Vars
@@ -53,7 +59,7 @@ SakuraiWebapp.StudentClassController = Ember.Controller.extend(
             var promise =  controller.store.query('product', {userId: studentId, publisherId: publisherId});
             promise.then(function (products) {
                 if (controller.get("sso")){
-                    var context = SakuraiWebapp.context;
+                    var context = context;
                     var authenticationManager = context.get('authenticationManager');
                     var productId = authenticationManager.getCurrentProduct().get("id");
                     products = products.filterBy("id", productId);
@@ -69,14 +75,13 @@ SakuraiWebapp.StudentClassController = Ember.Controller.extend(
             var store = controller.store;
             var user = this.get("user");
             product.get("internalClass").then(function (clazz) {
-                var record = SakuraiWebapp.Enrollment.createEnrollmentRecordSelfStudy(store, {
+                var record = Enrollment.createEnrollmentRecordSelfStudy(store, {
                     "clazz": clazz,
                     "user": user.get("id")
                 });
                 record.then(function(enrollment){
                     var promise = enrollment.save();
                     promise.then(function(result){
-                        var classObj = result.get('class');
                         result.get('class').then(function(_class){
                             controller.get("student").addClass(_class._internalModel);
                         });

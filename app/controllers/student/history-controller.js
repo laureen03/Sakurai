@@ -1,6 +1,12 @@
-SakuraiWebapp.StudentHistoryController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import Section from "models/section";
+
+export default Controller.extend(
+    ControllerMixin,
+    FeatureMixin,{
     queryParams: ["categoryId", "subcategoryId", "chapterId"],
     headerClasses: Ember.inject.controller(),
     instructorManageAssignment: Ember.inject.controller(),
@@ -169,7 +175,7 @@ SakuraiWebapp.StudentHistoryController = Ember.Controller.extend(
      * @property boolean
      */
     showAllQuizzesLink: Ember.computed("currentCategory", "currentSubcategory", "currentChapter", function(){
-        if(this.getDefaultValue("currentChapter") == -1) return false;
+        if(this.getDefaultValue("currentChapter") === -1){ return false; }
         return this.getDefaultValue("currentChapter", false) || this.getDefaultValue("currentSubcategory", false);
     }),
 
@@ -249,7 +255,7 @@ SakuraiWebapp.StudentHistoryController = Ember.Controller.extend(
             if(!metadata.pagination) {
                 metadata.pagination = {
                     pageSize: 10
-                }
+                };
             }
             var totalResults = metadata.pagination.totalResults ? metadata.pagination.totalResults : 0;
             var totalPages = Math.ceil(totalResults / metadata.pagination.pageSize);
@@ -289,7 +295,7 @@ SakuraiWebapp.StudentHistoryController = Ember.Controller.extend(
 
     getDefaultValue: function (name, defaultValue) {
         var value = this.get(name);
-        return value ? (value == "undefined" ? defaultValue : value) : defaultValue
+        return value ? (value === "undefined" ? defaultValue : value) : defaultValue;
     },
     /*
         Update Quizzes list with another Criteria
@@ -297,11 +303,11 @@ SakuraiWebapp.StudentHistoryController = Ember.Controller.extend(
     updateList: function(type, metadata){
         var controller = this,
             store = controller.store;
-        var chapterId = controller.getDefaultValue("currentChapter") != -1 ? controller.getDefaultValue("currentChapter", null) : null;
+        var chapterId = controller.getDefaultValue("currentChapter") !== -1 ? controller.getDefaultValue("currentChapter", null) : null,
             termId = controller.getDefaultValue("currentSubcategory", null);
         var filterId = chapterId ? chapterId : termId;
         //If category is NURSING_TOPICS the filter will go to 'chapterId' otherwise to 'termId'
-        if( controller.get("categoryId") == SakuraiWebapp.Section.NURSING_TOPICS) {
+        if( controller.get("categoryId") === Section.NURSING_TOPICS) {
             chapterId = filterId;
             termId = null;
         } else {

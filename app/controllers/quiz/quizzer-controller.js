@@ -1,4 +1,11 @@
-SakuraiWebapp.QuizQuizzerController = Ember.Controller.extend(SakuraiWebapp.ControllerMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import Question from 'models/question';
+import Result from 'models/result';
+import context from 'utils/context-utils';
+
+export default Controller.extend(ControllerMixin,{ 
 
     queryParams: ['animation', 'isExam', 'isReviewRefresh'],
 
@@ -35,12 +42,12 @@ SakuraiWebapp.QuizQuizzerController = Ember.Controller.extend(SakuraiWebapp.Cont
 
     /**
      * It could be a Quiz or a Exam instance
-     * @property {SakuraiWebapp.Quiz|SakuraiWebapp.Exam} selected quiz
+     * @property {Quiz|Exam} selected quiz
      */
     selectedQuiz: null,
 
     /**
-     * @property {SakuraiWebapp.Question} current question
+     * @property {Question} current question
      */
     currentQuestion: null,
 
@@ -86,17 +93,18 @@ SakuraiWebapp.QuizQuizzerController = Ember.Controller.extend(SakuraiWebapp.Cont
      * Property to show the current Index.
      **/
     index: Ember.computed('questionIndex', function(){
-        if (this.get('questionIndex') == -1) //Never Return 0
+        if (this.get('questionIndex') === -1){ //Never Return 0
             return 1;
-        else
+        }else{
             return this.get('questionIndex') + 1;
+        }
     }),
 
     /**
     Validate if the app is ready to show the Timer
     **/
     showTimer: Ember.computed("selectedQuiz.assignment", "questionLoaded", function(){
-        return (this.get("questionLoaded") && this.get("selectedQuiz.assignment.hasTimeLimit"))
+        return (this.get("questionLoaded") && this.get("selectedQuiz.assignment.hasTimeLimit"));
     }),
 
     /**
@@ -147,7 +155,7 @@ SakuraiWebapp.QuizQuizzerController = Ember.Controller.extend(SakuraiWebapp.Cont
      **/
     wait: function () {
         var controller = this;
-        var environment = SakuraiWebapp.context.get("environment");
+        var environment = context.get("environment");
         var quizzerProps = environment.getProperty("quizzer");
         var animationTimeout = quizzerProps.animationTimeout;
 
@@ -195,7 +203,7 @@ SakuraiWebapp.QuizQuizzerController = Ember.Controller.extend(SakuraiWebapp.Cont
         var controller = this;
         if ((controller.get("selectedQuiz").get("hasAssignment") && controller.get("selectedQuiz").get("assignment").get("hasTimeLimit")) ||
             (controller.get("isExam") && controller.get("selectedQuiz").get("hasTimeLimit"))) {
-            if (metadata.remainingTime != 0){
+            if (metadata.remainingTime !== 0){
                 controller.get("selectedQuiz").set("timeLeft", metadata.remainingTime);
             }else {
                 controller.timeOut();
@@ -211,8 +219,8 @@ SakuraiWebapp.QuizQuizzerController = Ember.Controller.extend(SakuraiWebapp.Cont
         var controller = this,
             interaction,
             quiz = controller.get('selectedQuiz'),
-            isExam = controller.get("isExam") != null,
-            isReviewRefresh = controller.get("isReviewRefresh") != null,
+            isExam = controller.get("isExam") !== null,
+            isReviewRefresh = controller.get("isReviewRefresh") !== null,
             promise, questionTime;
 
         if (isExam) {
@@ -268,16 +276,16 @@ SakuraiWebapp.QuizQuizzerController = Ember.Controller.extend(SakuraiWebapp.Cont
         var controller = this,
             templateName = null;
         switch (questionType) {
-            case SakuraiWebapp.Question.CHOICE:
+            case Question.CHOICE:
                 templateName = 'question-choice';
                 break;
-            case SakuraiWebapp.Question.HOT_SPOT:
+            case Question.HOT_SPOT:
                 templateName = 'question-hot-spot';
                 break;
-            case SakuraiWebapp.Question.FILL_IN_THE_BLANK:
+            case Question.FILL_IN_THE_BLANK:
                 templateName = 'question-fill-in-the-blank';
                 break;
-            case SakuraiWebapp.Question.DRAG_AND_DROP:
+            case Question.DRAG_AND_DROP:
                 templateName = 'question-dragn-drop';
                 break;
         }
@@ -307,18 +315,20 @@ SakuraiWebapp.QuizQuizzerController = Ember.Controller.extend(SakuraiWebapp.Cont
 
     transitionToResults: function(){
         var controller = this;
-        var isExam = controller.get("isExam") != null;
+        var isExam = controller.get("isExam") !== null;
         var quiz = controller.get("selectedQuiz");
-        var environment = SakuraiWebapp.context.get("environment");
+        var environment = context.get("environment");
         var quizzerProps = environment.getProperty("quizzer");
         var animationTimeout = quizzerProps.animationTimeout;
 
         var transitionTo = function(){
             var route = isExam ? "/exam/result/" : "/quiz/result/";
-            if (controller.get("isReviewRefresh"))
+            if (controller.get("isReviewRefresh")){
                 controller.transitionToRoute(route + quiz.get("id") + "/" + controller.get("class.id") + "?isReviewRefresh=true");
-            else
+            }
+            else{
                 controller.transitionToRoute(route + quiz.get("id") + "/" + controller.get("class.id"));
+            }
         };
 
         if (animationTimeout > 0){
@@ -332,10 +342,10 @@ SakuraiWebapp.QuizQuizzerController = Ember.Controller.extend(SakuraiWebapp.Cont
     checkProgressAlert: function(result) {
         var controller = this;
         var quiz = controller.get("selectedQuiz");
-        var lastQuestion = quiz.get('examLength') == quiz.get('questionsCompleted');
+        var lastQuestion = quiz.get('examLength') === quiz.get('questionsCompleted');
         if (!controller.progressAlertDisplayed && !lastQuestion) {
             var minimumPerformanceReached = result.get('minimumPerformanceReached');
-            if(minimumPerformanceReached != null) {
+            if(minimumPerformanceReached !== null) {
                 quiz.set('minimumPerformanceReached', minimumPerformanceReached);
                 $('#progress-alert').modal('show');
                 controller.set('progressAlertDisplayed', true);
@@ -370,8 +380,9 @@ SakuraiWebapp.QuizQuizzerController = Ember.Controller.extend(SakuraiWebapp.Cont
         var clazz = this.get("class");
 
         var errorObject = JSON.parse(error.responseText);
-        if (errorObject.errors[0].code == "past_due_assignment")
+        if (errorObject.errors[0].code === "past_due_assignment"){
             this.transitionToRoute("/student/assignment/" + clazz.get('id') + "/" + assignment.get("id"));
+        }
     },
 
     /**
@@ -403,10 +414,12 @@ SakuraiWebapp.QuizQuizzerController = Ember.Controller.extend(SakuraiWebapp.Cont
         var controller = this;
         this.set("clearTimers", true); //Stop Timers
         if (!controller.get("resultInProgress")){
-            if (controller.get("isExam"))
+            if (controller.get("isExam")){
                 controller.openTimeExpiredModal(); //TimeOut function for exams
-            else
+            }
+            else{
                 controller.redirectToAssignmentDetail(); //TimeOut function for quiz
+            }
         }
     },
 
@@ -423,7 +436,7 @@ SakuraiWebapp.QuizQuizzerController = Ember.Controller.extend(SakuraiWebapp.Cont
     submitExam: function(){
         var controller = this;
         return new Ember.RSVP.Promise(function(resolve, reject){
-            var url = SakuraiWebapp.context.getBaseUrl() + "/exams/submitExam";
+            var url = context.getBaseUrl() + "/exams/submitExam";
             var data = { examId: controller.get("selectedQuiz").get('id') };
             Ember.$.ajax(url, {
                 method: 'GET',
@@ -471,13 +484,13 @@ SakuraiWebapp.QuizQuizzerController = Ember.Controller.extend(SakuraiWebapp.Cont
         saveResult: function (answer) {
             var controller = this;
             var store = this.store;
-            var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+            var authenticationManager = context.get('authenticationManager');
             var user = authenticationManager.getCurrentUser(); //current user
-            var isExam = controller.get("isExam") != null;
+            var isExam = controller.get("isExam") !== null;
             var quiz = controller.get("selectedQuiz");
 
             if (!controller.isAssignmentExpired(quiz)) {
-                var record = SakuraiWebapp.Result.createResultRecord(store, {
+                var record = Result.createResultRecord(store, {
                     correct: true,
                     answer: answer,
                     student: user,
@@ -498,7 +511,7 @@ SakuraiWebapp.QuizQuizzerController = Ember.Controller.extend(SakuraiWebapp.Cont
                                 // Stop the timers so no activity on the page is pending after
                                 controller.set("clearTimers", true);
 
-                                $('#auto-shutoff').on('hidden.bs.modal', function (e) {
+                                $('#auto-shutoff').on('hidden.bs.modal', function () {
                                     // leaving the route
                                     controller.set("questionTemplate", false);
                                     controller.set("analyzingTemplate", true);
@@ -511,9 +524,9 @@ SakuraiWebapp.QuizQuizzerController = Ember.Controller.extend(SakuraiWebapp.Cont
                                 controller.nextStep();
                             }
                         }
-                    }, function(error){controller.checkError(error)});
+                    }, function(error){controller.checkError(error);});
                 },function(reason){
-                    if (reason.status == 400){
+                    if (reason.status === 400){
                         controller.timeOut();
                     }
                 });
@@ -527,8 +540,8 @@ SakuraiWebapp.QuizQuizzerController = Ember.Controller.extend(SakuraiWebapp.Cont
             question.get("interactions").forEach(function (item) {
                 if (item.shuffle) {
                     var answerChoices = item.answerChoices;
-                    var newChoices = SakuraiWebapp.Question.shuffle(answerChoices);
-                    newChoices = SakuraiWebapp.Question.order(newChoices);
+                    var newChoices = Question.shuffle(answerChoices);
+                    newChoices = Question.order(newChoices);
                     answerChoices.setObjects(newChoices); // set objects and fires observables
                 }
             });

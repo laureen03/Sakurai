@@ -1,12 +1,23 @@
-SakuraiWebapp.StudentAssignmentController = Ember.Controller.extend(
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import Section from 'models/section';
+import Exam from 'models/exam';
+import Quiz from 'models/quiz';
+import Product from 'models/product';
+import TermTaxonomy from 'models/term-taxonomy';
+import context from 'utils/context-utils';
+
+export default Controller.extend(
     Ember.Evented,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin, {
+    ControllerMixin,
+    FeatureMixin, {
 
     headerClasses: Ember.inject.controller(),
 
     /**
-     * @property {SakuraiWebapp.Assignment} assignment
+     * @property {Assignment} assignment
      */
     assignment: null,
 
@@ -98,11 +109,11 @@ SakuraiWebapp.StudentAssignmentController = Ember.Controller.extend(
         var product = this.get("class").get("product");
         var assignment = this.get("assignment");
 
-        if (!assignment.get("hasTermTaxonomy")) return;
+        if (!assignment.get("hasTermTaxonomy")){ return; }
 
         var taxonomy = assignment.get("termTaxonomy");
-        var key = SakuraiWebapp.TermTaxonomy.getParentType(product, taxonomy);
-        var termTaxonomyAllowed = SakuraiWebapp.Product.termTaxonomyAllowedByKey(product, key);
+        var key = TermTaxonomy.getParentType(product, taxonomy);
+        var termTaxonomyAllowed = Product.termTaxonomyAllowedByKey(product, key);
         return termTaxonomyAllowed.label;
     }),
 
@@ -123,7 +134,7 @@ SakuraiWebapp.StudentAssignmentController = Ember.Controller.extend(
     saveQuiz: function(parameters, data){
         var controller = this;
         var store = controller.store;
-        var record = SakuraiWebapp.Quiz.createQuizRecord(store,  parameters);
+        var record = Quiz.createQuizRecord(store,  parameters);
         record.then(function(quiz){
             var promise = quiz.save();
             promise.then(function (quiz) {
@@ -134,11 +145,11 @@ SakuraiWebapp.StudentAssignmentController = Ember.Controller.extend(
                 }
             },function(reason){
                 controller.trigger('asyncButton.restore', data.component);
-                if ((reason.status == 400) && ($.parseJSON(reason.responseText).errors[0].code=="missing_questions")) {
+                if ((reason.status === 400) && ($.parseJSON(reason.responseText).errors[0].code === "missing_questions")) {
                     controller.set("failedMessage", I18n.t('assignment.failedMessage') + " " + data.get("name"));
                 }
             });
-        })
+        });
     },
 
     /**
@@ -149,7 +160,7 @@ SakuraiWebapp.StudentAssignmentController = Ember.Controller.extend(
     saveExam: function (parameters, data){
         var controller = this;
         var store = this.store;
-        var record = SakuraiWebapp.Exam.createExamRecord(store, {
+        var record = Exam.createExamRecord(store, {
             examLength: parameters.examLength,
             timeLimit: parameters.timeLimit,
             student: parameters.student,
@@ -179,7 +190,7 @@ SakuraiWebapp.StudentAssignmentController = Ember.Controller.extend(
             if(!metadata.pagination) {
                 metadata.pagination = {
                     pageSize: 10
-                }
+                };
             }
             var totalResults = metadata.pagination.totalResults ? metadata.pagination.totalResults : 0;
             var totalPages = Math.ceil(totalResults / metadata.pagination.pageSize);
@@ -218,7 +229,7 @@ SakuraiWebapp.StudentAssignmentController = Ember.Controller.extend(
 
     getDefaultValue: function (name, defaultValue) {
         var value = this.get(name);
-        return value ? (value == "undefined" ? defaultValue : value) : defaultValue
+        return value ? (value === "undefined" ? defaultValue : value) : defaultValue;
     },
     /*
         Update Quizzes list with another Criteria
@@ -226,11 +237,11 @@ SakuraiWebapp.StudentAssignmentController = Ember.Controller.extend(
     updateList: function(type, metadata){
         var controller = this,
             store = controller.store;
-        var chapterId = controller.getDefaultValue("currentChapter") != -1 ? controller.getDefaultValue("currentChapter", null) : null;
+        var chapterId = controller.getDefaultValue("currentChapter") !== -1 ? controller.getDefaultValue("currentChapter", null) : null,
             termId = controller.getDefaultValue("currentSubcategory", null);
         var filterId = chapterId ? chapterId : termId;
         //If category is NURSING_TOPICS the filter will go to 'chapterId' otherwise to 'termId'
-        if( controller.get("categoryId") == SakuraiWebapp.Section.NURSING_TOPICS) {
+        if( controller.get("categoryId") === Section.NURSING_TOPICS) {
             chapterId = filterId;
             termId = null;
         } else {
@@ -303,7 +314,7 @@ SakuraiWebapp.StudentAssignmentController = Ember.Controller.extend(
          **/
         startQuiz: function (data) {
             var controller = this;
-            var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+            var authenticationManager = context.get('authenticationManager');
             var user = authenticationManager.getCurrentUser();
 
 
@@ -327,7 +338,7 @@ SakuraiWebapp.StudentAssignmentController = Ember.Controller.extend(
                     parameters.chapters = isChapter ? [data] : [];
                     parameters.termTaxonomies = !isChapter ? [data] : [];
                     controller.saveQuiz(parameters, data);
-                })
+                });
             }
         },
 
@@ -337,7 +348,7 @@ SakuraiWebapp.StudentAssignmentController = Ember.Controller.extend(
          */
         startExam: function(data){
             var controller = this;
-            var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+            var authenticationManager = context.get('authenticationManager');
             var user = authenticationManager.getCurrentUser();
 
 
@@ -376,7 +387,7 @@ SakuraiWebapp.StudentAssignmentController = Ember.Controller.extend(
         },
 
         toggleQuizzesList: function() {
-            controller = this;
+            var controller = this;
             var quizParams = {
                 assignmentId: this.get("assignment").get("id"),
                 studentId: this.get("studentId"),
@@ -390,8 +401,7 @@ SakuraiWebapp.StudentAssignmentController = Ember.Controller.extend(
             var promise = controller.store.query('quiz',quizParams);
             promise.then(function(quizzes) {
                 controller.set('quizzesML', quizzes);
-                if (quizzes.content.get("length")!=0){
-                    var store = controller.store;
+                if (quizzes.content.get("length")!==0){
                     controller.updateMetadata(quizzes.get('meta'), "metadataML");
                     controller.setPagination('ML');
                 }

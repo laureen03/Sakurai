@@ -1,6 +1,13 @@
-SakuraiWebapp.StudentAssignmentsController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,{
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import DateUtil from 'utils/date-util';
+import SortableHelper from 'utils/sortable';
+
+export default Controller.extend(
+    ControllerMixin,
+    FeatureMixin,{
     headerClasses: Ember.inject.controller(),
 
     /**
@@ -50,14 +57,14 @@ SakuraiWebapp.StudentAssignmentsController = Ember.Controller.extend(
 
     controllerSetup: function(){
         this.set("assignmentsQuizzesSortable",
-            SakuraiWebapp.SortableHelper.create({ sort: "dueDate", direction:true }));
+            SortableHelper.create({ sort: "dueDate", direction:true }));
         this.set("mlAssignmentsQuizzesSortable",
-            SakuraiWebapp.SortableHelper.create({ sort: "dueDate", direction:true }));
+            SortableHelper.create({ sort: "dueDate", direction:true }));
         this.set("qcAssignmentsQuizzesSortable",
-            SakuraiWebapp.SortableHelper.create({ sort: "dueDate", direction:true }));
+            SortableHelper.create({ sort: "dueDate", direction:true }));
 
         this.set("assignmentsExamsSortable",
-            SakuraiWebapp.SortableHelper.create({ sort: "dueDate", direction:true }));
+            SortableHelper.create({ sort: "dueDate", direction:true }));
     }.on('init'),
 
     /**
@@ -113,7 +120,7 @@ SakuraiWebapp.StudentAssignmentsController = Ember.Controller.extend(
      */
     showDetailsQuiz:function(idx, assignment){
         $('#mob-details').remove();
-        var dateUtil = new SakuraiWebapp.DateUtil();
+        var dateUtil = new DateUtil();
         var timezone = assignment.get("timeZone");
         var availableDate = dateUtil.format(assignment.get("availableDate"), 'lll', timezone, true);
         var dueDate = dateUtil.format(assignment.get("dueDate"), 'lll', timezone, true);
@@ -149,7 +156,7 @@ SakuraiWebapp.StudentAssignmentsController = Ember.Controller.extend(
     showDetailsExam:function(idx, assignment){
         $('#mob-details').remove();
 
-        var dateUtil = new SakuraiWebapp.DateUtil();
+        var dateUtil = new DateUtil();
         var timezone = assignment.get("timeZone");
         var availableDate = dateUtil.format(assignment.get("availableDate"), 'lll', timezone, true);
         var masteryLevel =  assignment.get("studentStatus").masteryLevel;

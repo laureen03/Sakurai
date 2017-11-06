@@ -1,7 +1,18 @@
-SakuraiWebapp.StudentMetadataController = SakuraiWebapp.StudentSectionController.extend(
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+import ReviewRefreshQuiz from "models/review-refresh-quiz";
+import Section from "models/section";
+import TermTaxonomy from "models/term-taxonomy";
+import Quiz from "models/quiz";
+import context from 'utils/context-utils';
+
+
+export default Controller.extend(
     Ember.Evented,
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin,{
+    ControllerMixin,
+    FeatureMixin,{
 
     queryParams: ["type", "ms", "activeRR"],
 
@@ -86,30 +97,30 @@ SakuraiWebapp.StudentMetadataController = SakuraiWebapp.StudentSectionController
      */
     updateMetadata: Ember.observer('selectedTermTaxonomy', function(){
         var controller = this;
-        if (controller.get("isDestroyed")) return;
+        if (controller.get("isDestroyed")){ return; }
 
         var store = controller.get("store");
         var type = controller.get('selectedTermTaxonomy');
         if (type){
-            if (type == SakuraiWebapp.Section.NURSING_TOPICS){
+            if (type === Section.NURSING_TOPICS){
                 var clazz = this.get("class");
                 controller.transitionToRoute("/student/section/" + clazz.get('id') + "?activeRR=" + controller.get("activeRR"));   
             }
             else{
-                var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+                var authenticationManager = context.get('authenticationManager');
                 //Check if taxonomy tag exist
                 var taxonomyTag = authenticationManager.get("taxonomyTag");
 
                 if (this.validateTaxonomyTagConcepts(type))
                 { //Find by GuID
-                    SakuraiWebapp.TermTaxonomy.findTermTaxonomyByTaxonomyTag(store, taxonomyTag, controller.get("class").get("id"))
+                    TermTaxonomy.findTermTaxonomyByTaxonomyTag(store, taxonomyTag, controller.get("class").get("id"))
                     .then(function(metadata){
-                        controller.set("metadata", SakuraiWebapp.TermTaxonomy.convertTaxonomyTagToTree(metadata, type));
+                        controller.set("metadata", TermTaxonomy.convertTaxonomyTagToTree(metadata, type));
                     });
                 }else{ //Find by ParentName
-                    SakuraiWebapp.TermTaxonomy.findTermTaxonomyByParentName(store, type, controller.get("class").get("id"))
+                    TermTaxonomy.findTermTaxonomyByParentName(store, type, controller.get("class").get("id"))
                     .then(function(metadata){
-                        controller.set("metadata", SakuraiWebapp.TermTaxonomy.convertToTree(metadata, type))
+                        controller.set("metadata", TermTaxonomy.convertToTree(metadata, type));
                     });
                 }
 
@@ -135,7 +146,7 @@ SakuraiWebapp.StudentMetadataController = SakuraiWebapp.StudentSectionController
 
     /**
      * Returns a promise that resolves to an array of terms
-     * @returns Em.RSVP.Promise
+     * @returns Ember.RSVP.Promise
      */
     getSelectedTerms: function () {
 
@@ -144,7 +155,7 @@ SakuraiWebapp.StudentMetadataController = SakuraiWebapp.StudentSectionController
                             return self.store.find('termTaxonomy', parseInt($(this).val()));
                        }).get();
 
-        return Em.RSVP.all(promises);
+        return Ember.RSVP.all(promises);
     },
 
     /**
@@ -155,9 +166,9 @@ SakuraiWebapp.StudentMetadataController = SakuraiWebapp.StudentSectionController
             rules = controller.get("rapidML_rules"),
             isValid = true;
 
-        rules.forEach(function(currentValue,index,arr){
-            if (amountQuestions == currentValue.questions && lengthTopics> currentValue.maxTopics){
-                controller.set("rapidML_message", I18n.t("quiz.failedRapidML", {count:currentValue.maxTopics, amount : currentValue.maxTopics, questions : currentValue.questions}))
+        rules.forEach(function(currentValue){
+            if (amountQuestions === currentValue.questions && lengthTopics> currentValue.maxTopics){
+                controller.set("rapidML_message", I18n.t("quiz.failedRapidML", {count:currentValue.maxTopics, amount : currentValue.maxTopics, questions : currentValue.questions}));
                 $('.chapters-container input[type=checkbox]').prop('checked', false);
                 isValid = false;
             }
@@ -168,9 +179,10 @@ SakuraiWebapp.StudentMetadataController = SakuraiWebapp.StudentSectionController
     actions: {
         createQuiz: function (data) {
             var self = this,
-                authenticationManager = SakuraiWebapp.context.get('authenticationManager'),
+                authenticationManager = context.get('authenticationManager'),
                 user = authenticationManager.getCurrentUser(),
-                store = self.store;
+                store = self.store,
+                record;
 
             this.set("noChaptersSelectedError", false);
 
@@ -181,14 +193,14 @@ SakuraiWebapp.StudentMetadataController = SakuraiWebapp.StudentSectionController
                 if (terms.length > 0 && validAmountQuestion) {
 
                     if (self.get("isReviewRefresh")) {
-                        var record = SakuraiWebapp.ReviewRefreshQuiz.createQuizRecord(store, {
+                        record = ReviewRefreshQuiz.createQuizRecord(store, {
                             quizLength: self.get("numQuestionsSelected"),
                             termTaxonomies: terms,
                             student: user,
                             class: self.get('class')
                         });
                     }else{
-                        var record = SakuraiWebapp.Quiz.createQuizRecord(store, {
+                        record = Quiz.createQuizRecord(store, {
                             quizLength: self.get("numQuestionsSelected"),
                             termTaxonomies: terms,
                             student: user,
@@ -201,23 +213,25 @@ SakuraiWebapp.StudentMetadataController = SakuraiWebapp.StudentSectionController
                         promise.then(function (quiz) {
                             if ( quiz.get('id') ) {
                                 self.trigger('asyncButton.restore', data.component);
-                                if (!self.get('isReviewRefresh'))
+                                if (!self.get('isReviewRefresh')){
                                     self.transitionToRoute("/quiz/quizzer/" + quiz.get('id') + "/" + self.get("class.id"));
-                                else
+                                }
+                                else{
                                     self.transitionToRoute("/quiz/quizzer/" + quiz.get('id') + "/" + self.get("class.id") + "?isReviewRefresh=true");
+                                }
                             }
                         },function(reason){
                             self.trigger('asyncButton.restore', data.component);
-                            if ((reason.status == 400) && ($.parseJSON(reason.responseText).errors[0].code=="missing_questions")) {
+                            if ((reason.status === 400) && ($.parseJSON(reason.responseText).errors[0].code === "missing_questions")) {
                                 var message = $.parseJSON(reason.responseText).errors[0].info;
                                 var n = message.lastIndexOf(" ");
                                 var code = message.substr(n + 1, message.length-1);
-                                var taxonomy = self.store.find("termTaxonomy", code).then(function(term){
+                                self.store.find("termTaxonomy", code).then(function(){
                                     self.set("failedMessage", self.get("numQuestionsSelected") > 5 ? I18n.t('quiz.failedMessage') : I18n.t('quiz.failedFiveQuestionMessage'));
                                     self.set("numQuestionsSelected", 5);
                                     $('.questions-desc select').attr('disabled', true);
                                     var ids = $("input[name=metadata]:checked", "#chapters").map(function () {
-                                        return $(this).val()
+                                        return $(this).val();
                                     });
                                     var ids_str = ids.get().sort().join();
                                     var hasMetadata = self.get("notEnoughQuestions").findBy('ids', ids_str);
@@ -231,10 +245,12 @@ SakuraiWebapp.StudentMetadataController = SakuraiWebapp.StudentSectionController
 
                 } else {
                     self.trigger('asyncButton.restore', data.component);
-                    if (!validAmountQuestion)
+                    if (!validAmountQuestion){
                         $("#rapidMLErrorPopUp").modal("show");
-                    else
+                    }
+                    else{
                         self.set("noChaptersSelectedError", true);
+                    }
                 }
             });
         },
@@ -249,17 +265,18 @@ SakuraiWebapp.StudentMetadataController = SakuraiWebapp.StudentSectionController
                 controller.set('ms', null);
             }
 
-            if (inactiveTopics.length > 0)
+            if (inactiveTopics.length > 0){
                 inactiveTopics.forEach(function(topicId) {
                     $('.item_' + topicId).addClass("disabled");
                 });
-            else
+            }else{
                 $('.chapters-container .disabled').removeClass("disabled");
+            }
         },
 
         selectMetadata: function() {
             var ids = $("input[name=metadata]:checked", "#chapters").map(function () {
-                return $(this).val()
+                return $(this).val();
             });
             var ids_str = ids.get().sort().join();
             var hasMetadata = this.get("notEnoughQuestions").findBy('ids', ids_str);

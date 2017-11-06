@@ -1,12 +1,18 @@
-SakuraiWebapp.StudentExamReportsController = Ember.Controller.extend(
-    SakuraiWebapp.ControllerMixin,
-    SakuraiWebapp.FeatureMixin, {
+import Controller from '@ember/controller';
+import Ember from 'ember';
+import ControllerMixin from 'mixins/controller';
+import FeatureMixin from 'mixins/feature';
+
+export default Controller.extend(
+    ControllerMixin,
+    FeatureMixin, {
     headerClasses: Ember.inject.controller(),
 
     queryParams: ['studentId'],
 
     /**
-     * @property {SakuraiWebapp.Class} the class
+     * @property {
+     Class} the class
      */
     class: null,
 
@@ -16,17 +22,20 @@ SakuraiWebapp.StudentExamReportsController = Ember.Controller.extend(
     studentId: null,
 
     /**
-     * @property {SakuraiWebapp.ExamStat} the exam stats
+     * @property {
+     ExamStat} the exam stats
      */
     examStat: null,
 
     /**
-     * @property {SakuraiWebapp.TermTaxonomyStat} the term taxonomy stats
+     * @property {
+     TermTaxonomyStat} the term taxonomy stats
      */
     termTaxonomyStat: null,
 
     /**
-     * @property {SakuraiWebapp.ChapterStat} chapter stats (nursing topics)
+     * @property {
+     ChapterStat} chapter stats (nursing topics)
      */
     chapterStat: null,
 
