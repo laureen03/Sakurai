@@ -1,9 +1,17 @@
-SakuraiWebapp.LibraryRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+import TermTaxonomy from "models/term-taxonomy";
+import context from 'utils/context-utils';
+
+export default Route.extend(
+    ResetScroll,{
+
     model: function(params, transition) {
         var store = this.store;
         var classId = transition.params[transition.targetName].classId;
 
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+        var authenticationManager = context.get('authenticationManager');
         authenticationManager.setImpersonatedUser(false);
         var user = authenticationManager.getCurrentUser();
 
@@ -24,8 +32,9 @@ SakuraiWebapp.LibraryRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
 
                     //Check if taxonomy tag exist
                     var taxonomyTag = authenticationManager.get("taxonomyTag");
-                    if (taxonomyTag)
+                    if (taxonomyTag){
                         hashObject.termTaxonomiesConcepts = store.find("termTaxonomy", {'taxonomyTag': taxonomyTag});
+                    }
 
                     Ember.RSVP.hash(hashObject).then(function(hash){
                             resolve(hash);
@@ -37,8 +46,7 @@ SakuraiWebapp.LibraryRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
     },
 
     setupController: function(controller, model) {
-        var store = this.store,
-            qcTotal;
+        var qcTotal;
 
         controller.set("class", model.class);
         controller.set("sections", model.sections);
@@ -55,27 +63,27 @@ SakuraiWebapp.LibraryRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
         }
 
         qcTotal = questionSetMetadata.questionSetsEnabledForCurrentSubject;
-        qcTotal = (qcTotal && typeof parseInt(qcTotal) == 'number') ? parseInt(qcTotal) : 0;
+        qcTotal = (qcTotal && typeof parseInt(qcTotal) === 'number') ? parseInt(qcTotal) : 0;
         controller.set("questionSetsEnabledForCurrentSubject", qcTotal);
     },
 
     actions: {
         openTaxonomyModal: function(type, label) {
             var libraryController = this.controllerFor('library');
-            var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+            var authenticationManager = context.get('authenticationManager');
             var allTermTaxonomies = libraryController.get("allTermTaxonomies");
-            var filteredByType = SakuraiWebapp.TermTaxonomy.filterByType(allTermTaxonomies, type);
+            var filteredByType = TermTaxonomy.filterByType(allTermTaxonomies, type);
             //Check if taxonomy tag exist
             var treeTaxonomies = null;
             var taxonomyTag = authenticationManager.get("taxonomyTag");
-            if (SakuraiWebapp.TermTaxonomy.isConcepts(type) && (taxonomyTag)) {
+            if (TermTaxonomy.isConcepts(type) && (taxonomyTag)) {
                 var termTaxonomiesConcepts = libraryController.get("termTaxonomiesConcepts");
-                filteredByType = SakuraiWebapp.TermTaxonomy.filterByType(termTaxonomiesConcepts, type);
-                treeTaxonomies = SakuraiWebapp.TermTaxonomy.convertTaxonomyTagToTree(filteredByType);
-            } else if (type === SakuraiWebapp.TermTaxonomy.BLOOM_TAXONOMY) {
-                treeTaxonomies = SakuraiWebapp.TermTaxonomy.convertBloomsToTree(filteredByType)
+                filteredByType = TermTaxonomy.filterByType(termTaxonomiesConcepts, type);
+                treeTaxonomies = TermTaxonomy.convertTaxonomyTagToTree(filteredByType);
+            } else if (type === TermTaxonomy.BLOOM_TAXONOMY) {
+                treeTaxonomies = TermTaxonomy.convertBloomsToTree(filteredByType);
             } else {
-                treeTaxonomies = SakuraiWebapp.TermTaxonomy.convertToTree(filteredByType, type);
+                treeTaxonomies = TermTaxonomy.convertToTree(filteredByType, type);
             }
 
             libraryController.set("termTaxonomies", treeTaxonomies);

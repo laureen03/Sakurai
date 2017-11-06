@@ -1,4 +1,10 @@
-SakuraiWebapp.InstructorAssignmentSummaryRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+
+export default Route.extend(
+    ResetScroll,{
+
     model: function(params) {
         var store = this.get('store');
         return Ember.RSVP.hash({
@@ -34,7 +40,6 @@ SakuraiWebapp.InstructorAssignmentSummaryRoute = Ember.Route.extend(SakuraiWebap
                 product: model.class.get("product"), //preloading
             }).then(function(hash){
                     var product = hash.product;
-                    var isMetadataAllowed = product.get("isMetadataAllowed");
                     return store.query('termTaxonomyStat', {
                             'assignmentId': model.assignmentId,
                             'classId':model.classId,

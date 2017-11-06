@@ -1,4 +1,12 @@
-SakuraiWebapp.ExamResultRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+import context from 'utils/context-utils';
+import Assignment from 'models/assignment';
+
+export default Route.extend(
+    ResetScroll,{
+
     model: function (params) {
         var store = this.store;
 
@@ -11,14 +19,14 @@ SakuraiWebapp.ExamResultRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
 
     afterModel: function(model){
         var examResult = model.examResult.objectAt(0);
-        return examResult.get("exam").then(function(exam){ //pre loading exam result dependencies
+        return examResult.get("exam").then(function(){ //pre loading exam result dependencies
             return model.clazz.get("product"); // pre loading product
-        })
+        });
     },
 
     setupController: function (controller, model) {
         var store = this.store;
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+        var authenticationManager = context.get('authenticationManager');
         var examResult = model.examResult.objectAt(0);
         var exam = model.exam;
         var assignment = (exam.get("hasAssignment"))? exam.get("assignment") : null;
@@ -26,7 +34,7 @@ SakuraiWebapp.ExamResultRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
         var product = clazz.get("product");
 
         if (assignment){ //inc answer key views
-            SakuraiWebapp.Assignment.incAnswerKeyViews(store, assignment.get("id"), authenticationManager.getCurrentUserId());
+            Assignment.incAnswerKeyViews(store, assignment.get("id"), authenticationManager.getCurrentUserId());
         }
 
         var settings = product.get('settings'),
@@ -54,7 +62,7 @@ SakuraiWebapp.ExamResultRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
         });
 
         if (thresholdRanges) {
-            var assignment = controller.get("assignment");
+            assignment = controller.get("assignment");
             if (assignment && assignment.get("examMasteryThreshold")) {
                 var customThresholdPassing = assignment.get("examMasteryThreshold");
                 var thresholdUpperLimit = thresholdRanges.barelyPassed[1] - thresholdRanges.barelyPassed[0] + customThresholdPassing;

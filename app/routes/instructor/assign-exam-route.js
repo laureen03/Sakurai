@@ -1,13 +1,20 @@
-SakuraiWebapp.InstructorAssignExamRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+import context from 'utils/context-utils';
+import DateUtil from 'utils/date-util';
+
+export default Route.extend(
+    ResetScroll,{
 
     model: function(params) {
         var store = this.store;
 
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+        var authenticationManager = context.get('authenticationManager');
         authenticationManager.setImpersonatedUser(false);
 
         var editMode = params.assignmentId !== null;
-        var copyMode = params.action == 'copy';
+        var copyMode = params.action === 'copy';
 
         return Ember.RSVP.hash({
                 assignment : (editMode) ? store.find('assignment', parseInt(params.assignmentId)) : null,
@@ -19,7 +26,7 @@ SakuraiWebapp.InstructorAssignExamRoute = Ember.Route.extend(SakuraiWebapp.Reset
     },
 
 
-    afterModel: function(model, transition) {
+    afterModel: function(model) {
         var edit = model.isEditMode;
         return Ember.RSVP.hash({
             "assignment": edit ? model.assignment.reload() : model.assignment,
@@ -43,7 +50,7 @@ SakuraiWebapp.InstructorAssignExamRoute = Ember.Route.extend(SakuraiWebapp.Reset
         controller.set("numQuestions", product.get('examLengths'));
         controller.set("minutesLimit", product.get('examTimeLimits'));
         controller.set("product", product);
-        controller.set('timezones', SakuraiWebapp.DateUtil.getTimeZones());
+        controller.set('timezones', DateUtil.getTimeZones());
         controller.set("nclexProficiencyLevels", product.get('nclexProficiencyLevels'));
         var classExamOverallSettings = model.class.get('classExamOverallSettings');
         controller.set('classExamOverallSettings', classExamOverallSettings);

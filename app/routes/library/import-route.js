@@ -1,4 +1,9 @@
-SakuraiWebapp.LibraryImportRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+
+export default Route.extend(
+    ResetScroll,{
 
     getSourceQuestionSet: function (params, transition) {
         var store = this.store;
@@ -73,7 +78,7 @@ SakuraiWebapp.LibraryImportRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,
         });
     },
 
-    afterModel: function (model, transition) {
+    afterModel: function (model) {
 
         // To complete the transition, both source and target question sets must exist
         if (!model.target.questionSet) {

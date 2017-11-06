@@ -1,6 +1,14 @@
-SakuraiWebapp.QuizResultRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+import context from 'utils/context-utils';
+import Assignment from "models/assignment";
+
+export default Route.extend(
+    ResetScroll,{
+
     model: function (params) {
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager'),
+        var authenticationManager = context.get('authenticationManager'),
             store = this.store;
 
         var quizType = (params.isReviewRefresh) ? "reviewRefreshQuiz" : "quiz";
@@ -27,7 +35,7 @@ SakuraiWebapp.QuizResultRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
         });
     },
 
-    afterModel: function(model, transition) {
+    afterModel: function(model) {
         var store = this.store;
         var assignment = model.assignment;
         var userId = model.userId;
@@ -46,10 +54,11 @@ SakuraiWebapp.QuizResultRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
             var stats = (isMetadataAllowed && hasTermTaxonomies) ? "termTaxonomyStat" : "chapterStat";
 
             if(isQC) {
-                var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+                var authenticationManager = context.get('authenticationManager');
                 var isImpersonated = authenticationManager.get('isImpersonated');
-                if(!isImpersonated)
-                    return SakuraiWebapp.Assignment.incAnswerKeyViews(store, assignment.get("id"), userId);
+                if(!isImpersonated){
+                    return Assignment.incAnswerKeyViews(store, assignment.get("id"), userId);
+                }
             } else {
                 return store.query(stats, {'quizId': model.quizId, "classId": model.classId, "isReviewRefresh": model.isReviewRefresh}).then(function(data){
                     model.stats = data;
@@ -64,7 +73,7 @@ SakuraiWebapp.QuizResultRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
         controller.set('class', model.class);
         controller.set('assignment', model.assignment);
         controller.set('stats', model.stats ? model.stats.objectAt(0) : null);
-        controller.set("studentId", model.userId)
+        controller.set("studentId", model.userId);
     },
 
     deactivate: function() {

@@ -1,9 +1,13 @@
-SakuraiWebapp.LoginMimicRoute = Ember.Route.extend({
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import AuthKey from 'models/auth-Key';
+
+export default Route.extend({
 
     //does mimic user
     model: function(params) {
         return Ember.RSVP.hash({
-            authKey: SakuraiWebapp.AuthKey.mimic(this.store, params.refresh_token, params.publisher_name),
+            authKey: AuthKey.mimic(this.store, params.refresh_token, params.publisher_name),
             params: params
         });
     },
@@ -11,13 +15,13 @@ SakuraiWebapp.LoginMimicRoute = Ember.Route.extend({
     //loads some more data for handling the sso request
     afterModel: function(model){
         var authKey = model.authKey;
-        var context = SakuraiWebapp.context;
+        var context = context;
         var manager = context.get('authenticationManager');
         return manager._authenticate(authKey, { mimic : true });
     },
 
-    setupController: function(controller, model) {
-        var context = SakuraiWebapp.context;
+    setupController: function(controller) {
+        var context = context;
         var manager = context.get('authenticationManager');
         if (manager.isAuthenticated()){
             var metadata = controller.store._metadataFor("authKey");

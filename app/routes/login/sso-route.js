@@ -1,10 +1,15 @@
-SakuraiWebapp.LoginSsoRoute = Ember.Route.extend({
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import AuthKey from 'models/auth-Key';
+import Class from 'models/class';
+
+export default Route.extend({
 
     //does sso
 	model: function(params) {
 
         return Ember.RSVP.hash({
-            authKey: SakuraiWebapp.AuthKey.sso(this.store, params.token, params.product, params.templateId),
+            authKey: AuthKey.sso(this.store, params.token, params.product, params.templateId),
             params: params,
             store: this.store
         });
@@ -15,7 +20,7 @@ SakuraiWebapp.LoginSsoRoute = Ember.Route.extend({
         var route = this;
 
         var authKey = model.authKey;
-        var context = SakuraiWebapp.context;
+        var context = context;
         var manager = context.get('authenticationManager');
         var isbn = model.params.product;
 
@@ -36,21 +41,20 @@ SakuraiWebapp.LoginSsoRoute = Ember.Route.extend({
                 else{
                     resolve();
                 }
-            }, reject)
+            }, reject);
         });
     },
 
     /**
      * Handles the after model for a sso request
-     * @param {SakuraiWebapp.AuthenticationManager} manager
-     * @param {SakuraiWebapp.AuthKey} authKey
+     * @param {AuthenticationManager} manager
+     * @param {AuthKey} authKey
      * @returns {*}
      */
     afterModelSSO: function(manager, authKey, model){
         var store = this.store;
         var user = manager.getCurrentUser();
         var product = authKey.get("product");
-        var productISBN = authKey.get("productISBN");
         var chapterId = model.params.chapterId;
         var studentId = model.params.studentId;
 
@@ -58,7 +62,7 @@ SakuraiWebapp.LoginSsoRoute = Ember.Route.extend({
         var classId = model.params.classId;
         var classPromise = (classId) ?
             store.find("class", { "externalId" : classId}) :
-            SakuraiWebapp.Class.getActiveClassesByProductAndUser(store, product.get("id"), user.get("id"));
+            Class.getActiveClassesByProductAndUser(store, product.get("id"), user.get("id"));
 
         return Ember.RSVP.hash({
             product: product,
@@ -69,7 +73,7 @@ SakuraiWebapp.LoginSsoRoute = Ember.Route.extend({
     },
 
     setupController: function(controller, model) {
-        var context = SakuraiWebapp.context;
+        var context = context;
         var manager = context.get('authenticationManager');
 
         if (manager.isAuthenticated()){

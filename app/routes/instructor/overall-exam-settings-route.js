@@ -1,4 +1,9 @@
-SakuraiWebapp.InstructorOverallExamSettingsRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+
+export default Route.extend(
+    ResetScroll,{
 
     model: function(params) {
         var store = this.store;

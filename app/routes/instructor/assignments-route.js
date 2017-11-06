@@ -1,9 +1,16 @@
-SakuraiWebapp.InstructorAssignmentsRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+import context from 'utils/context-utils';
+
+export default Route.extend(
+    ResetScroll,{
+
     model: function(params) {
         var store = this.store;
 
-            var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
-            var user = authenticationManager.getCurrentUser();
+            var authenticationManager = context.get('authenticationManager');
+            var user = authenticationManager.getCurrentUser(),
                 userId = user.get("id");
             
             return Ember.RSVP.hash({

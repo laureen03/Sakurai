@@ -1,16 +1,22 @@
-SakuraiWebapp.QuizQuizzerRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+
+export default Route.extend(
+    ResetScroll,{
 
     model: function (params) {
         var store = this.store;
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
-        var isExam = (params.isExam == "true");
+        var isExam = (params.isExam === "true");
 
         var entity = null;
 
-        if (params.isReviewRefresh)
+        if (params.isReviewRefresh){
             entity = "reviewRefreshQuiz";
-        else
+        }
+        else{
             entity = (!isExam) ? "quiz" : "exam";
+        }
 
         return new Ember.RSVP.Promise(function(resolve, reject){
             store.find(entity, params.id).then( function(record) {
@@ -26,7 +32,7 @@ SakuraiWebapp.QuizQuizzerRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
 
     },
 
-    afterModel: function(model, transition) {
+    afterModel: function(model) {
         var controller = this;
 
         var quiz = model.quiz;

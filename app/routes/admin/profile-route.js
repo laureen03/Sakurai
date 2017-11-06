@@ -1,4 +1,9 @@
-SakuraiWebapp.AdminProfileRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import ResetScroll from "mixins/reset-scroll";
+import context from 'utils/context-utils';
+
+export default Route.extend(
+    ResetScroll,{
 
     controllerName: 'profile',
 
@@ -7,7 +12,7 @@ SakuraiWebapp.AdminProfileRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
     },
 
     model: function() {
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager'),
+        var authenticationManager = context.get('authenticationManager'),
             userId = authenticationManager.getCurrentUserId();
 
         return this.store.find('user', userId);

@@ -1,7 +1,12 @@
-SakuraiWebapp.InstructorClassRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import ResetScroll from "mixins/reset-scroll";
+import context from 'utils/context-utils';
 
-    setupController: function(controller, model) {
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+export default Route.extend(
+    ResetScroll,{
+
+    setupController: function() {
+        var authenticationManager = context.get('authenticationManager');
         authenticationManager.clearCurrentClass(); //removing the current class for instructors
     }
 

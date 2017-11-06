@@ -1,4 +1,10 @@
-SakuraiWebapp.InstructorQcAssignmentSummaryRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+
+export default Route.extend(
+    ResetScroll,{
+
     model: function(params) {
         var store = this.get('store');
 
@@ -23,14 +29,14 @@ SakuraiWebapp.InstructorQcAssignmentSummaryRoute = Ember.Route.extend(SakuraiWeb
         };
 
 
-        return clazz.get("product").then(function(product){
+        return clazz.get("product").then(function(){
             var promise = store.query("question", queryParams);
 
             return promise.then(function(questions){
                 model.questions = questions;
                 return questions;
-            })
-        })
+            });
+        });
     },
 
     setupController: function(controller, model) {

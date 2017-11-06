@@ -1,10 +1,17 @@
-SakuraiWebapp.InstructorHmcdRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+import context from 'utils/context-utils';
+import Question from 'models/question';
+
+export default Route.extend(
+    ResetScroll,{
 
     model: function(params) {
         var store = this.store;
 
         //clears impersonated user
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+        var authenticationManager = context.get('authenticationManager');
         authenticationManager.setImpersonatedUser(false);
         authenticationManager.setCurrentClass(params.classId); //tracks the current class for instructors
 
@@ -25,7 +32,6 @@ SakuraiWebapp.InstructorHmcdRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll
     },
 
     setupController: function(controller, model) {
-        var store = this.store;
         //var metadata = store.metadataFor("classUsage");
         controller.set("class", model.class);
         controller.set("classId", model.class.get("id"));
@@ -34,7 +40,7 @@ SakuraiWebapp.InstructorHmcdRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll
         //Init Student Usage
         controller.initStudentUsage(model.studentUsage);
         controller.defaultReviewRefreshClassSetting(model.product, model.class);
-        this.lazyLoad(controller, model)
+        this.lazyLoad(controller, model);
     },
 
 
@@ -61,19 +67,19 @@ SakuraiWebapp.InstructorHmcdRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll
             .then(function(chapterStats){
                 var isMetadataAllowed = product.get("isMetadataAllowed");
                 var taxonomySettings = product.get("taxonomySettings");
-                var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+                var authenticationManager = context.get('authenticationManager');
                 //Check if taxonomy tag exist
                 var taxonomyTag = authenticationManager.get("taxonomyTag");
                 if (isMetadataAllowed){
                     return store.query("termTaxonomyStat", {classId: classId, taxonomyTag: taxonomyTag }).then(function(termTaxonomyStats){
                         //Init Strength and Weaknesses
                         controller.initStrengthsWeaknesses(taxonomySettings, chapterStats.nextObject(0), termTaxonomyStats);
-                        return SakuraiWebapp.Question.getClassMisconceptions(store, classId, product.get("id")); // next load misconceptions
+                        return Question.getClassMisconceptions(store, classId, product.get("id")); // next load misconceptions
                     });
                 }
                 else{
                     controller.initStrengthsWeaknesses(taxonomySettings, chapterStats.nextObject(0), null);
-                    return SakuraiWebapp.Question.getClassMisconceptions(store, classId, product.get("id")); // next load misconceptions
+                    return Question.getClassMisconceptions(store, classId, product.get("id")); // next load misconceptions
                 }
 
             }).

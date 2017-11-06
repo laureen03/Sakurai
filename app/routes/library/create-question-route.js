@@ -1,12 +1,16 @@
-SakuraiWebapp.LibraryCreateQuestionRoute = Ember.Route.extend(
-    SakuraiWebapp.FeatureMixin, SakuraiWebapp.ResetScroll, {
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+
+export default Route.extend(
+    ResetScroll,{
 
 	model: function(params) {
         var store = this.store;
 
         return Ember.RSVP.hash({
             class : store.find("class", params.classId),
-            question: (params.questionId != "0") ? store.find("question", params.questionId) : undefined,
+            question: (params.questionId !== "0") ? store.find("question", params.questionId) : undefined,
             params: params
         });
 	},
@@ -32,18 +36,17 @@ SakuraiWebapp.LibraryCreateQuestionRoute = Ember.Route.extend(
                     model.products = hash.products;
                     model.subjects = hash.subjects;
                     model.isRemediationLinkAllowed = hash.isRemediationLinkAllowed;
-            })
+            });
         });
     },
 
 
 	setupController: function(controller, model) {
-        var product =  model.class.get('product');
 
         controller.set('class', model.class);
         controller.set('learningObjectives', model.learningObjectives);
 
-        controller.set('isCreating', !(!!+model.params.questionId));
+        controller.set('isCreating', !(+model.params.questionId));
         controller.set('questionProducts', model.products);
         controller.set('isRemediationLinkAllowed', model.isRemediationLinkAllowed);
         controller.set('subjects', model.subjects);

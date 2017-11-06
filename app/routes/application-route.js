@@ -1,4 +1,8 @@
-SakuraiWebapp.ApplicationRoute = Ember.Route.extend({
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import context from 'utils/context-utils';
+
+export default Route.extend({
 
     /**
      * Route names which do not require a user session
@@ -9,9 +13,9 @@ SakuraiWebapp.ApplicationRoute = Ember.Route.extend({
     beforeModel: function (transition) {
         var route = this;
         var store = this.store;
-        return new Ember.RSVP.Promise(function(resolve, reject){
+        return new Ember.RSVP.Promise(function(resolve){
             if (!route.get('anonymous').contains(transition.targetName)){
-                var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+                var authenticationManager = context.get('authenticationManager');
                 authenticationManager.authenticateFromStorage(store).then(function(data){
                     if (!data.fromStorage || !data.authenticated){
                         Ember.Logger.debug("Invalid token in storage");
@@ -89,7 +93,7 @@ SakuraiWebapp.ApplicationRoute = Ember.Route.extend({
             //@TODO: handle model end point error properly
 
             // Remove the loading spinner before presenting the error message
-            SakuraiWebapp.context.set("isLoading", false);
+            context.set("isLoading", false);
             toastr.error(message);
 
             // Manage your errors
@@ -97,13 +101,13 @@ SakuraiWebapp.ApplicationRoute = Ember.Route.extend({
             return false;
         },
 
-        loading: function (transition, originRoute) {
+        loading: function () {
 
             Ember.Logger.debug('Enabling global loading');
 
-            SakuraiWebapp.context.set("isLoading", true);
+            context.set("isLoading", true);
             this.router.one('didTransition', function () {
-                SakuraiWebapp.context.set("isLoading", false);
+                context.set("isLoading", false);
 
                 Ember.Logger.debug('Disabling global loading');
             });

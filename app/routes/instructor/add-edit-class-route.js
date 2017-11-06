@@ -1,9 +1,15 @@
-SakuraiWebapp.InstructorAddEditClassRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+import context from 'utils/context-utils';
+
+export default Route.extend(
+    ResetScroll,{
     model: function(params) {
         var store = this.store;
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+        var authenticationManager = context.get('authenticationManager');
         var user = authenticationManager.getCurrentUser();
-        var editMode = params.classId != 0;
+        var editMode = params.classId !== 0;
         return new Ember.RSVP.Promise(function (resolve, reject) {
             var promise = (editMode) ?
                                 store.find("class", params.classId) :
@@ -37,7 +43,7 @@ SakuraiWebapp.InstructorAddEditClassRoute = Ember.Route.extend(SakuraiWebapp.Res
             var clazz =  model.currentClass;
             clazz.get("school").then(function(school){
                 controller.set("schools", Ember.A([school]));
-                clazz.get("product").then(function(product){ //load product as well
+                clazz.get("product").then(function(){ //load product as well
                     controller.setClass(clazz);
                 });
             });

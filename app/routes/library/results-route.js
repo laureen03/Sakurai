@@ -1,4 +1,9 @@
-SakuraiWebapp.LibraryResultsRoute = Ember.Route.extend({
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import Question from "models/question";
+
+export default Route.extend({
+
     queryParams: {
         qsId: { refreshModel: true },
         instructorId: { refreshModel: true },
@@ -21,7 +26,7 @@ SakuraiWebapp.LibraryResultsRoute = Ember.Route.extend({
         var store = this.store;
         
         var hasQuestionSet = !!params.qsId,
-            sort = undefined;
+            sort,
             page = !!params.currentPage ? params.currentPage : 1,
             pageSize = params.pagination ? params.pageSize * params.currentPage : !!params.currentPage ? (params.currentPage * 25) : 25;
 
@@ -29,8 +34,9 @@ SakuraiWebapp.LibraryResultsRoute = Ember.Route.extend({
         pageSize = (pageSize < 25) ? 25: pageSize;
         
         if (!params.scrollTo){ //When scroll To is null
-            if (params.pagination)
+            if (params.pagination){
                 sort = undefined; //Reset Sort option
+            }
         }
 
         // Set search queryParams
@@ -84,19 +90,13 @@ SakuraiWebapp.LibraryResultsRoute = Ember.Route.extend({
 
     },
 
-    afterModel: function(model, transition) {
-        /*return model.hasQuestionSet ? SakuraiWebapp.QuestionSet.fetch(model.questionSet.get('firstObject')).then(function(data){
-                    model.questionSet = data;
-                }): null;*/
-    },
-
     setupController: function (controller, model) {
         if (controller.get("instructorId")){
             controller.resetValues(); //clears values for created questions
         }
 
-        var store = this.store,
-            questionSet = null;
+        var questionSet = null,
+            metadata;
         controller.set("showResults", true);
         controller.set("hideQuestionSetList", true);
         controller.set("questionSetEditMode", false);
@@ -110,14 +110,14 @@ SakuraiWebapp.LibraryResultsRoute = Ember.Route.extend({
             controller.set('questionSet', questionSet);
             if (!model.isPreview){
                 controller.set("questions", questionSet.get("questions"));
-                var metadata = model.questionSet.get('meta');
+                metadata = model.questionSet.get('meta');
                 controller.updateMetadataQC(metadata);
                 controller.initQuestionCollectionPagination();
                 controller.setOrderList();
             }
         }
         else{
-            var metadata = model.questions.get('meta');
+            metadata = model.questions.get('meta');
             controller.updateMetadata(metadata);
 
             if (controller.get("scrollTo") == null){
@@ -130,7 +130,7 @@ SakuraiWebapp.LibraryResultsRoute = Ember.Route.extend({
         }
 
         controller.set("product", model.class.get("product"));
-        controller.set("sortOptions", SakuraiWebapp.Question.getSortOptions(controller.get("isAuthoringEnabled")));
+        controller.set("sortOptions", Question.getSortOptions(controller.get("isAuthoringEnabled")));
     },
 
     deactivate: function() {

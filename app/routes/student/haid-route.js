@@ -1,8 +1,14 @@
-SakuraiWebapp.StudentHaidRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+import context from 'utils/context-utils';
+
+export default Route.extend(
+    ResetScroll,{
 
     model: function(params) {
         var store = this.store;
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+        var authenticationManager = context.get('authenticationManager');
         if (params.studentId){ //impersonates the user
             authenticationManager.setImpersonatedUser(params.studentId);
         }
@@ -18,7 +24,7 @@ SakuraiWebapp.StudentHaidRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
         });
     },
 
-    afterModel: function(model, transition) {
+    afterModel: function(model) {
         var store = this.store;
         var userId = model.userId;
 
@@ -27,7 +33,7 @@ SakuraiWebapp.StudentHaidRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
         return productPromise.then(function(product){
             var isMetadataAllowed = product.get("isMetadataAllowed");
 
-            var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+            var authenticationManager = context.get('authenticationManager');
             //Check if taxonomy tag exist
             var taxonomyTag = authenticationManager.get("taxonomyTag");
             

@@ -1,8 +1,15 @@
-SakuraiWebapp.StudentAssignmentRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+import context from 'utils/context-utils';
+
+export default Route.extend(
+    ResetScroll,{
+
     model: function(params) {
         var store = this.store;
         var userId;
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+        var authenticationManager = context.get('authenticationManager');
         userId = authenticationManager.getActiveUserId();
         
         return Ember.RSVP.hash({
@@ -23,8 +30,8 @@ SakuraiWebapp.StudentAssignmentRoute = Ember.Route.extend(SakuraiWebapp.ResetScr
             product: model.class.get("product"), //preload product
             termTaxonomy: assignment.get("termTaxonomy"), //preload taxonomy
             chapter: assignment.get("chapter") //preload chapter
-        }).then(function(hash){
-                model.assignment = assignment;
+        }).then(function(){
+            model.assignment = assignment;
         });
     },
 

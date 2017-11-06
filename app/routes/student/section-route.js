@@ -1,8 +1,13 @@
-SakuraiWebapp.StudentSectionRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+import Section from "models/section";
+import TermTaxonomy from 'models/term-taxonomy';
+
+export default Route.extend(
+    ResetScroll,{
     model: function(params) {
         var store = this.store;
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
-        //var product = authenticationManager.getCurrentProduct();
 
         //TODO: This is a workaround because store.unloadAll('reviewRefreshClassSetting')is failing
         //by a bug of ember-data beta.16, Please review again when undate the Ember data.
@@ -28,9 +33,9 @@ SakuraiWebapp.StudentSectionRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll
         var product =  model.class.get('product');
 
         // metadata types supported
-        var selectOptions = SakuraiWebapp.TermTaxonomy.findTermTaxonomyTypes(product);
+        var selectOptions = TermTaxonomy.findTermTaxonomyTypes(product);
 
-        controller.set("selectedTermTaxonomy", SakuraiWebapp.Section.NURSING_TOPICS);
+        controller.set("selectedTermTaxonomy", Section.NURSING_TOPICS);
         controller.set("termTaxonomyTypeOptions", selectOptions);
 
         this.controllerFor('header').set("menu", "menu-practiceQuiz");
@@ -39,7 +44,7 @@ SakuraiWebapp.StudentSectionRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll
         controller.set("sections", model.sections);
         controller.set("class", model.class);
 
-        if (model.reviewRefreshClassSettings.get("length") == 1){
+        if (model.reviewRefreshClassSettings.get("length") === 1){
             controller.set("reviewRefreshClassSettings",model.reviewRefreshClassSettings.get('firstObject'));
         }
     },

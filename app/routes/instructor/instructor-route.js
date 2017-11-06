@@ -2,16 +2,22 @@
  * Base Instructor Route for all sub route in the instructor module
  * @type {*}
  */
-SakuraiWebapp.InstructorRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import ResetScroll from "mixins/reset-scroll";
+import context from 'utils/context-utils';
+import Class from 'models/class';
+
+export default Route.extend(
+    ResetScroll,{
     model: function() {
         var store = this.store;
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+        var authenticationManager = context.get('authenticationManager');
         var publisher = authenticationManager.getCurrentPublisher();
         var user = authenticationManager.getCurrentUser();
         var product = authenticationManager.getCurrentProduct();
         return authenticationManager.isSSO() ?
-            SakuraiWebapp.Class.getAllClassesByProductAndUser(store, product.get("id"), user.get("id")) :
-            SakuraiWebapp.Class.getAllClassesByPublisherAndUser(store, publisher.get('id'), user.get('id'));
+            Class.getAllClassesByProductAndUser(store, product.get("id"), user.get("id")) :
+            Class.getAllClassesByPublisherAndUser(store, publisher.get('id'), user.get('id'));
     },
 
     setupController: function(controller, model) {

@@ -1,11 +1,16 @@
-SakuraiWebapp.InstructorExamSummaryRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+import context from 'utils/context-utils';
 
+export default Route.extend(
+    ResetScroll,{
     model: function(params) {
         var store = this.store,
             userId;
 
         //clears impersonated
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager'),
+        var authenticationManager = context.get('authenticationManager'),
             classPromise = store.find("class", params.classId);
 
         authenticationManager.setImpersonatedUser(false);
@@ -16,7 +21,7 @@ SakuraiWebapp.InstructorExamSummaryRoute = Ember.Route.extend(SakuraiWebapp.Rese
             class : classPromise,
             studentUsage : store.query("studentUsage", { classId: params.classId, isExam: 1 }),
             product : classPromise.then( function(clazz) {
-                return clazz.get('product')
+                return clazz.get('product');
             })
         });
     },
@@ -24,8 +29,7 @@ SakuraiWebapp.InstructorExamSummaryRoute = Ember.Route.extend(SakuraiWebapp.Rese
 
     setupController: function(controller, model) {
         var settings = model.product.get('settings'),
-            thresholdRanges = settings.thresholdRanges,
-            store = this.store;
+            thresholdRanges = settings.thresholdRanges;
 
         controller.set("class", model.class);
         controller.set("studentUsage", model.studentUsage);
@@ -41,16 +45,15 @@ SakuraiWebapp.InstructorExamSummaryRoute = Ember.Route.extend(SakuraiWebapp.Rese
             Ember.Logger.warn('thresholdRanges value not found in class.product.settings');
         }
 
-        this.lazyLoad(controller, model)
+        this.lazyLoad(controller, model);
 
     },
 
     lazyLoad: function(controller, model) {
 
         var store = this.store,
-            product = model.product,
             classId = model.class.get("id"),
-            authenticationManager = SakuraiWebapp.context.get('authenticationManager'),
+            authenticationManager = context.get('authenticationManager'),
             taxonomyTag = authenticationManager.get("taxonomyTag");    //Check if taxonomy tag exist
 
         store.query("examAssignmentResult", {classId: classId}) //load Exam Assignment Result

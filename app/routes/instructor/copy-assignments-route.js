@@ -1,8 +1,14 @@
-SakuraiWebapp.InstructorCopyAssignmentsRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+import context from 'utils/context-utils';
+
+export default Route.extend(
+    ResetScroll,{
 
     model: function(params) {
         var store = this.get('store');
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+        var authenticationManager = context.get('authenticationManager');
         authenticationManager.setImpersonatedUser(false);
         return Ember.RSVP.hash({
             assignments : store.query("assignment", {assignmentIds:params.assignmentIds}),
@@ -11,7 +17,7 @@ SakuraiWebapp.InstructorCopyAssignmentsRoute = Ember.Route.extend(SakuraiWebapp.
         });
     },
 
-    afterModel: function(model, transition) {
+    afterModel: function(model) {
         return Ember.RSVP.hash({
             "product": model.class.get("product")
         }).then(function (hash) {

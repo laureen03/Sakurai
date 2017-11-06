@@ -1,11 +1,18 @@
-SakuraiWebapp.InstructorManageAssignmentRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+import context from 'utils/context-utils';
+import TermTaxonomy from 'models/term-taxonomy';
+
+export default Route.extend(
+    ResetScroll,{
 
     model: function(params) {
         var store = this.get('store');
-        var authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+        var authenticationManager = context.get('authenticationManager');
         authenticationManager.setImpersonatedUser(false);
         var editMode = parseInt(params.assignmentId) !== 0;
-        var copyMode = params.action == 'copy';
+        var copyMode = params.action === 'copy';
 
         return Ember.RSVP.hash({
                 assignment : (editMode) ? store.find('assignment', params.assignmentId) : null,
@@ -15,7 +22,7 @@ SakuraiWebapp.InstructorManageAssignmentRoute = Ember.Route.extend(SakuraiWebapp
         });
     },
 
-    afterModel: function(model, transition) {
+    afterModel: function(model) {
         var edit = model.isEditMode;
         return Ember.RSVP.hash({
             "assignment": edit ? model.assignment.reload() : model.assignment,
@@ -29,7 +36,7 @@ SakuraiWebapp.InstructorManageAssignmentRoute = Ember.Route.extend(SakuraiWebapp
     setupController: function(controller, model) {
 
         var product =  model.product;
-        var selectOptions = SakuraiWebapp.TermTaxonomy.findTermTaxonomyTypes(product);
+        var selectOptions = TermTaxonomy.findTermTaxonomyTypes(product);
         var selectedTermTaxonomy = product.get('defaultDataType');
 
         controller.set('class', model.class);

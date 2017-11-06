@@ -1,8 +1,14 @@
-SakuraiWebapp.StudentExamReportsRoute = Ember.Route.extend(SakuraiWebapp.ResetScroll,{
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+import context from 'utils/context-utils';
+
+export default Route.extend(
+    ResetScroll,{
 
     model: function(params) {
         var store = this.store,
-            authenticationManager = SakuraiWebapp.context.get('authenticationManager');
+            authenticationManager = context.get('authenticationManager');
 
         if (params.studentId){ //impersonates the user
             authenticationManager.setImpersonatedUser(params.studentId);

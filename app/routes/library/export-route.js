@@ -1,5 +1,11 @@
-SakuraiWebapp.LibraryExportRoute = Ember.Route.extend(
-    SakuraiWebapp.FeatureMixin, SakuraiWebapp.ResetScroll, {
+import Route from '@ember/routing/route';
+import Ember from "ember";
+import ResetScroll from "mixins/reset-scroll";
+import FeatureMixin from 'mixin/feature-mixin';
+
+export default Route.extend(
+    ResetScroll,
+    FeatureMixin,{
 
 	model: function(params) {
         var store = this.store;
