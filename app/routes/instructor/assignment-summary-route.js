@@ -38,8 +38,7 @@ export default Route.extend(
         }else{
             return Ember.RSVP.hash({
                 product: model.class.get("product"), //preloading
-            }).then(function(hash){
-                    var product = hash.product;
+            }).then(function(){
                     return store.query('termTaxonomyStat', {
                             'assignmentId': model.assignmentId,
                             'classId':model.classId,

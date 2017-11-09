@@ -1,0 +1,6 @@
+<form id="edit-qc" name="edit-qc">
+    {{input class="" id="qc_name" name="qc_name" value=question_set_name focus-out="editQL" focus-in="resetQCError"}}
+    {{#if invalid_qc_name }}
+       <label class="error">{{t "questionLibrary.duplicateNameError"}}</label>
+    {{/if}}
+</form>

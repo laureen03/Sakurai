@@ -1,0 +1,25 @@
+{{#if performances}}
+   <div class="bar-graph-container {{data-type}}" >
+        <div class="header">
+            <h2>{{t "common.performanceBy"}} <span class="capitalize">{{labelTitle}}</span></h2>
+            <a href="#" class="button-gray" id="wit" {{action "openModalWhatisThis" "whatsthis-performance"}}>
+                {{t "whatIsThis"}}</a>
+        </div>
+        {{#each performances as |performance|}}
+            <div class="content">
+                <div class="unit">
+                    <h4>{{performance.owner.name}}</h4>
+                    <small> {{performance.quizzesTaken}} {{t "quiz.quizTaken"}}</small>
+                    {{bar-graph baselineValue=null
+                                currentValue=performance.currentMasteryLevel
+                                caption="quiz.yourMastery" }}
+                    {{#unless data-self-studying}}
+                        {{bar-graph currentValue=performance.classAverage
+                                caption="quiz.classAverage" }}
+                    {{/unless}}
+                </div>
+            </div>
+        {{/each}}
+    </div>
+
+{{/if}}

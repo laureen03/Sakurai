@@ -4,7 +4,9 @@
  * @extends Ember.Component
  *
  */
-SakuraiWebapp.LevelScaleComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 
     tagName: 'div',
 

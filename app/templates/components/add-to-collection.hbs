@@ -1,0 +1,22 @@
+<button class="btn btn-default dropdown-toggle max-width" type="button" id="dropdownMenu1" data-toggle="dropdown">
+    {{t "questionLibrary.addCollection"}}
+    <span class="caret"></span>
+</button>
+<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+    <li role="presentation" class="dropdown-header">
+        {{t "questionLibrary.addTo"}}
+        <div>
+            {{input type="text" class="input-in-dropdown" placeholder=searchQuestionPlaceholder value=searchQCTerm}}
+        </div>
+    </li>
+    <li role="presentation" class="divider"></li>
+    <li role="presentation"><a class="add-to-new-qc" role="menuitem" tabindex="-1" {{action 'createQCWithQuestion' data-question}} href="#">{{t "questionLibrary.newQC"}}</a></li>
+    <li role="presentation" class="divider"></li>
+    {{#each questionSetsEnabledFiltered as |questionSet|}}
+        <li role="presentation" class="qc-option">
+            <a class="options add-to-question-set" {{action 'addToCollection' data-question questionSet}} role="menuitem" tabindex="-1" href="#">
+                {{questionSet.name}}
+            </a>
+        </li>
+    {{/each}}
+</ul>

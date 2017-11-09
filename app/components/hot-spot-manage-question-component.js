@@ -1,10 +1,14 @@
 /**
  *
- * @type {SakuraiWebapp.HotSportManageQuestionComponent}
+ * @type {HotSportManageQuestionComponent}
  */
-SakuraiWebapp.HotSpotManageQuestionComponent = Ember.Component.extend(
-    SakuraiWebapp.ManageQuestionComponentMixin,
-    {
+import Ember from "ember"; 
+import ManageQuestionComponentMixin from "mixins/manage-question-component";
+import Question from "models/question";
+import Interaction from "objects/interaction";
+
+export default Ember.Component.extend(
+    ManageQuestionComponentMixin, {
 
     /**
      * @property {Boolean} Show error for answer choice
@@ -36,15 +40,15 @@ SakuraiWebapp.HotSpotManageQuestionComponent = Ember.Component.extend(
         
         if (self.get("questionImage")!= null){
             //set url Image
-            if (self.get("questionImage.content"))
+            if (self.get("questionImage.content")){
                 self.set("imageUrl", self.get("questionImage.content"));
-            else
+            }
+            else{
                 self.set("imageUrl", self.get("questionImage.relativePath"));
+            }
 
             self.set("data-question.questionMedia", self.get("imageUrl"));
 
-            //Get Real size
-            var img = $(".select-point-result img"); // Get my img elem
             //Get real size
             $("<img/>") // Make in memory copy of image to avoid css issues
                 .attr("src",  self.get("imageUrl"))
@@ -85,8 +89,8 @@ SakuraiWebapp.HotSpotManageQuestionComponent = Ember.Component.extend(
 
     /**
      * Setups the interaction during the didInsertElement
-     * @see SakuraiWebapp.ManageQuestionComponentMixin#didInsertElement
-     * @see SakuraiWebapp.ManageQuestionComponentMixin#didInsertElementInteraction
+     * @see ManageQuestionComponentMixin#didInsertElement
+     * @see ManageQuestionComponentMixin#didInsertElementInteraction
      */
     didInsertElementInteraction: function () { 
         var self = this;
@@ -144,8 +148,9 @@ SakuraiWebapp.HotSpotManageQuestionComponent = Ember.Component.extend(
         point = point - half_size_box; 
         
         //If the point is < than 0
-        if (point < 0)
+        if (point < 0){
             point = 0;
+        }
         else if ((point + (half_size_box * 2)) > maxValue){ //If the point is > than total size
             point = maxValue - (half_size_box * 2); 
         }
@@ -154,13 +159,13 @@ SakuraiWebapp.HotSpotManageQuestionComponent = Ember.Component.extend(
 
     /**
      * Initializes the question interaction
-     * @param {SakuraiWebapp.Question} question
+     * @param {Question} question
      * @param {bool} createMode
      *
      * It is called by
-     * @see SakuraiWebapp.ManageQuestionComponentMixin#initQuestion
+     * @see ManageQuestionComponentMixin#initQuestion
      *
-     * @see SakuraiWebapp.ManageQuestionComponentMixin#initInteraction
+     * @see ManageQuestionComponentMixin#initInteraction
      */
     initInteraction: function (question, createMode) {
         this.set("createMode", createMode);
@@ -174,9 +179,9 @@ SakuraiWebapp.HotSpotManageQuestionComponent = Ember.Component.extend(
      * @return {bool}
      *
      * It is called by
-     * @see SakuraiWebapp.ManageQuestionComponentMixin#saveQuestion
+     * @see ManageQuestionComponentMixin#saveQuestion
      *
-     * @see SakuraiWebapp.ManageQuestionComponentMixin#validateInteraction
+     * @see ManageQuestionComponentMixin#validateInteraction
      */
     validateInteraction: function(){
         return !this.get("answerChoiceInvalid");
@@ -185,20 +190,20 @@ SakuraiWebapp.HotSpotManageQuestionComponent = Ember.Component.extend(
     /**
      * Set all values for Interaction and return a Json
      *
-     * @see SakuraiWebapp.ManageQuestionComponentMixin#saveQuestion
-     * @see SakuraiWebapp.ManageQuestionComponentMixin#getInteractions
+     * @see ManageQuestionComponentMixin#saveQuestion
+     * @see ManageQuestionComponentMixin#getInteractions
      **/
     getInteractions: function () {
-        var interaction = SakuraiWebapp.Interaction.create({}),
+        var interaction = Interaction.create({}),
             answerChoiceInvalid = true,
             correctAnswerChoices = [],
             self = this;
 
-        return new Em.RSVP.Promise( function(resolve, reject) {
+        return new Ember.RSVP.Promise( function(resolve) {
 
             interaction.setProperties({
-                "type": SakuraiWebapp.Question.HOT_SPOT,
-                "subType": SakuraiWebapp.Question.HOT_SPOT,
+                "type": Question.HOT_SPOT,
+                "subType": Question.HOT_SPOT,
                 "shuffle": false,
                 "minChoices":0,
                 "maxChoices":0,
@@ -215,7 +220,7 @@ SakuraiWebapp.HotSpotManageQuestionComponent = Ember.Component.extend(
                 y = $(".select-point-result .result-ok-ql").position().top;
                 
                 x = self.convertToRealPositionOrSize(x, self.get("proportionalWidth"), self.get('realWidth'));
-                y = self.convertToRealPositionOrSize(y, self.get("proportionalHeight"), self.get('realHeight'))
+                y = self.convertToRealPositionOrSize(y, self.get("proportionalHeight"), self.get('realHeight'));
                 
                 correctAnswerChoices.pushObject(x);  //Set x
                 correctAnswerChoices.pushObject(y);  //Set Y

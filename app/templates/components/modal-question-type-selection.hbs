@@ -1,0 +1,28 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">{{t "questionLibrary.filter.filteringBy"}} {{t "common.questionType.one"}}</h4>
+        </div>
+        <div class="modal-body">
+
+            {{#each questionTypes as |questionType|}}
+                <ul>
+                    {{#with questionType as |questionType|}}
+                        <li>
+                            <input type="checkbox" value={{questionType.code}} id="question_type_{{questionType.code}}"/>
+                            <label for="question_type_{{questionType.code}}">{{t questionType.label}}</label>
+                        </li>
+                    {{/with}}
+                </ul>
+            {{/each}}
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-blue" {{action 'sendSelection'}}>{{t "questionLibrary.filter.apply"}}</button>
+            <a class="cancel" data-dismiss="modal" href="#">{{t "cancel"}}</a>
+        </div>
+    </div>
+</div>

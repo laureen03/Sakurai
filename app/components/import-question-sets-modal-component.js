@@ -11,7 +11,9 @@
  * @param on-name-click {string} name of action to send to the target when clicking on a question set name
  */
 
-SakuraiWebapp.ImportQuestionSetsModalComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 
     /*
      * === PROPERTIES
@@ -72,7 +74,7 @@ SakuraiWebapp.ImportQuestionSetsModalComponent = Ember.Component.extend({
                     // Filter out question sets with no questions
                     return qc.get('totalQuestions') > 0;
                 }).map( function(qc) {
-                    return new Em.RSVP.Promise( function(resolve, reject) {
+                    return new Ember.RSVP.Promise( function(resolve) {
                         qc.get('product').then( function(product) {
                             // Get only what is needed from each question collection
                             resolve({
@@ -89,13 +91,13 @@ SakuraiWebapp.ImportQuestionSetsModalComponent = Ember.Component.extend({
 
             Ember.RSVP.all(questionCollections).then( function(questionCollections) {
                 var productsObject = {},
-                    productsArray = Em.ArrayProxy.create({ content: Ember.A()}),
+                    productsArray = Ember.ArrayProxy.create({ content: Ember.A()}),
                     productId;
 
                 questionCollections.forEach( function(qc) {
                     var productId = qc.product.get('id');
 
-                    if (productId != excludeProduct) {
+                    if (productId !== excludeProduct) {
 
                         // Has the product id already been added?
                         if (!productsObject[productId]) {

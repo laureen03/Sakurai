@@ -1,0 +1,19 @@
+{{#unless isFullQuestion}}
+    <div class="btn-box">
+	<button type="submit" class="{{btnStyle}}" {{action "submitQuestion" allowedKeys="enter"}} id="save-results">
+            {{t "quiz.submitAnswer"}}
+        </button>&nbsp;
+        {{#if progressAlertDisplayed}}
+            <button class="btn btn-danger" title={{t "quiz.stopExamTitle" }} {{action "displayAnswerKey" }} id="submitExam">
+                {{t "quiz.stopExam"}}
+            </button>
+        {{/if}}
+        {{#link-to 'student.haid' selectedQuiz.class.id class='gray exit-quiz'}}
+            {{#if isExam}}
+                {{t "quiz.exitExam"}}
+            {{else}}
+                {{t "quiz.exitQuiz"}}
+            {{/if}}
+        {{/link-to}}
+    </div>
+{{/unless}}

@@ -1,0 +1,39 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">{{t "common.questionHistory"}}</h4>
+        </div>
+        <div class="modal-body">
+
+            {{#if _isHistoryLoaded}}
+
+                {{#if _auditItems}}
+                <ul>
+                    {{#each _auditItems as |item|}}
+                        <li>
+                            {{item.label}}{{format-date item.date format="MM/DD/YY" tz=false}}
+                            {{#if item.isNoteAdded}}
+                                <br/><i>{{item.detail}}</i>
+                            {{/if}}
+                        </li>
+                    {{/each}}
+                </ul>
+                {{else}}
+                    {{t "common.noEventsHistory"}}
+                {{/if}}
+
+            {{else}}
+                <div class="loading">
+                    <span class="glyphicon glyphicon-refresh animate-spin"></span>
+                </div>
+            {{/if}}
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-blue" data-dismiss="modal">{{t "button.close"}}</button>
+        </div>
+    </div>
+</div>

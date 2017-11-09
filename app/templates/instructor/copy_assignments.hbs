@@ -1,0 +1,80 @@
+<div class="container copy-assignments-container">
+    {{#if assignmentCreated }}
+        {{partial 'instructor/partial/assignments_copied'}}
+    {{else}}
+        <h2>{{t "copyAssignments.header"}}</h2>
+        <form role="form" id="copy-assignments">
+            <div class="copy-assignments-form">
+                {{partial 'instructor/assign/choose_class_list'}}
+                <div class="form-group instructions">
+                    <p>{{t "copyAssignments.instructionLong"}}</p>
+                </div>
+                {{#each copyAssignments as |assignment|}}
+                    <div class="form-group assignment-name">
+                        <label>
+                            <span class="assignment-type">
+                                {{#if assignment.isQuestionCollectionAssignment}}
+                                    {{{t "copyAssignments.questionCollection"}}}
+                                {{else if assignment.isMasteryLevelAssignment}}
+                                    {{{t "copyAssignments.masteryLevel"}}}
+                                {{else if assignment.isExamAssignment}}
+                                    {{t "copyAssignments.examType"}}
+                                {{/if}}
+                            </span>
+                            {{t "copyAssignments.assignName"}}
+                        </label>
+                        {{input name=assignment.parentAssignment.id type="text" class="form-control" value=assignment.name}}
+                    </div>
+                    <div id="datesAssignment{{unbound assignment.parentAssignment.id}}" class="form-group assign-dates dates custom-dates clearfix">
+                        <div class="col-md-6">
+                            <label>{{t "assignExam.availableOn"}}:</label>
+                            {{input name="startDate" class="date-input startDate" type="text" readonly="true"}}
+                            {{my-select
+                                class="hour-input custom-select startHour"
+                                content=timeList
+                                optionValuePath="value"
+                                optionLabelPath="hour"}}
+
+                            <div class="dropdown form-group dropup">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                    {{zone-abbr assignment.timeZone}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                    {{#each timezones as |timezone|}}
+                                         <li role="presentation"><a role="menuitem" tabindex="-1" {{action "setTimeZone" assignment timezone}}><strong>{{zone-abbr timezone}}</strong> ({{ timezone }})</a></li>
+                                    {{/each}}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>{{t "assignExam.dueOn"}}:</label>
+                            {{input name="dueDate" class="date-input dueDate" type="text" readonly="true"}}
+
+                            {{my-select
+                                class="hour-input custom-select endHour"
+                                content=timeList
+                                optionValuePath="value"
+                                optionLabelPath="hour"}}
+
+                            <span class="label-timezone">{{zone-abbr assignment.timeZone}}</span>
+                        </div>
+                        <label id="error-dates-{{unbound assignment.parentAssignment.id}}" class="error hide">{{t "assignQuiz.dueDateBeforeAvailableDate"}}</label>
+                    </div>
+                {{/each}}
+                <div class="form-group instructions">
+                    <p>{{t "copyAssignments.instructionShort"}}</p>
+                </div>
+            </div>
+            <div class="btn-box">
+                    {{async-button
+                        data-button-class="btn btn-blue copy-assignments-btn"
+                        data-text="assign"
+                        action="copyAssignments" }}
+                    <a class="go-back" {{action 'goBack' class.product.id class.id}}>{{t "cancel"}}</a>
+            </div>
+        </form>
+    {{/if}}
+</div>
+
+

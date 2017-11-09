@@ -1,0 +1,36 @@
+<h4 {{action "onPerformanceClick"}}>{{data-performance-name}}</h4>
+
+{{#if data-performance.numQuestions}}
+    <em>{{data-performance.numQuestionsCorrect}}
+        {{t "common.of"}}
+        {{data-performance.numQuestions}}
+        {{t "common.question" count=data-performance.numQuestions}}
+        {{t "common.answeredCorrectly"}}</em>
+{{else}}
+    <em>{{t "common.basedOn"}}
+        {{data-performance.numStudents}}
+        {{t "common.student" count=data-performance.numStudents}}</em>
+{{/if}}
+
+<figure>
+    {{#unless data-hideThresholdLabel}}
+        {{#if data-highlight-text}}
+            <div id="performanceMinimumNCLEXProficiency" class="range-text performance-tooltip" style={{rangeTextStyle}}>
+                <span>{{t data-highlight-text}}</span>
+            </div>
+        {{/if}}
+    {{/unless}}
+
+    <div class="background"></div>
+    <div class="line" style={{lineWidth}}></div>
+    {{#unless data-hideThresholdLabel}}
+        <div class="range" style={{rangeStyle}}></div>
+    {{/unless}}
+    <div class="value" style={{valueOffset}}>{{numeral-format currentValue '0.00'}}</div>
+
+    {{#if caption}}
+        <figcaption>{{t caption}}</figcaption>
+    {{/if}}
+</figure>
+
+

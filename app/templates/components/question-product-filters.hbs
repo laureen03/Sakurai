@@ -1,0 +1,70 @@
+<div class="question-product-filters">
+    <strong>{{t "components.questionProductFilters.productFilters"}}:</strong>
+    <span class="comma-split">
+    {{#each data-product-filters as |productFilter|}}
+        {{#if productFilter.isHidden }}
+            <span class="filter">{{productFilter.product.title}}: {{t "common.hidden"}}</span>
+        {{else}}
+            <span class="filter">{{productFilter.product.title}}: {{t "common.privateReserve"}}</span>
+        {{/if}}
+    {{else}}
+        <span class="no-filters">{{t "components.questionProductFilters.showAllProducts"}}</span>
+    {{/each}}
+    </span>
+    {{#if hasProductFilterItems}}
+        <a class="change-filters text-lowercase" {{action 'openFilterModal'}} href="#">({{t "change"}})</a>
+
+
+        <div class="question-product-filters-modal modal fade filter-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close"
+                                {{action 'onCancelFilters'}}
+                                data-dismiss="modal" aria-hidden="true">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">{{t "components.questionProductFilters.productFilters"}}</h4>
+                    </div>
+                    <div class="modal-body cf">
+                        <table class="product-filter-table">
+                            <thead>
+                                <tr>
+                                    <th>{{t "common.products"}}</th>
+                                    <th class="center">{{t "common.everyone"}}</th>
+                                    <th class="center">{{t "common.privateReserve"}}</th>
+                                    <th class="center">{{t "common.noOne"}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {{#each productFilterItems as |filterItem|}}
+                                <tr>
+                                    <td class="title">
+                                        {{filterItem.product.title}}
+                                    </td>
+                                    <td class="center everyone">
+                                        {{radio-button name=filterItem.id value='everyone' checked=filterItem.type}}
+                                    </td>
+                                    <td class="center private">
+                                        {{radio-button name=filterItem.id value='private_filter' checked=filterItem.type}}
+                                    </td>
+                                    <td class="center no-one">
+                                        {{radio-button name=filterItem.id value='hidden_filter' checked=filterItem.type}}
+                                    </td>
+                                </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        {{async-button
+                        data-button-class="btn btn-blue apply-btn"
+                        data-text="apply"
+                        action="onSaveFilters" }}
+                        <a class="cancel cancel-btn" data-dismiss="modal" {{action 'onCancelFilters'}} href="#">{{t "cancel"}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/if}}
+</div>

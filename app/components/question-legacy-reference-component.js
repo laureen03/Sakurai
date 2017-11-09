@@ -1,9 +1,12 @@
 /**
  *
  * This component to render question references
- * @type {SakuraiWebapp.QuestionLegacyReferenceComponent}
+ * @type {QuestionLegacyReferenceComponent}
  */
-SakuraiWebapp.QuestionLegacyReferenceComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+
+export default Ember.Component.extend({
 
     /**
      * @property {array} [ { id: number, text: string, product: <productId> }... ]
@@ -11,7 +14,7 @@ SakuraiWebapp.QuestionLegacyReferenceComponent = Ember.Component.extend({
     'data-references':null,
 
     /**
-     * @property {SakuraiWebapp.Product} product
+     * @property {Product} product
      */
     'data-product-id': null,
 
@@ -32,13 +35,12 @@ SakuraiWebapp.QuestionLegacyReferenceComponent = Ember.Component.extend({
     */
     setupReferenceList: function() {
         var productId = this.get("data-product-id"),
-            references = this.get("data-references"),
             self = this,
             filtered;
 
         self.get('data-references').then( function(references) {
             filtered = $.grep(references, function(reference){
-                return reference.product == productId;
+                return reference.product === productId;
             });
             self.set('references', filtered);
         });

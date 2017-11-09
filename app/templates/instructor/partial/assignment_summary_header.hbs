@@ -1,0 +1,29 @@
+<div class="details">
+    <div>{{t "assignQuiz.assignedTo"}}:</div>
+    <div class="classes-list">
+        {{#each assignment.classes as |clazz|}}
+            <div>
+                <span class="highlight">{{clazz.name}}</span>&nbsp;-&nbsp;
+                {{clazz.term}}
+            </div>
+        {{/each}}
+    </div>
+    
+    {{#if assignment.autoShutoff}}
+    <div>{{t "assignmentSummary.type"}}:</div> <div class="highlight"> {{t "assignmentSummary.shutoff"}}</div>
+    {{/if}}
+    
+    <div>{{t "assignQuiz.deadlines"}}:</div>
+    <div class="highlight">
+        <span>{{t "assignQuiz.availableOn"}}</span>&nbsp;
+        {{format-date assignment.availableDate timezone=assignment.timeZone}}&nbsp;
+
+        <span>{{t "assignQuiz.andDueOn"}}</span>&nbsp;
+        {{format-date assignment.dueDate timezone=assignment.timeZone}}.
+    </div>
+</div>
+<div class="details">
+    {{t "assignmentSummary.numberCompleted"}}:
+    <h3>{{assignment.totalCompleted}}&nbsp;/&nbsp;{{assignment.totalStudents}}&nbsp;
+        {{t "assignmentSummary.students"}}</h3>
+</div>

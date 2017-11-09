@@ -1,5 +1,10 @@
-SakuraiWebapp.QuestionFillInTheBlankComponent = Ember.Component.extend(
-SakuraiWebapp.QuestionMixin, {
+import Ember from "ember"; 
+import QuestionMixin from "mixins/question-mixin";
+import Question from "models/question";
+
+
+export default Ember.Component.extend(
+    QuestionMixin,{
     /**
      * @property {string} shuffle action
      */
@@ -22,7 +27,7 @@ SakuraiWebapp.QuestionMixin, {
         //Reset and disable inputs
         component.set('answer', null);
         component.set("isDisable", false);
-        if (component.get("model.interactions") && component.get('model.interactions').get('firstObject') && $.inArray(SakuraiWebapp.Question.TOOLS.CALCULATOR, component.get('model.interactions').get('firstObject').tools) >= 0) {
+        if (component.get("model.interactions") && component.get('model.interactions').get('firstObject') && $.inArray(Question.TOOLS.CALCULATOR, component.get('model.interactions').get('firstObject').tools) >= 0) {
             // Make sure the calculator is set to 0
             $('.question-answer .calculator').calculator('option', 'value', 0);
 
@@ -47,8 +52,8 @@ SakuraiWebapp.QuestionMixin, {
 
 
             //Filter input text to accept only numbers , arrow movement, backspace, delete, point, or negative sign
-            if ((e.which == 8) || (e.which == 46) || (e.which == 190) ||
-                    (e.which >= 35 && e.which <= 40) || (e.which >= 48 && e.which <= 57) || (e.which == key) ||
+            if ((e.which === 8) || (e.which === 46) || (e.which === 190) ||
+                    (e.which >= 35 && e.which <= 40) || (e.which >= 48 && e.which <= 57) || (e.which === key) ||
                     (e.which >= 96 && e.which <= 105)) {
 
                 //event bugfix - if user press shift + special char too fast the event will not catch it
@@ -127,7 +132,7 @@ SakuraiWebapp.QuestionMixin, {
                 $("#answer-form").valid();
             }
         });
-        if (component.get("model.interactions") && component.get('model.interactions').get('firstObject') && $.inArray(SakuraiWebapp.Question.TOOLS.CALCULATOR, component.get('model.interactions').get('firstObject').tools) >= 0) {
+        if (component.get("model.interactions") && component.get('model.interactions').get('firstObject') && $.inArray(Question.TOOLS.CALCULATOR, component.get('model.interactions').get('firstObject').tools) >= 0) {
             // Show the calculator if it's listed in the tools array
             $('.question-answer .calculator').removeClass('hidden');
         }

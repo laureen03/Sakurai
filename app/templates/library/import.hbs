@@ -1,0 +1,62 @@
+<div class="container question-library qc-import">
+    <div class="menu">
+        {{partial "library/left_menu"}}
+    </div>
+    <div class="col-md-9 content-ql">
+        <div class="ql-title">
+            <div class="name">
+                {{#if questionSetEditMode}}
+                    {{edit-question-collection question_set_name = sourceQuestionSet.questionSet.name}}
+                {{else}}
+                    <h3>{{sourceQuestionSet.questionSet.name}}&nbsp;
+                        <a class="glyphicon glyphicon-pencil medium-icon text-muted gray" {{action "activeQCEdit"}}></a>
+                    </h3>
+                {{/if}}
+            </div>
+                <div class="pull-right actions">
+                    <button class="btn btn-blue {{if numberQuestionsToImport 'active' 'disabled'}} " data-toggle="modal" data-target="#import-confirmation-modal">{{t "common.importThisCollection"}}</button>
+                    {{#link-to 'library.results' class.id (query-params qsId=targetQuestionSet.questionSet.id)}}
+                        {{t "common.returnToQuestionSet"}}
+                    {{/link-to}}
+                </div>
+        </div>
+
+        <div class="question-container">
+            <div class="qc-header">
+                <div class="question-numbers">
+                    <h4>{{sortedQuestions.length}} {{t "questionLibrary.questions"}}
+                        <em class="{{if numberQuestionsToImport '' 'no-questions'}}">
+                            &mdash;{{t "common.questionsToImport" count=numberQuestionsToImport}}
+                        </em>
+                    </h4>
+                </div>
+            </div>
+            <div id="qc-result-body" class="qc-body">
+                {{#each sortedQuestions as |question|}}
+                    {{partial 'library/question_partial'}}
+                {{/each}}
+            </div>
+            <div class="qc-footer"></div>
+        </div>
+
+    </div>
+</div>
+
+<!-- text-entry questions: modal to show other answers -->
+{{partial "library/question/other_answers_modal"}}
+
+<div class="modal fade" id="import-confirmation-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button  type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">{{t "common.confirmationImport"}}</h4>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-blue" data-dismiss="modal" {{action 'importQuestions'}}>{{t "common.yes"}}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{t "common.cancel"}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{render "library.create_question_collection"}}

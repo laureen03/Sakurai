@@ -1,5 +1,9 @@
-SakuraiWebapp.QuestionFooterComponent = Ember.Component.extend(
-SakuraiWebapp.QuestionMixin, {
+import Ember from "ember"; 
+import QuestionMixin from "mixins/question-mixin";
+
+
+export default Ember.Component.extend(
+    QuestionMixin,{
     actions: {
         submitQuestion: function () {
             this.sendAction('submitQuestion');

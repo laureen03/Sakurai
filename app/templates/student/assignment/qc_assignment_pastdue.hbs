@@ -1,0 +1,31 @@
+<div class="assignment-info clearfix">
+
+    {{partial "student/partials/qc_assignment_header"}}
+
+    <div class="details">
+        {{#if assignment.isTimeOut}}
+            {{t "assignment.youDidNotCompleteTimeOut1"}}&nbsp;{{assignment.timeLimit}}&nbsp;{{timeUnit}}&nbsp;
+            {{t "assignment.youDidNotCompleteTimeOut2"}}
+        {{else}}
+            {{t "assignment.youDidNotComplete"}}
+        {{/if}}
+    </div>
+    <div class="details">
+        {{#if assignment.isAutoSubmitted}}
+            <span class="label label-success">{{t "assignments.autoSubmitted"}}</span>
+        {{else}}
+            <span class="label label-danger">{{t "assignments.pastDue"}}</span>
+        {{/if}}
+        <span class="points highlight">
+            {{assignment.score}}/{{assignment.points}}&nbsp;{{t "assignment.pointsText"}}
+        </span>
+    </div>
+</div>
+<div class="btn-box clearfix margin-btn">
+    {{#link-to 'student.assignments' class.id class="btn btn-blue btn-done"}}{{t "assignQuiz.done"}}{{/link-to}}
+    {{#if assignment.isAutoSubmitted}}
+        {{#if assignment.quiz}}
+            {{#link-to 'quiz.result' assignment.quiz class.id class="btn btn-blue btn-result space-btn"}}{{t "assignment.quizResult"}}{{/link-to}}
+        {{/if}}
+    {{/if}}
+</div>

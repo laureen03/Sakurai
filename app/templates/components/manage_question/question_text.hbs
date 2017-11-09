@@ -1,0 +1,8 @@
+<div class="section question-text">
+    {{#if allowMajorEdit}}
+        <label>{{input type="checkbox" name="minor-edit" checked=isMinorEdit}}{{t "common.makeMinorEdit"}}</label>
+    {{/if}}
+    {{textarea id="questionText" name="questionText" rows="7" placeholder=placeHolder}}
+    {{textarea id="question-text" name="question-text" class="question-text hidden-questionText" value=data-question.questionText}}
+
+</div>

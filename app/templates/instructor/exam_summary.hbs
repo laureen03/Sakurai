@@ -1,0 +1,261 @@
+<div class="container exam-summary">
+    <div class="col-md-3 options-menu">
+        <div class="divider"></div>
+        <ul>
+            <li class="exam-action-title hidden-sm hidden-xs">{{t "examReports.jumpDirectlyTo"}}:</li>
+            <li><a data-scroll-to="classPracticeExamPerformance">{{t "examSummary.classPracticeExamPerformance"}}</a></li>
+            <li><a data-scroll-to="classPracticeExamResults">{{t "examSummary.classPracticeExamResults"}}</a></li>
+            <li><a data-scroll-to="studentPracticeExamResults">{{t "examSummary.studentPracticeExamResults"}}</a></li>
+            <li><a data-scroll-to="comprehensivePracticeExamResults">{{t "examSummary.comprehensivePracticeExamResults"}}</a></li>
+            <li><a data-scroll-to="performanceByClientNeeds">{{t "examSummary.performanceByClientNeeds"}}</a></li>
+            <li><a data-scroll-to="performanceByNursingTopics">{{t "examSummary.performanceByNursingTopics"}}</a></li>
+            <li><a data-scroll-to="performanceByNursingConcepts">{{t "examSummary.performanceByNursingConcepts"}}</a></li>
+        </ul>
+        <div class="divider"></div>
+     </div>
+    <div class="col-md-9 exam-summary-content">
+
+        <div id="classPracticeExamPerformance">
+            <div class="classPracticeExamPerformance">
+                <h2>{{t "examSummary.classPracticeExamPerformance"}}</h2>
+                <div class="clearfix">
+                    <div class="graph-mastery-level">
+                        {{mastery-level-distribution-chart
+                            data-i18n-title='examSummary.classPracticeExamPerformanceChart.title'
+                            data-i18n-x-axis='examSummary.classPracticeExamPerformanceChart.examMasteryLevel'
+                            data-i18n-y-axis='examSummary.classPracticeExamPerformanceChart.numberOfStudents'
+                            data-height=290
+                            data-studentUsage=studentUsage
+                        }}
+                    </div>
+                    <div class="average-mastery-level">
+                        <h4 class="title">{{t "examSummary.averageMasteryLevel"}}</h4>
+                        <div class="ml">{{numeral-format classAverageMasteryLevel '0.00'}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{#if examAssignmentResultsLoaded}}
+        <div id="classPracticeExamResults">
+            <div class="classPracticeExamResults">
+                <div class="explanation-box">
+                    <h2 class="header-assignments">{{t "examSummary.classPracticeExamResults"}}
+                    <small id="manageAssignments">{{#link-to 'instructor.assignments' class.product.id class.id (query-params prevPage="exam_summary") class="highlight-link"}}  {{t "instructor.manageAssignments"}}{{/link-to}}</small>
+                    </h2>
+
+                    {{#if examAssignmentResultsSortable.collection}}
+                        <table class="table tablesorter examAssignmentResults-table" >
+                            <thead>
+                                <tr>
+                                    <th class="header visible-xs no-arrow">{{t "expand"}}</th>
+                                    <th class="header sort_assignment_name tleft">
+                                        <a {{action 'onSortByCriteria' 'examAssignmentResults' 'assignment.name' }}>
+                                            <span class="name-assignmentName action">{{t "practiceExamResults.tableHeader.name"}}</span>
+                                        </a>
+                                    </th>
+                                    <th class="hidden-xs sort_totalQuestions">
+                                        <a {{action 'onSortByCriteria' 'examAssignmentResults' 'totalQuestions' }}>
+                                        <span class="name-totalQuestions action">{{t "practiceExamResults.tableHeader.questions"}} </span>
+                                    </a>
+                                    </th>
+                                    <th class="hidden-xs hidden-xs header sort_timestampAvailableDate">
+                                        <a {{action 'onSortByCriteria' 'examAssignmentResults' 'timestampAvailableDate' }}>
+                                        <span class="name-timestampAvailableDate action">{{t "practiceExamResults.tableHeader.startDate"}} </span>
+                                    </a>
+                                    </th>
+                                    <th class="hidden-xs header sort_timestampEndDate">
+                                        <a {{action 'onSortByCriteria' 'examAssignmentResults' 'timestampEndDate' }}>
+                                            <span class="name-timestampDueDate action">{{t "practiceExamResults.tableHeader.endDate"}}</span>
+                                         </a>
+                                    </th>
+                                    <th class="hidden-xs header sort_examsCompleted small-colunm center">
+                                        <a {{action 'onSortByCriteria' 'examAssignmentResults' 'examsCompleted' }}>
+                                            <span class="name-examsCompleted action">{{t "practiceExamResults.tableHeader.nComplete"}}</span>
+                                         </a>
+                                    </th>
+                                    <th class="hidden-xs header sort_examAvgMastery">
+                                        <a {{action 'onSortByCriteria' 'examAssignmentResults' 'examAvgMastery' }}>
+                                            <span class="name-examAvgMastery action">{{t "practiceExamResults.tableHeader.avgMastery"}}</span>
+                                         </a>
+                                    </th>
+                                </tr>
+                            </thead>
+                        <tbody>
+                        {{#each examAssignmentResultsSortable.collection as |examAssignment index|}}
+                            <tr data-pos="{{index}}">
+                                <td class="visible-xs">
+                                    <a {{action 'showMore' index examAssignment }} class="icon">
+                                        <span data-arrow="{{index}}" class="glyphicon glyphicon-chevron-down"></span>
+                                    </a>
+                                </td>
+                                <td class="name tleft" title="{{examAssignment.assignment.name}}">
+                                    {{#link-to "instructor.assignmentSummary" class.id examAssignment.assignment.id classNames="dark-gray assignment-name"}}{{examAssignment.assignment.name}}{{/link-to}}
+                                </td>
+                                <td class="status hidden-xs center">{{examAssignment.assignment.numberQuestion}}</td>
+                                <td class="hidden-xs">
+                                    <span class="date-format">{{format-date examAssignment.assignment.availableDate timezone=examAssignment.timeZone}}</span>
+                                </td>
+                                <td class="hidden-xs">
+                                    <span class="date-format">{{format-date examAssignment.assignment.dueDate timezone=examAssignment.timeZone}}</span>
+                                </td>
+                                <td class="hidden-xs center">{{examAssignment.examsCompleted}}</td>
+                                <td class="hidden-xs center">
+                                    {{#with examAssignment.examAvgMastery as |examAvgMastery|}}
+                                        <div class="ml">{{numeral-format examAvgMastery '0.0'}}</div>
+                                    {{/with}}
+                                </td>
+                            </tr>
+                        {{/each}}
+                        </tbody>
+                     </table>
+                     {{else}}
+                        <h3 class="title-no-class">{{t "assignments.noCreated"}}</h3>
+                     {{/if}}
+                </div>
+            </div>
+        </div>
+        {{else}}
+            <div class="lazy-load-spin"><span class="glyphicon glyphicon-refresh animate-spin"></span></div>
+        {{/if}}
+        {{#if studentUsageLoaded}}
+        <div id="studentPracticeExamResults">
+            <h2>{{t "examSummary.studentPracticeExamResults"}}
+                {{#if showPracticeExamResultsDownload}}
+                    <small class="small-link">
+                        {{export-csv-link
+                            data=studentUsageSortable.collection
+                            data-class=class
+                            data-product=class.product
+                            type="practiceExamResults"}}
+                    </small>
+                {{/if}}
+            </h2>
+            <div>
+                <table class="table tablesorter studentUsage-table">
+                    <thead>
+                    <tr>
+                        <th class="header sort_user_fullName tleft">
+                            <a {{action 'onSortByCriteria' 'studentUsage' 'user.fullName' }}>
+                                <span class="name-userFullName action headerSortUp">{{t "examSummary.studentUsage.name"}}</span>
+                            </a>
+                        </th>
+
+                        <th class="header sort_examsCompleted">
+                            <a {{action 'onSortByCriteria' 'studentUsage' 'examsCompleted' }}>
+                                <span class="name-examsCompleted action">{{t "examSummary.studentUsage.examsCompleted"}}</span>
+                            </a>
+                        </th>
+                        <th class="header sort_lastExamAt">
+                            <a {{action 'onSortByCriteria' 'studentUsage' 'lastExamAt' }}>
+                                <span class="name-lastExamAt action">{{t "examSummary.studentUsage.lastExam"}}</span>
+                            </a>
+                        </th>
+                        <th class="header sort_questionsAnswered">
+                            <a {{action 'onSortByCriteria' 'studentUsage' 'questionsAnswered' }}>
+                                <span class="name-questionsAnswered action">{{t "examSummary.studentUsage.questionsAnswered"}}</span>
+                            </a>
+                        </th>
+                        <th class="header sort_masteryLevel">
+                            <a {{action 'onSortByCriteria' 'studentUsage' 'masteryLevel' }}>
+                                <span class="name-masteryLevel action">{{t "examSummary.studentUsage.masteryLevel"}}</span>
+                            </a>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each studentUsageSortable.collection as |studentUsage|}}
+                        <tr data-student="{{studentUsage.user.id}}" data-pos-su="{{index}}">
+                            <td class="name tleft" title="{{studentUsage.user.fullName}}">
+                                <span class="dark-gray assignment-name"><a class="dark-gray" {{action "openStudentView" studentUsage.user.id}}>{{studentUsage.user.fullName}}</a></span>
+                                <span class="text-muted student-email">{{studentUsage.user.email}}</span>
+                            </td>
+                            <td class="exams-completed">
+                                {{studentUsage.examsCompleted}}
+                            </td>
+                            <td class="last-exam-at">
+                                {{#if studentUsage.lastExamAt}}
+                                    <span class="date-format">{{format-date studentUsage.lastExamAt}}</span>
+                                {{else}}
+                                    <span class="date-format">&mdash;</span>
+                                {{/if}}
+                            </td>
+                            <td class="questions-answered">
+                                {{studentUsage.questionsAnswered}}
+                            </td>
+                            <td class="xs-last mastery-level">{{numeral-format studentUsage.masteryLevel '0.00'}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="comprehensivePracticeExamResults">
+            <h2>{{t "examSummary.comprehensivePracticeExamResults"}}</h2>
+            {{usage-stat data-stats=studentUsage}}
+        </div>
+        {{else}}
+            <div class="lazy-load-spin"><span class="glyphicon glyphicon-refresh animate-spin"></span></div>
+        {{/if}}
+        {{#if termTaxonomyStatsLoaded}}
+        <div class="performances bar-graph-container">
+            <div id="performanceByClientNeeds">
+                <div class="header">
+                    <h2>{{t "common.performanceBy"}} <b>{{t "common.clientNeed.other"}}</b></h2>
+                    <p>{{t "common.instructorGraphsNote"}}</p>
+                </div>
+                <div class="content">
+                    {{#each termTaxonomyStat.clientNeedsTaxonomyPerformances as |performance|}}
+                        <div class="unit">
+                            {{performance-graph data-performance=performance
+                                                data-performance-name=performance.termTaxonomy.name
+                                                data-value-property="classAverage"
+                                                data-highlight-from=thresholdLowerLimit
+                                                data-highlight-to=thresholdUpperLimit
+                                                data-highlight-text="common.approximatePassingThreshold"
+                                                data-item-click="onPerformanceTaxonomyClick"}}
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+        {{else}}
+            <div class="lazy-load-spin"><span class="glyphicon glyphicon-refresh animate-spin"></span></div>
+        {{/if}}
+        {{#if chapterStatsLoaded}}
+        <div class="bar-graph-container">
+            <div id="performanceByNursingTopics">
+                <div class="header">
+                    <h2>{{t "common.performanceBy"}} <b>{{t "common.nursingTopic.other"}}</b></h2>
+                    <p>{{t "common.instructorGraphsNote"}}</p>
+                </div>
+                <div class="content">
+                    {{performance-list  data-component-class="nursing-topics"
+                                        data-category-i18n="common.nursingTopic.other"
+                                        data-stats=chapterStats
+                                        data-toggle-link=true
+                                        data-item-click="onPerformanceChapterClick" }}
+                </div>
+            </div>
+
+            <div id="performanceByNursingConcepts">
+                <div class="header">
+                    <h2>{{t "common.performanceBy"}} <b>{{t "common.nursingConcept.other"}}</b></h2>
+                    <p>{{t "common.instructorGraphsNote"}}</p>
+                </div>
+                <div class="content">
+                    {{performance-list  data-component-class="nursing-concepts"
+                                        data-category-i18n="common.nursingConcept.other"
+                                        data-stats=termTaxonomyStat
+                                        data-type="nursing_concepts"
+                                        data-filter-type=true
+                                        data-toggle-link=true
+                                        data-item-click="onPerformanceTaxonomyClick" }}
+                </div>
+            </div>
+        </div>
+        {{else}}
+            <div class="lazy-load-spin"><span class="glyphicon glyphicon-refresh animate-spin"></span></div>
+        {{/if}}
+    </div>
+</div>

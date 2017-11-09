@@ -1,0 +1,71 @@
+<!-- H E A D E R -->
+<div class="login-header">
+    <div class="container">
+        <div class="navbar-header">
+            <h1 id="prepU"><a class="ir">prepU</a></h1>
+        </div>
+        <nav class="navbar-collapse" role="navigation">
+            <ul class="nav menu-dropdown menu-username" role="tablist">
+                <li class="dropdown">
+                    <a class="dropdown-toggle username" data-toggle="dropdown" href="#">
+                      <div class="name">{{user.firstName}}&nbsp;{{user.lastName}}</div><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        {{#if sso}}
+                            {{#if isXSmall}}
+                            <li>
+                               <a href="#" {{action 'exitApp'}}>
+                                    {{t "common.returnToThePoint"}}
+                                </a>
+                            </li>
+                            {{/if}}
+                        {{/if}}
+                        {{#if controller.user.isStudent}}
+                            <li class="{{if sso 'my-profile' ''}}">{{#link-to 'student.profile'}}{{t "header.myProfile"}}{{/link-to}} </li>
+                        {{else}}
+                            <li class="{{if sso 'my-profile' ''}}">{{#link-to 'instructor.profile'}}{{t "header.myProfile"}}{{/link-to}} </li>
+                        {{/if}}
+                        <li><a>{{t "header.help"}}</a></li>
+                        {{#unless sso}}
+                        <li class="logout"><a href="#" {{action "logout"}}>{{t "header.signOut"}}</a> </li>
+                        {{/unless}}
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav menu-dropdown menu-center" role="tablist">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                      {{t "header.myClasses"}}&nbsp;<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        {{#each classes as |clazz|}}
+                            {{#if controller.user.isStudent}}
+                                <li>
+                                    {{#link-to 'student.haid' clazz.id}}
+                                        {{truncate-text clazz.name controller.maxLength true}}
+
+                                        {{#if selfStudying}}
+                                            <div class="class-term">{{t "classes.selfStudy"}}</div>
+                                        {{else}}
+                                            <div class="class-term">{{clazz.term}}</div>
+                                        {{/if}}
+                                    {{/link-to}}
+                                 </li>
+                            {{else}}
+                                <li>
+                                    {{#link-to 'instructor.hmcd' clazz.id}} {{truncate-text clazz.name controller.maxLength true}} <div class="class-term">{{clazz.term}}</div>{{/link-to}}
+                                </li>
+                            {{/if}}
+                        {{/each}}
+                        <li class="divider"></li>
+                        {{#if controller.user.isStudent}}
+                            <li>{{#link-to 'student.class'}}{{t "header.viewAllClasses"}}{{/link-to}}</li>
+                        {{else}}
+                            <li>{{#link-to 'instructor.class'}}{{t "header.viewAllClasses"}}{{/link-to}}</li>
+                        {{/if}}
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

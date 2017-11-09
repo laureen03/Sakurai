@@ -1,4 +1,9 @@
-SakuraiWebapp.StudentExamReportsView = Ember.Component.extend(SakuraiWebapp.UserInterfaceFeaturesMixin, {
+import Ember from "ember";
+import UserInterfaceFeaturesMixin from "mixins/user-interface-features";
+import context from "utils/context-utils";
+
+export default Ember.Component.extend(
+    UserInterfaceFeaturesMixin, {
 
     layoutName: 'layout/forStudentComplete',
 
@@ -40,7 +45,7 @@ SakuraiWebapp.StudentExamReportsView = Ember.Component.extend(SakuraiWebapp.User
             var $this = $(this),
                 $container = $this.closest('.category');
 
-            if (!SakuraiWebapp.context.isEnvironment('test')) {
+            if (!context.isEnvironment('test')) {
                 // Hide the view more link, then show the rest of the performances
                 $this.animate({
                     opacity: 0
@@ -77,7 +82,7 @@ SakuraiWebapp.StudentExamReportsView = Ember.Component.extend(SakuraiWebapp.User
         var height,
             speed = this.get('animationSpeed');
 
-        if (!SakuraiWebapp.context.isEnvironment('test')) {
+        if (!context.isEnvironment('test')) {
 
             // Save the height for restoring it later when it is shown
             height = $performance.css('height');
@@ -108,7 +113,7 @@ SakuraiWebapp.StudentExamReportsView = Ember.Component.extend(SakuraiWebapp.User
         // When showing a performance, first it's added to the render tree
         $performance.toggleClass('hidden');
 
-        if (!SakuraiWebapp.context.isEnvironment('test')) {
+        if (!context.isEnvironment('test')) {
 
             height = $performance.data('unit-height');
 

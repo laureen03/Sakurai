@@ -1,0 +1,37 @@
+<div class="section classes">
+    {{#if isCopy }}
+        <h4>{{t "copyAssignments.whichClasses"}}</h4>
+    {{else}}
+        <h4>{{t "assignQuiz.whichClasses"}}</h4>
+    {{/if}}
+    <ul class="activeClasses" id="activeClassesList">
+        {{#each myClasses as |clazz|}}
+            <li>
+                {{#if isCopy }}
+                    {{radio-button name="classes-radios" checked=copyClassId value=clazz.id}}
+                {{else}}
+                    {{#in-array item=clazz.id array=controller.classesInAssignment}}
+                        <input id="check{{clazz.id}}" type="checkbox" value="{{clazz.id}}" checked="checked" {{action "selectClass" clazz on="change"}}/>
+                    {{/in-array}}
+                    {{#not-in-array item=clazz.id array=controller.classesInAssignment}}
+                        <input id="check{{clazz.id}}" type="checkbox" value="{{clazz.id}}" {{action "selectClass" clazz on="change"}}/>
+                    {{/not-in-array}}
+                {{/if}}
+                <label class="labels" for="check{{clazz.id}}"><span class="class-name">{{clazz.name}}</span>
+                	{{#unless clazz.isUnknownTerm}}
+                		<span class="term-name">&nbsp;-&nbsp;{{clazz.term}}</span>
+                	{{/unless}}
+                </label>
+            </li>
+        {{/each}}
+    </ul>
+    {{#if selectClassMessage}}
+        <label class="custom-error error-classes">
+            {{#if isCopy }}
+                {{t "copyAssignments.pleaseSelectClass"}}
+            {{else}}
+                {{t "assignQuiz.pleaseSelectClass"}}
+            {{/if}}
+        </label>
+    {{/if}}
+</div>

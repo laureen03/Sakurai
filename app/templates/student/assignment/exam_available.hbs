@@ -1,0 +1,40 @@
+<div class="assignment-info clearfix">
+    {{partial "student/partials/exam_assignment_header_3_col"}}
+    <div class="details">
+        <div>
+            <b>{{t "assignment.exam.time"}}</b>
+
+            {{#if assignment.timeLimit}}
+                <span>
+                    {{t "assignment.exam.timedBegin"}}
+                    <strong>{{minutes-as-time assignment.timeLimit}}</strong>
+                    {{t "assignment.exam.timedEnd"}}
+                </span>
+            {{else}}
+                <span>{{t "assignment.exam.notTimed"}}</span>
+            {{/if}}
+        </div>
+
+        <div>
+            <b>{{t "assignment.exam.deadlines"}}</b>
+            <span>
+                {{t "assignment.exam.availableOn"}}
+                <strong>{{format-date assignment.availableDate}}</strong>
+                {{t "assignment.exam.dueOn"}}
+                <strong>{{format-date assignment.dueDate}}</strong>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+    <div class="btn-box">
+        {{#if assignment.hasExam}}
+            <button class="btn btn-blue start-quiz" {{action "goToExam"  assignment.exam.id}}>{{t "examHistory.finishExam"}}</button>
+        {{else}}
+            {{async-button data-button-class="btn btn-blue"
+                       data-text="assignment.exam.start"
+                       action="startExam" }}
+        {{/if}}
+
+    </div>
+</div>

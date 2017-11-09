@@ -1,0 +1,112 @@
+<div class="review-refresh-section">
+    <!--More About Review and Refresh Info-->
+    <div class="about-section {{if activeAbout 'show' 'hide'}}">
+        <h2>{{t 'reviewRefresh.aboutReviewAndRefresh'}}</h2>
+        <hr>
+        <p>{{t 'reviewRefresh.instructorAbout1'}}</p>
+        <p>{{t 'reviewRefresh.instructorAbout2'}}</p>
+        <p>{{t 'reviewRefresh.instructorAbout3'}}</p>
+        <p>{{t 'reviewRefresh.instructorAbout4'}}</p>
+        <hr>
+        <div class="btn-box">
+            <a class="cancel-link" {{action 'cancelSettings' 'activeAbout'}}>{{t "assignQuiz.goBack"}}</a>
+        </div>
+    </div>
+
+        <!--Settings Info-->
+        <div class="settings-section {{if activeSettings 'show' 'hide'}}">
+            <h2>{{t 'reviewRefresh.reviewRefreshSettings'}}&nbsp;<i>{{_class.name}}</i></h2>
+            {{#if isloading}}
+                <div class="lazy-load-spin"><span class="glyphicon glyphicon-refresh animate-spin"></span></div>
+            {{else}}
+                <div class="review-refresh-info {{if activeRROptions 'show' 'hide'}}">
+                    {{#if isON}}
+                        {{#if available}}
+                            <div>
+                                <span>{{t 'reviewRefresh.reviewRefreshIs'}}</span>
+                                <span class="green-label">{{t 'reviewRefresh.on'}}</span>
+                                {{t 'reviewRefresh.for'}}
+                                <b>{{_class.name}}</b>,&nbsp;{{t 'reviewRefresh.mlSetTo'}}
+                                <span class="green-label">{{reviewRefreshClassSettings.targetMasteryLevel}}</span>
+                            </div>
+                        {{else}}
+                            <div>
+                                <span>{{t 'reviewRefresh.reviewRefreshIs'}}</span>
+                                <span class="red-label">{{t 'reviewRefresh.off'}}</span>
+                                {{t 'reviewRefresh.for'}}
+                                <b>{{_class.name}}</b>,&nbsp;{{t 'reviewRefresh.mlSetTo'}} <b>{{reviewRefreshClassSettings.targetMasteryLevel}}</b>.
+                                {{t 'reviewRefresh.notAvailableByDate1'}}
+                                {{format-date reviewRefreshClassSettings.availableDate timezone=reviewRefreshClassSettings.timeZone}}.
+                                {{t 'reviewRefresh.notAvailableByDate2'}}
+                            </div>
+                        {{/if}}
+                    {{else}}
+                        <div>
+                            <span>{{t 'reviewRefresh.reviewRefreshIs'}}</span>
+                            <span class="red-label">{{t 'reviewRefresh.off'}}</span>
+                        </div>
+                    {{/if}}
+                </div>
+                <hr>
+                <div class="legend {{if isON 'enable' 'disabled'}}">
+                    {{radio-button id="default-radio" name="settings_radio" value='default' checked=settings_radio}}
+                    {{{t 'reviewRefresh.studentOption1'}}}<br>
+                    <div class="options {{if isDefaultSettings 'enable' 'disabled'}}">
+                        <b>{{t 'reviewRefresh.masteryLevel'}}</b>
+                        {{my-select 
+                        class="custom-select"
+                        name="targetMl"
+                        content=mlList
+                        selectedValue=reviewRefreshClassSettings.targetMasteryLevel}}
+                    </div>
+                </div>
+                <div class="legend">
+                    {{radio-button id="custom-radio" name="settings_radio" value='custom' checked=settings_radio}}
+                    {{{t 'reviewRefresh.studentOption2'}}}<br>
+                    <div class="options {{if isDefaultSettings 'disabled' 'enable'}}"class="options {{if isDefaultSettings 'disabled' 'enable'}}">
+                        <b>{{t 'reviewRefresh.startDate'}}&nbsp;</b>
+                        {{input id="startDateRR" name="startDateRR" class="date-input" type="text" value=startDateRR readonly="true"}}
+                        <b>&nbsp;{{t 'reviewRefresh.at'}}&nbsp;</b>
+                        
+                        {{my-select 
+                        id="startHourRR"
+                        class="hour-input"
+                        content=timeList
+                        optionValuePath="value"
+                        optionLabelPath="hour"
+                        selectedValue=startHourRR}}
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                {{zone-abbr reviewRefreshClassSettings.timeZone}}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                {{#each timezones as |timezone|}}
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" {{action "setTimeZone" timezone}}><strong>{{zone-abbr timezone}}</strong> ({{ timezone }})</a></li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="legend">
+                    {{radio-button id="activeRadio" name="settings_radio" value='activeInactive' checked=settings_radio}}
+                    {{t "reviewRefresh.turn"}}
+                    {{#if isON}}
+                        {{#if available}}
+                            <span class="red-label">{{t 'reviewRefresh.off'}}</span>
+                        {{else}}
+                            <span class="green-label">{{t 'reviewRefresh.on'}}</span>
+                        {{/if}}
+                    {{else}}
+                        <span class="green-label">{{t 'reviewRefresh.on'}}</span>
+                    {{/if}}
+                    {{t "reviewRefresh.RRnow"}}
+                </div>
+                <hr>
+                <div class="btn-settings">
+                    <button class="btn btn-blue" {{action "saveSettings"}}>{{t "reviewRefresh.saveSettings"}}</button>
+                    <a class="cancel-link space" {{action "cancelSettings" 'activeSettings'}}>{{t "cancel"}}</a>
+                </div>
+            {{/if}}
+        </div>
+</div>

@@ -1,0 +1,97 @@
+<section class="quiz-area">
+    <div class="container cf">
+        {{review-refresh-student data-class=class data-product=class.product reviewRefreshClassSettings=reviewRefreshClassSettings activeRR=activeRR history=history}}
+        <h1>{{t "quiz.whatWouldYouLike"}}</h1>
+        <div class="chapters-container">
+            <div class="chapters">
+                <ul id="chapters" class="{{if metadataDropDownEnabled 'metadata' ''}}">
+                    {{#if metadataDropDownEnabled}}
+                        <li class="select-metadata">
+                            {{my-select 
+                            content=termTaxonomyTypeOptions
+                            optionValuePath="id"
+                            optionLabelPath="name"
+                            selectedValue=selectedTermTaxonomy}}
+                        </li>
+                    {{/if}}
+                    {{#each sections as |section|}}
+                        <li class="unit">
+                            <span>{{section.name}}</span>
+                            <ul>
+                                {{#each section.children as |child|}}
+                                <li class="item_{{child.id}}">
+                                    {{#unless child.isHiddenFromPracticeQuiz}}
+                                        {{#if child.isLive}}
+                                            <label>
+                                                {{#in-array item=child.id array=controller.cs}}
+                                                    <input type="checkbox" value="{{child.id}}" name="chapters" id="chapter_{{child.id}}" checked="checked" {{action "selectChapter" on="change"}} />
+                                                {{/in-array}}
+                                                {{#not-in-array item=child.id array=controller.cs}}
+                                                    <input type="checkbox" value="{{child.id}}" name="chapters" id="chapter_{{child.id}}" {{action "selectChapter" on="change"}}/>
+                                                {{/not-in-array}}
+                                                {{child.name}}
+                                            </label>
+                                        {{else}}
+                                            <label >
+                                                <input type="checkbox" value="{{child.id}}" name="chapters" id="chapter_{{child.id}}" disabled/>
+                                                <span class="inactive">{{child.name}}</span>
+                                                <span class="text-muted">{{t "quiz.inDevelopment"}}</span>
+                                            </label>
+                                        {{/if}}
+                                    {{else}}
+                                        <label class="hidden-quiz">
+                                            <span class="inactive">{{child.name}}</span>
+                                            {{#if child.hasHiddenFilter}}
+                                                <span class="text-muted">{{t "quiz.inDevelopment"}}</span>
+                                            {{else}}
+                                                <span class="text-muted">{{t "quiz.turnedOff"}}</span>
+                                            {{/if}}
+                                        </label>
+                                    {{/unless}}
+
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </li>
+                    {{/each}}
+
+                </ul>
+            </div>
+        </div>
+        {{#if noChaptersSelectedError}}
+            <div class="error">{{t "quiz.selectChapter"}}</div>
+        {{/if}}
+        <div class="questions-desc">
+            <h4>{{t "quiz.numberQuestion"}}</h4>
+            {{my-select 
+                name=question_number
+                content=numQuestionsAvailable
+                selectedValue=numQuestionsSelected}}
+        </div>
+        {{#if failedMessage}}
+            <div class="error">{{failedMessage}}</div>
+        {{/if}}
+        <div class="question-action btn-box">
+            {{async-button id="quiz_start"
+                           data-button-class="btn btn-blue"
+                           data-text="quiz.startQuiz"
+                           action="createQuiz" }}
+        </div>
+
+    </div>
+</section>
+
+<div class="modal fade" id="rapidMLErrorPopUp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        &nbsp;
+      </div>
+      <div class="modal-body">
+        <p>{{rapidML_message}}</p>
+        <p><small><i>{{t "quiz.warningRapidML"}}</i></small></p>
+      </div>
+    </div>
+  </div>
+</div>

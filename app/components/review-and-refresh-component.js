@@ -1,4 +1,9 @@
-SakuraiWebapp.ReviewAndRefreshComponent = Ember.Component.extend({
+import Ember from "ember"; 
+import Assignment from "models/assignment";
+import DateUtil from "utils/date-util";
+import ReviewRefreshClassSetting from "models/review-refresh-class-setting";
+
+export default Ember.Component.extend({
     /**
      * @property {class} Current Class
      */
@@ -58,7 +63,7 @@ SakuraiWebapp.ReviewAndRefreshComponent = Ember.Component.extend({
      * Check if the radio is Default to active and inactive some options
      **/
     isDefaultSettings: Ember.computed('settings_radio', function(){
-        return (this.get("settings_radio") == "default")
+        return (this.get("settings_radio") === "default");
     }),
 
     /**
@@ -92,14 +97,14 @@ SakuraiWebapp.ReviewAndRefreshComponent = Ember.Component.extend({
      * Active Review and Refresh options
      **/
     activeRROptions: Ember.computed("activeAbout", "activeSettings", function(){
-        return (!this.get("activeAbout") && (this.get("activeSettings")))
+        return (!this.get("activeAbout") && (this.get("activeSettings")));
     }),
 
     /**
     * Available list of hours
     **/
     timeList: Ember.computed(function(){
-        return SakuraiWebapp.Assignment.availableHoursList();
+        return Assignment.availableHoursList();
     }),
 
     /*
@@ -125,7 +130,7 @@ SakuraiWebapp.ReviewAndRefreshComponent = Ember.Component.extend({
      * List of Timezones
      **/
     timezones: Ember.computed(function(){
-        return SakuraiWebapp.DateUtil.getTimeZones();
+        return DateUtil.getTimeZones();
     }),
 
     didInsertElement: function() {
@@ -140,7 +145,7 @@ SakuraiWebapp.ReviewAndRefreshComponent = Ember.Component.extend({
         component.set("activeSettings", false);
         component.set("activeAbout", false);
         store.query("reviewRefreshClassSetting", {classId: component.get("_class.id")}).then(function (result) {
-            if (result.get("length") == 1) {
+            if (result.get("length") === 1) {
                 component.set("reviewRefreshClassSettings", result.objectAt(0));
             }
             component.set("isloading", false);
@@ -153,16 +158,16 @@ SakuraiWebapp.ReviewAndRefreshComponent = Ember.Component.extend({
 
         var checkin = $('#startDateRR').datepicker({
             startDate: date
-        }).on('changeDate', function (ev) {
+        }).on('changeDate', function () {
             checkin.hide();
         }).data('datepicker');
     },
 
     resetDateHour: function () {
         var component = this,
-                dateUtil = new SakuraiWebapp.DateUtil(),
-                timeZone = SakuraiWebapp.DateUtil.getLocalTimeZone();
-        reviewRefreshClassSettings = component.get("reviewRefreshClassSettings")
+                dateUtil = new DateUtil(),
+                timeZone = DateUtil.getLocalTimeZone(),
+                reviewRefreshClassSettings = component.get("reviewRefreshClassSettings");
 
         component.set("startDateRR", dateUtil.format(new Date(), dateUtil.slashedShortDateFormat, timeZone));
         component.set("startHourRR", "08,00");
@@ -174,7 +179,7 @@ SakuraiWebapp.ReviewAndRefreshComponent = Ember.Component.extend({
     initSettings: function () {
         var component = this,
                 reviewRefreshClassSettings = component.get("reviewRefreshClassSettings"),
-                dateUtil = new SakuraiWebapp.DateUtil(),
+                dateUtil = new DateUtil(),
                 store = this.get("data-store");
 
         if (reviewRefreshClassSettings) { //if the review and Refresh setting exist set information
@@ -190,20 +195,20 @@ SakuraiWebapp.ReviewAndRefreshComponent = Ember.Component.extend({
                     $('.settings-section input[type=radio]:eq(0)').prop("checked", true);
                 } else { //If the available Date has a value
                     var availableDate = reviewRefreshClassSettings.get("availableDate"),
-                            timeZone = reviewRefreshClassSettings.get("timeZone");
-                    availableHourStr = dateUtil.format(reviewRefreshClassSettings.get("availableDateRound"), "HH,mm", timeZone);
+                        timeZone = reviewRefreshClassSettings.get("timeZone"),
+                        availableHourStr = dateUtil.format(reviewRefreshClassSettings.get("availableDateRound"), "HH,mm", timeZone);
                     component.set("startDateRR", dateUtil.format(availableDate, dateUtil.slashedShortDateFormat, timeZone));
                     component.set('startHourRR', availableHourStr);
                     $("#startHourRR").val(availableHourStr).trigger("change");
                     component.set("settings_radio", "custom");
-                    $('.settings-section input[type=radio]:eq(1)').prop("checked", true)
+                    $('.settings-section input[type=radio]:eq(1)').prop("checked", true);
                 }
             }
         } else { //Is reviewRefreshClassSettings don't exist, need to create one.
             reviewRefreshClassSettings = store.createRecord("reviewRefreshClassSetting", {active: false,
                 targetMasteryLevel: component.get("defaultML")});
 
-            var record = SakuraiWebapp.ReviewRefreshClassSetting.createRRSettingsRecord(store, {
+            var record = ReviewRefreshClassSetting.createRRSettingsRecord(store, {
                 reviewRefreshClassSettings: reviewRefreshClassSettings,
                 class: component.get("_class")
             });
@@ -223,10 +228,11 @@ SakuraiWebapp.ReviewAndRefreshComponent = Ember.Component.extend({
     //
     //----------------------------------
     manageSetting: function (section, value) {
-        this.set(section, value)
+        this.set(section, value);
         this.sendAction('data-change-settings', value);
-        if (value)
+        if (value){
             $("html, body").animate({scrollTop: 0}, "slow");
+        }
     },
 
     actions: {
@@ -236,7 +242,7 @@ SakuraiWebapp.ReviewAndRefreshComponent = Ember.Component.extend({
         continueReviewRefreshActions: function () {
             var component = this;
 
-            if (component.get("options_radio") == "change_settings") { //Show Settings Options
+            if (component.get("options_radio") === "change_settings") { //Show Settings Options
                 component.initDatePicker();
                 component.manageSetting("activeSettings", true);
                 component.initSettings();
@@ -249,20 +255,21 @@ SakuraiWebapp.ReviewAndRefreshComponent = Ember.Component.extend({
 
             var component = this,
                     reviewRefreshClassSettings = component.get("reviewRefreshClassSettings"),
-                    dateUtil = new SakuraiWebapp.DateUtil();
+                    dateUtil = new DateUtil(),
+                    promise;
 
-            if (component.get("settings_radio") == "default") //Set Custom ML
+            if (component.get("settings_radio") === "default") //Set Custom ML
             {
                 reviewRefreshClassSettings.set("availableDate", undefined);
                 reviewRefreshClassSettings.set("timeZone", "");
 
-                var promise = reviewRefreshClassSettings.save();
-                promise.then(function (result) {
+                promise = reviewRefreshClassSettings.save();
+                promise.then(function () {
                     component.manageSetting("activeSettings", false);
                 });
             }
 
-            if (component.get("settings_radio") == "custom") //Set Date and time
+            if (component.get("settings_radio") === "custom") //Set Date and time
             {
                 var date = $('#startDateRR').val() + " " + component.get("startHourRR");
 
@@ -270,23 +277,23 @@ SakuraiWebapp.ReviewAndRefreshComponent = Ember.Component.extend({
                 var availableDate = dateUtil.toLocal(date, "MM-DD-YYYY HH,mm", reviewRefreshClassSettings.get("timeZone"));
                 reviewRefreshClassSettings.set("availableDate", availableDate);
                 reviewRefreshClassSettings.set("targetMasteryLevel", component.get("defaultML"));
-                reviewRefreshClassSettings.set("active", true) //Set active value
-                var promise = reviewRefreshClassSettings.save();
-                promise.then(function (result) {
+                reviewRefreshClassSettings.set("active", true); //Set active value
+                promise = reviewRefreshClassSettings.save();
+                promise.then(function () {
                     component.manageSetting("activeSettings", false);
                 });
             }
 
-            if (component.get("settings_radio") == "activeInactive") //Activer or Inactive
+            if (component.get("settings_radio") === "activeInactive") //Activer or Inactive
             {
                 if (component.get("isON") && component.get("available")) {//Is active want to disactive
                     reviewRefreshClassSettings.set("availableDate", undefined); //Clean Date
                     reviewRefreshClassSettings.set("timeZone", ""); //Clean Hour
                     reviewRefreshClassSettings.set("targetMasteryLevel", component.get("defaultML")); //Set Default ML
-                    reviewRefreshClassSettings.set("active", false) //Set active value
+                    reviewRefreshClassSettings.set("active", false); //Set active value
 
-                    var promise = reviewRefreshClassSettings.save();
-                    promise.then(function (result) {
+                    promise = reviewRefreshClassSettings.save();
+                    promise.then(function () {
                         component.manageSetting("activeSettings", false);
                     });
 
@@ -295,10 +302,10 @@ SakuraiWebapp.ReviewAndRefreshComponent = Ember.Component.extend({
                     reviewRefreshClassSettings.set("availableDate", undefined); //Clean Date
                     reviewRefreshClassSettings.set("timeZone", ""); //Clean Hour
                     reviewRefreshClassSettings.set("targetMasteryLevel", component.get("defaultML")); //Set Default ML
-                    reviewRefreshClassSettings.set("active", true) //Set active value
+                    reviewRefreshClassSettings.set("active", true); //Set active value
 
-                    var promise = reviewRefreshClassSettings.save();
-                    promise.then(function (result) {
+                    promise = reviewRefreshClassSettings.save();
+                    promise.then(function () {
                         component.manageSetting("activeSettings", false);
                     });
                 }
@@ -307,8 +314,9 @@ SakuraiWebapp.ReviewAndRefreshComponent = Ember.Component.extend({
         },
 
         cancelSettings: function (section) {
-            if (this.get("reviewRefreshClassSettings"))
+            if (this.get("reviewRefreshClassSettings")){
                 this.get("reviewRefreshClassSettings").rollbackAttributes();
+            }
             this.manageSetting(section, false);
         },
 

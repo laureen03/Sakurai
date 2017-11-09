@@ -1,0 +1,87 @@
+<section class="quiz-area">
+    <div class="container cf">
+        {{review-refresh-student data-class=class data-product=class.product data-parent-name=selectedTermTaxonomy metadata=metadata reviewRefreshClassSettings=reviewRefreshClassSettings activeRR=activeRR history=history}}
+        <h1>{{t "quiz.whatWouldYouLike"}}</h1>
+        <div class="chapters-container">
+            <div class="chapters">
+                <ul id="chapters" class="metadata">
+                    <li class="select-metadata">
+                        {{my-select 
+                            content=termTaxonomyTypeOptions
+                            selectedValue=selectedTermTaxonomy
+                            optionValuePath = "id"
+                            optionLabelPath = "name"}}
+                    </li>
+                    {{#each metadata as |meta|}}
+                        <li class="unit">
+                            <span>{{meta.name}}</span>
+                            <ul>
+                                {{#each meta.children as |child|}}
+                                <li class="item_{{child.id}}">
+                                    {{#unless child.isHiddenFromPracticeQuiz}}
+                                        <label>
+                                            {{#in-array item=child.id array=controller.ms}}
+                                                <input type="checkbox" value="{{child.id}}" name="metadata" id="metadata_{{child.id}}" checked="checked" {{action "selectMetadata" on="change"}}/>
+                                            {{/in-array}}
+                                            {{#not-in-array item=child.id array=controller.ms}}
+                                                <input type="checkbox" value="{{child.id}}" name="metadata" id="metadata_{{child.id}}" {{action "selectMetadata" on="change"}} />
+                                            {{/not-in-array}}
+                                            {{child.name}}
+                                        </label>
+                                    {{else}}
+                                        <label class="hidden-quiz">
+                                            <span class="inactive">{{child.name}}</span>
+                                            {{#if child.hasHiddenFilter}}
+                                                <span class="text-muted">{{t "quiz.inDevelopment"}}</span>
+                                            {{else}}
+                                                <span class="text-muted">{{t "quiz.turnedOff"}}</span>
+                                            {{/if}}
+                                        </label>
+                                    {{/unless}}
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </li>
+                    {{/each}}
+
+                </ul>
+            </div>
+        </div>
+        {{#if noChaptersSelectedError}}
+            <div class="error">{{t "quiz.selectChapter"}}</div>
+        {{/if}}
+        <div class="questions-desc">
+            <h4>{{t "quiz.numberQuestion"}}</h4>
+            {{my-select 
+                name=question_number
+                content=numQuestionsAvailable
+                selectedValue=numQuestionsSelected}}
+
+        </div>
+        {{#if failedMessage}}
+            <div class="error">{{failedMessage}}</div>
+        {{/if}}
+        <div class="question-action btn-box">
+            {{async-button id="quiz_start"
+                           data-button-class="btn btn-blue"
+                           data-text="quiz.startQuiz"
+                           action="createQuiz" }}
+        </div>
+
+    </div>
+</section>
+
+<div class="modal fade" id="rapidMLErrorPopUp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        &nbsp;
+      </div>
+      <div class="modal-body">
+        <p>{{rapidML_message}}</p>
+        <p><small><i>{{t "quiz.warningRapidML"}}</i></small></p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,267 @@
+body.access-card {
+	section.access-area {
+		padding-top:66px;
+		padding-bottom:78px;
+		h2 + p {
+			margin-bottom:22px;
+		}
+	}
+}
+
+body.get-started {
+	.access-area {
+		h2.section-header {
+			margin-bottom:8px;
+			+ p.text-white {
+				margin-bottom:24px;
+			}
+		}
+	}
+}
+
+.get-started {
+	.course-select {
+		.course {
+			padding:0 32px;
+			margin-bottom:16px;
+		}
+	}
+}
+
+body.free-trial {
+	.hero {
+		button[type="submit"] {
+			margin-bottom:10px;
+		}
+	}
+}
+
+body.purchase {
+	section.accordion div.accordion-content-wrapper {
+		div.slider {
+			padding:10px 50px;
+		}
+	}
+	div.ap-courses {
+		
+		h4 {
+			font-size:14px;
+		}
+		li.col-sm-4 {
+			font-size:12px;
+			
+			img {
+				margin-bottom:4px;
+			}
+
+			.btn.btn-default {
+				padding-left:40px;
+				padding-right:40px;
+			}
+
+			&:nth-child(1){
+				padding-left:0px;
+				padding-right:40px;
+			}
+
+			&:nth-child(2){
+				padding-right:20px;
+				padding-left:20px;
+			}
+
+			&:nth-child(3){
+				padding-right:0px;
+				padding-left:40px;
+			}
+
+		}
+	}
+}
+
+
+@media screen and (max-width:$screen-sm) {
+	body.purchase div.ap-courses li.col-sm-4 {
+		padding-left:10px!important;
+		padding-right:10px!important;
+		text-align:center;
+		img{
+			margin:0 auto;
+			display:block;
+		}
+	}
+	body.purchase section.accordion div.accordion-content-wrapper div.slider {
+		padding:0 35px;
+	}
+}
+
+.support {
+	main .content-wrapper {
+		padding:0;
+	}
+	section.accordion {
+		margin-top:32px;
+	}
+	.contact-block {
+		max-width:418px;
+		padding-left:0;
+		position:relative;
+		&.two-items {
+			margin-top:54px;
+		}
+		.relative {
+			padding-left:76px;
+			&.email {
+				min-height:39px;
+			}
+		}
+		img{
+			position:absolute;
+			top:0;
+			left:0;
+		}
+	}
+}
+
+@media screen and (max-width:$screen-sm) {
+	.support .contact-block {
+		padding-left:0px;
+		margin-bottom:20px;
+		text-align:center;
+		.text-left{
+			text-align:center;
+		}
+		img{
+			position:relative;
+		}
+	}
+}
+
+section.access-area {
+	padding:24px 0 132px;
+	> .container-fluid {
+		position:relative;
+		z-index:5;
+	}
+}
+	
+section.accordion {
+	
+	background:#fff;
+	overflow:hidden;
+	position:relative;
+	z-index:10;
+	
+	.ap-sentence {
+		margin-top:5px;
+	}
+
+	.book {
+		article {
+			min-height:275px;
+		}
+	}
+
+	header {
+
+		@include background-image(linear-gradient(#f6f6f6, #e0e0e0));
+
+		background-color:#e7e7e7;
+		position:relative;
+
+		&.ui-accordion-header{
+			cursor:pointer;
+		}
+
+		h5{
+			color:#888;
+			font-size:15px;
+			line-height:38px;
+			margin:0;
+		}
+	}
+
+	.ui-icon {
+		
+		background:transparent url('#{$assetMarketingPath}/bg-sign-in-tab-indicator.png') no-repeat right bottom;
+		display:block;
+		height:13px;
+		margin-top:-6.5px;
+		position:absolute;
+		width:13px;
+		right:12px;
+		top:50%;
+
+		&.accordion-icon-active {
+			background:transparent url('#{$assetMarketingPath}/bg-sign-in-tab-indicator.png') no-repeat left top;
+		}
+
+	}
+
+	div.accordion-content-wrapper {
+		overflow:hidden;
+		padding:30px 0 18px;
+		div.slider {
+			padding:0 35px;
+			position:relative;
+			z-index:1;
+			.flex-viewport {
+				height:298px;
+			}
+			ul.flex-direction-nav {
+				@extend .no-list;
+				li a {
+					@extend .ir;
+					@include inline-block;
+					height:82px;
+					margin-top:-41px;
+					position:absolute;
+					width:29px;
+					top:50%;
+
+					&.flex-next{
+						background:transparent url('#{$assetMarketingPath}/bg-slider-paging.png') no-repeat right top;
+						right:0;
+					}
+					&.flex-prev{
+						background:transparent url('#{$assetMarketingPath}/bg-slider-paging.png') no-repeat left top;
+						left:0;
+					}
+				}
+			}
+		}
+	}
+
+	ul.slides {
+		display:block;
+
+		> li article { 
+			
+			float:left;
+			width:182px;
+
+			h6 {
+				margin-bottom:0;
+			}
+
+			span {
+				font-size:11px;
+			}
+
+			
+		}
+	}
+
+	.radius.highlight {
+		@include border-radius(3px);
+
+		background:#fff;
+		border:1px solid #fafafa;
+		padding:20px 13px 15px;
+		
+		&:hover, &:focus {
+			background:#fafafa;
+			border:1px solid $gray;
+		}
+	}
+
+}

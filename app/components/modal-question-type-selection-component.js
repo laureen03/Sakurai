@@ -9,8 +9,9 @@
  * @param on-apply {string} name of action to send to the target when clicking on the apply button.
  *                          An array with all the question type codes selected is sent.
  */
+import Ember from "ember"; 
 
-SakuraiWebapp.ModalQuestionTypeSelectionComponent = Ember.Component.extend({
+export default Ember.Component.extend({
 
     /*
      * === PROPERTIES
@@ -56,7 +57,7 @@ SakuraiWebapp.ModalQuestionTypeSelectionComponent = Ember.Component.extend({
         if ($.isArray(selected)) {
             this.$('input[type="checkbox"]').each( function() {
                 var $this = $(this);
-                if (selected.indexOf($this.val()) != -1) {
+                if (selected.indexOf($this.val()) !== -1) {
                     $this.attr('checked', 'checked');
                 }
             });
@@ -68,7 +69,7 @@ SakuraiWebapp.ModalQuestionTypeSelectionComponent = Ember.Component.extend({
 
         sendSelection: function() {
             var codes = this.$("input[type='checkbox']:checked").map(function () {
-                return $(this).val()
+                return $(this).val();
             }).toArray();
 
             // Hide the modal

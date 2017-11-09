@@ -1,0 +1,72 @@
+<div class="qc-wrapper-title {{if questionSet 'left-space' ''}}">
+    <div class="number">{{increment-int index}}</div>
+    <div class="text">{{safe-html question.questionText}}</div>
+    {{select-point-result urlImage=question.questionMedia isAnswerKey=false correctResponse=question.interactions.0.correctResponse idQuestion=question.id answerChoicesPercentages=question.interactions.0.answerChoicesPercentages}}
+</div>
+<div class="qc-wrapper-body">
+    <ul class="answer-choices">
+
+            <li>
+                {{#if question.hasProductClassPercentage}}
+                    <div class="hs-class-percentage all-student">
+                        {{#with question.interactions.[0].classAnswerChoicesPercentages.[0] as |percentage|}}
+                        <div class="hs-response-container all-students">
+                            <span class="title">{{t "questionLibrary.allStudents"}}</span>
+                            <div class="hs-response-wrapper">
+                                <div class="correct-percentage">
+                                    <span class="percentage">{{percentage.correctAnswerPercentage}}%</span>
+                                    <div class="progress">
+                                        {{progress-bar isCorrect=true  percentage=percentage.correctAnswerPercentage}}
+                                    </div>
+                                    <span class="circle-ok glyphicon glyphicon-ok"></span>
+                                </div>
+                                <div class="incorrect-percentage">
+                                    <span class="percentage">{{percentage.incorrectAnswerPercentage}}%</span>
+                                    <div class="progress">
+                                        {{progress-bar isCorrect=false  percentage=percentage.incorrectAnswerPercentage}}
+                                    </div>
+                                    <span class="circle-wrong glyphicon glyphicon-remove"></span>
+                                </div>
+                            </div>
+                        </div>
+                        {{/with}}
+                    </div>
+                    <div class="hs-class-percentage  this-class">
+                        {{#with question.interactions.[0].answerChoicesPercentages.[0] as |percentage|}}
+                            <div class="hs-response-container">
+                                <span class="title">{{t "questionLibrary.thisClass"}}</span>
+                                <div class="hs-response-wrapper">
+                                    <div class="correct-percentage">
+                                        <span class="percentage">{{percentage.correctAnswerPercentage}}%</span>
+                                        <div class="progress">
+                                            {{progress-bar isCorrect=true  percentage=percentage.correctAnswerPercentage}}
+                                        </div>
+                                        <span class="circle-ok glyphicon glyphicon-ok"></span>
+                                    </div>
+                                    <div class="incorrect-percentage">
+                                        <span class="percentage">{{percentage.incorrectAnswerPercentage}}%</span>
+                                        <div class="progress">
+                                            {{progress-bar isCorrect=false  percentage=percentage.incorrectAnswerPercentage}}
+                                        </div>
+                                        <span class="circle-wrong glyphicon glyphicon-remove"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/with}}
+                    </div>
+                    {{else}}
+                        {{#with question.interactions.[0].answerChoicesPercentages.[0] as |percentage|}}
+                        <div class="stats">
+                            <span class="percentage">{{percentage.correctAnswerPercentage}}%</span>
+                            <div class="progress">
+                                {{progress-bar isCorrect=true  percentage=percentage.correctAnswerPercentage}}
+                            </div>
+                            <span class="circle-ok glyphicon glyphicon-ok"></span>
+                        </div>
+                        {{/with}}
+                    {{/if}}
+            </li>
+
+    </ul>
+</div>
+

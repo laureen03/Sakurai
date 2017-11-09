@@ -5,13 +5,15 @@
  *
  * @param component-class {string} special class to add to the component's tag (optional)
  * @param user {User} user for the corresponding login information (default: '')
- * @param login-data {SakuraiWebapp.Login} login information for a specific user
+ * @param login-data {Login} login information for a specific user
  * @param data-range {string} range of the login information. A string of the form:
  *                            YYYY-MM-DD:YYYY-MM-DD, where the first date refers to the start date and the
  *                            second date refers to the end date of the login infomation
  */
 
-SakuraiWebapp.LoginCalendarModalComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 
     /*
      * === PROPERTIES
@@ -125,13 +127,13 @@ SakuraiWebapp.LoginCalendarModalComponent = Ember.Component.extend({
 
                 if (dayLogins) {
                     // The number of times a user has logged in a day is inserted into the calendar through CSS.
-                    // A class 'num-<numLogins>' is applied to each day where numLogins != 0.
+                    // A class 'num-<numLogins>' is applied to each day where numLogins !== 0.
                     // Currently, this goes all the way to num-20. This means that if a student logs in
                     // more than 20 times in a day, more styles will need to be added to _login-calendar-modal.scss
                     return {
                         enabled: false,
                         classes: 'logins num-' + dayLogins
-                    }
+                    };
                 }
                 return false;
             }
@@ -201,7 +203,7 @@ SakuraiWebapp.LoginCalendarModalComponent = Ember.Component.extend({
 
         this.updateDateBuffer(loginData);
 
-        if (typeof this.get('totalLogins') == 'number') {
+        if (typeof this.get('totalLogins') === 'number') {
             // When the modal is closed, 'data-range' becomes null. This should make the controller
             // clear the content of logins (logins = {}) and 'totalLogins' then becomes undefined.
             // In this case, the calendar should neither be created nor updated while the modal is closed.

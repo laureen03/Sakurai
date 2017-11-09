@@ -1,4 +1,7 @@
-SakuraiWebapp.ExportCsvLinkComponent = Ember.Component.extend({
+import Ember from "ember"; 
+import DateUtil from "utils/date-util";
+
+export default Ember.Component.extend({
     tagName: 'span',
 
     //Current assignment
@@ -10,12 +13,12 @@ SakuraiWebapp.ExportCsvLinkComponent = Ember.Component.extend({
     data: null,
 
     /**
-     * @property {SakuraiWebapp.Product} the product
+     * @property {Product} the product
      */
     'data-product': null,
 
     /**
-     * @property {SakuraiWebapp.Class} the class
+     * @property {Class} the class
      */
     'data-class': null,
 
@@ -64,7 +67,7 @@ SakuraiWebapp.ExportCsvLinkComponent = Ember.Component.extend({
      * Downloads content
      * @see http://code.ciphertrick.com/2014/12/07/download-json-data-in-csv-format-cross-browser-support/
      * @param fileName
-     * @param data
+     * @param data 
      */
     download: function (fileName, data) {
         if (this.isInternetExplorer()) {
@@ -122,9 +125,9 @@ SakuraiWebapp.ExportCsvLinkComponent = Ember.Component.extend({
         if (!(date instanceof Date)) {
             throw new Ember.Error('LoginCalendarModalComponent: date objected expected');
         }
-        var dateUtil = (new SakuraiWebapp.DateUtil()),
+        var dateUtil = (new DateUtil()),
                 format = 'lll',
-                timezone = SakuraiWebapp.DateUtil.getLocalTimeZone(),
+                timezone = DateUtil.getLocalTimeZone(),
                 tz = true;
         return dateUtil.format(date, format, timezone, tz);
     },
@@ -134,96 +137,95 @@ SakuraiWebapp.ExportCsvLinkComponent = Ember.Component.extend({
             var component = this,
                     json = [],
                     studentResults = component.get("assignment.studentResults"),
-                    lastPosition = 0,
-                    lastPosition = (studentResults.get("length") - 1);
+                    lastPosition = (studentResults.get("length") - 1),
+                    dateUtil = new DateUtil();
             studentResults.then(function (_studentResults) {
                 _studentResults.forEach(function (studentResult, index) {
                     studentResult.get("user").then(function (user) {
+                        var timezone = component.get("assignment").get("timeZone");
+                        var lastQuestionSubmittedTime = dateUtil.format(studentResult.get("lastQuestionSubmittedTime"), 'lll', timezone, true);
                         if (component.get("assignment").get("isMasteryLevelAssignment")) {
                             if (component.get("assignment").get("hasPassedDueDate")) {
                                 json.push({
                                     "Name": user.get("fullName"),
                                     "Email": user.get("email"),
-                                    "No. of Quizzes on This Assignment": (studentResult.get("numQuizzes") != null) ? studentResult.get("numQuizzes") : 0,
-                                    "Total No. of Quizzes on This Category": (studentResult.get("numQuizzesTotal") != null) ? studentResult.get("numQuizzesTotal") : 0,
-                                    "No. of Questions on This Assignment": (studentResult.get("questionsAnswered") != null) ? studentResult.get("questionsAnswered") : 0,
-                                    "Total No. of Questions on This Category": (studentResult.get("questionsAnsweredTotal") != null) ? studentResult.get("questionsAnsweredTotal") : 0,
-                                    "Mastery Level at Due Date": (studentResult.get("masteryLevel") != null) ? studentResult.get("masteryLevel") : 0,
-                                    "Score": (studentResult.get("score") != null) ? studentResult.get("score") : 0
+                                    "No. of Quizzes on This Assignment": (studentResult.get("numQuizzes") !== null) ? studentResult.get("numQuizzes") : 0,
+                                    "Total No. of Quizzes on This Category": (studentResult.get("numQuizzesTotal") !== null) ? studentResult.get("numQuizzesTotal") : 0,
+                                    "No. of Questions on This Assignment": (studentResult.get("questionsAnswered") !== null) ? studentResult.get("questionsAnswered") : 0,
+                                    "Total No. of Questions on This Category": (studentResult.get("questionsAnsweredTotal") !== null) ? studentResult.get("questionsAnsweredTotal") : 0,
+                                    "Mastery Level at Due Date": (studentResult.get("masteryLevel") !== null) ? studentResult.get("masteryLevel") : 0,
+                                    "Score": (studentResult.get("score") !== null) ? studentResult.get("score") : 0
                                 });
                             } else {
                                 json.push({
                                     "Name": user.get("fullName"),
                                     "Email": user.get("email"),
-                                    "No. of Quizzes on This Assignment": (studentResult.get("numQuizzes") != null) ? studentResult.get("numQuizzes") : 0,
-                                    "Total No. of Quizzes on This Category": (studentResult.get("numQuizzesTotal") != null) ? studentResult.get("numQuizzesTotal") : 0,
-                                    "No. of Questions on This Assignment": (studentResult.get("questionsAnswered") != null) ? studentResult.get("questionsAnswered") : 0,
-                                    "Total No. of Questions on This Category": (studentResult.get("questionsAnsweredTotal") != null) ? studentResult.get("questionsAnsweredTotal") : 0,
-                                    "Current Mastery Level": (studentResult.get("masteryLevel") != null) ? studentResult.get("masteryLevel") : 0,
-                                    "Score": (studentResult.get("score") != null) ? studentResult.get("score") : 0
+                                    "No. of Quizzes on This Assignment": (studentResult.get("numQuizzes") !== null) ? studentResult.get("numQuizzes") : 0,
+                                    "Total No. of Quizzes on This Category": (studentResult.get("numQuizzesTotal") !== null) ? studentResult.get("numQuizzesTotal") : 0,
+                                    "No. of Questions on This Assignment": (studentResult.get("questionsAnswered") !== null) ? studentResult.get("questionsAnswered") : 0,
+                                    "Total No. of Questions on This Category": (studentResult.get("questionsAnsweredTotal") !== null) ? studentResult.get("questionsAnsweredTotal") : 0,
+                                    "Current Mastery Level": (studentResult.get("masteryLevel") !== null) ? studentResult.get("masteryLevel") : 0,
+                                    "Score": (studentResult.get("score") !== null) ? studentResult.get("score") : 0
                                 });
                             }
                         } else if (component.get("assignment").get("isQuestionCollectionAssignment")) {
-                            var dateUtil = new SakuraiWebapp.DateUtil();
-                            var timezone = component.get("assignment").get("timeZone");
-                            var lastQuestionSubmittedTime = dateUtil.format(studentResult.get("lastQuestionSubmittedTime"), 'lll', timezone, true);
+                            
 
                             json.push({
                                 "Name": user.get("fullName"),
                                 "Email": user.get("email"),
-                                "Number of Questions": (studentResult.get("questionsAnswered") != null) ? studentResult.get("questionsAnswered") : 0,
-                                "Number Correct": (studentResult.get("questionsCorrect") != null) ? studentResult.get("questionsCorrect") : 0,
-                                "Time of the Last Question Submitted": (studentResult.get("lastQuestionSubmittedTime") != null) ? lastQuestionSubmittedTime : '-',
-                                "Score": (studentResult.get("score") != null) ? studentResult.get("score") : 0
+                                "Number of Questions": (studentResult.get("questionsAnswered") !== null) ? studentResult.get("questionsAnswered") : 0,
+                                "Number Correct": (studentResult.get("questionsCorrect") !== null) ? studentResult.get("questionsCorrect") : 0,
+                                "Time of the Last Question Submitted": (studentResult.get("lastQuestionSubmittedTime") !== null) ? lastQuestionSubmittedTime : '-',
+                                "Score": (studentResult.get("score") !== null) ? studentResult.get("score") : 0
                             });
                         } else if (component.get("assignment").get("isExamAssignment")) {
-                            var dateUtil = new SakuraiWebapp.DateUtil();
-                            var timezone = component.get("assignment").get("timeZone");
-                            var lastQuestionSubmittedTime = dateUtil.format(studentResult.get("lastQuestionSubmittedTime"), 'lll', timezone, true);
+
                             var timeToComplete = null;
-                            if(studentResult.get("status") == 'notCompleted' || studentResult.get("status") == 'pastDue')  {
+                            if(studentResult.get("status") === 'notCompleted' || studentResult.get("status") === 'pastDue')  {
                                 timeToComplete = 'Not Completed';
                             } else {
-                                if(studentResult.get("minToComplete"))
+                                if(studentResult.get("minToComplete")){
                                     timeToComplete = studentResult.get("timeToComplete");
+                                }
                             }
 
                             if(component.get("assignment").get("hasPassedDueDate")) {
                                 json.push({
                                     "Name": user.get("fullName"),
-                                    "Mastery Level at Due Date": (studentResult.get("masteryLevel") != null) ? studentResult.get("masteryLevel") : '-',
-                                    "Time To Complete": (timeToComplete != null) ? timeToComplete : '-',
-                                    "Time Started": (studentResult.get("startDate") != null) ? dateUtil.format(studentResult.get("startDate"), 'lll', timezone, true) : '-',
-                                    "Time of Last Answer": (studentResult.get("lastQuestionSubmittedTime") != null) ? lastQuestionSubmittedTime : '-',
-                                    "Answered Correctly": (studentResult.get("questionsCorrect") != null) ? studentResult.get("questionsCorrect") + " of " + studentResult.get("questionsAnswered") : '-',
-                                    "Remediation Views": (studentResult.get("remediationViews") != null) ? studentResult.get("remediationViews") : '-',
+                                    "Mastery Level at Due Date": (studentResult.get("masteryLevel") !== null) ? studentResult.get("masteryLevel") : '-',
+                                    "Time To Complete": (timeToComplete !== null) ? timeToComplete : '-',
+                                    "Time Started": (studentResult.get("startDate") !== null) ? dateUtil.format(studentResult.get("startDate"), 'lll', timezone, true) : '-',
+                                    "Time of Last Answer": (studentResult.get("lastQuestionSubmittedTime") !== null) ? lastQuestionSubmittedTime : '-',
+                                    "Answered Correctly": (studentResult.get("questionsCorrect") !== null) ? studentResult.get("questionsCorrect") + " of " + studentResult.get("questionsAnswered") : '-',
+                                    "Remediation Views": (studentResult.get("remediationViews") !== null) ? studentResult.get("remediationViews") : '-',
                                 });
                             } else {
                                 json.push({
                                     "Name": user.get("fullName"),
-                                    "Current Mastery Level": (studentResult.get("masteryLevel") != null) ? studentResult.get("masteryLevel") : '-',
-                                    "Time To Complete": (timeToComplete != null) ? timeToComplete : '-',
-                                    "Time Started": (studentResult.get("startDate") != null) ? dateUtil.format(studentResult.get("startDate"), 'lll', timezone, true) : '-',
-                                    "Time of Last Answer": (studentResult.get("lastQuestionSubmittedTime") != null) ? lastQuestionSubmittedTime : '-',
-                                    "Answered Correctly": (studentResult.get("questionsCorrect") != null) ? studentResult.get("questionsCorrect") + " of " + studentResult.get("questionsAnswered") : '-',
-                                    "Remediation Views": (studentResult.get("remediationViews") != null) ? studentResult.get("remediationViews") : '-',
+                                    "Current Mastery Level": (studentResult.get("masteryLevel") !== null) ? studentResult.get("masteryLevel") : '-',
+                                    "Time To Complete": (timeToComplete !== null) ? timeToComplete : '-',
+                                    "Time Started": (studentResult.get("startDate") !== null) ? dateUtil.format(studentResult.get("startDate"), 'lll', timezone, true) : '-',
+                                    "Time of Last Answer": (studentResult.get("lastQuestionSubmittedTime") !== null) ? lastQuestionSubmittedTime : '-',
+                                    "Answered Correctly": (studentResult.get("questionsCorrect") !== null) ? studentResult.get("questionsCorrect") + " of " + studentResult.get("questionsAnswered") : '-',
+                                    "Remediation Views": (studentResult.get("remediationViews") !== null) ? studentResult.get("remediationViews") : '-',
                                 });
                             }
                         } else {
                             json.push({
                                 "Name": user.get("fullName"),
                                 "Email": user.get("email"),
-                                "Number of Questions": (studentResult.get("questionsAnswered") != null) ? studentResult.get("questionsAnswered") : 0,
-                                "Number Correct": (studentResult.get("questionsCorrect") != null) ? studentResult.get("questionsCorrect") : 0,
-                                "Score": (studentResult.get("score") != null) ? studentResult.get("score") : 0
+                                "Number of Questions": (studentResult.get("questionsAnswered") !== null) ? studentResult.get("questionsAnswered") : 0,
+                                "Number Correct": (studentResult.get("questionsCorrect") !== null) ? studentResult.get("questionsCorrect") : 0,
+                                "Score": (studentResult.get("score") !== null) ? studentResult.get("score") : 0
                             });
                         }
 
-                        if (index == lastPosition) {
+                        if (index === lastPosition) {
                             var csv = Papa.unparse(json.sort(function (a, b) {
                                 return (a.Name.toLowerCase() > b.Name.toLowerCase()) ? 1 : ((b.Name.toLowerCase() > a.Name.toLowerCase()) ? -1 : 0);
                             }));
-                            component.saveCSV(csv)
+                            component.saveCSV(csv);
                         }
                     });
                 });
@@ -241,26 +243,26 @@ SakuraiWebapp.ExportCsvLinkComponent = Ember.Component.extend({
                         json.push({
                             "Name": user.get("fullName"),
                             "Email Address": user.get("email"),
-                            "Logins": (studentUsage.get("logins") != null) ? studentUsage.get("logins") : 0,
-                            "Last Login": (studentUsage.get("lastLogin") != null) ? component.formatDate(studentUsage.get("lastLogin")) : '-',
-                            "Quizzes Completed": (studentUsage.get("quizzesCompleted") != null) ? studentUsage.get("quizzesCompleted") : 0,
-                            "Questions Answered": (studentUsage.get("questionsAnswered") != null) ? studentUsage.get("questionsAnswered") : 0,
-                            "Mastery Level Avg.": (studentUsage.get("masteryLevel") != null) ? numeral(studentUsage.get("masteryLevel")).format('0.00') : 0,
-                            "Remediation Views": (studentUsage.get("totalRemediationLinkViews") != null) ? studentUsage.get("totalRemediationLinkViews") : 0
+                            "Logins": (studentUsage.get("logins") !== null) ? studentUsage.get("logins") : 0,
+                            "Last Login": (studentUsage.get("lastLogin") !== null) ? component.formatDate(studentUsage.get("lastLogin")) : '-',
+                            "Quizzes Completed": (studentUsage.get("quizzesCompleted") !== null) ? studentUsage.get("quizzesCompleted") : 0,
+                            "Questions Answered": (studentUsage.get("questionsAnswered") !== null) ? studentUsage.get("questionsAnswered") : 0,
+                            "Mastery Level Avg.": (studentUsage.get("masteryLevel") !== null) ? numeral(studentUsage.get("masteryLevel")).format('0.00') : 0,
+                            "Remediation Views": (studentUsage.get("totalRemediationLinkViews") !== null) ? studentUsage.get("totalRemediationLinkViews") : 0
                         });
                     } else {
                         json.push({
                             "Name": user.get("fullName"),
                             "Email Address": user.get("email"),
-                            "Logins": (studentUsage.get("logins") != null) ? studentUsage.get("logins") : 0,
-                            "Last Login": (studentUsage.get("lastLogin") != null) ? component.formatDate(studentUsage.get("lastLogin")) : '-',
-                            "Quizzes Completed": (studentUsage.get("quizzesCompleted") != null) ? studentUsage.get("quizzesCompleted") : 0,
-                            "Questions Answered": (studentUsage.get("questionsAnswered") != null) ? studentUsage.get("questionsAnswered") : 0,
-                            "Mastery Level Avg.": (studentUsage.get("masteryLevel") != null) ? numeral(studentUsage.get("masteryLevel")).format('0.00') : 0
+                            "Logins": (studentUsage.get("logins") !== null) ? studentUsage.get("logins") : 0,
+                            "Last Login": (studentUsage.get("lastLogin") !== null) ? component.formatDate(studentUsage.get("lastLogin")) : '-',
+                            "Quizzes Completed": (studentUsage.get("quizzesCompleted") !== null) ? studentUsage.get("quizzesCompleted") : 0,
+                            "Questions Answered": (studentUsage.get("questionsAnswered") !== null) ? studentUsage.get("questionsAnswered") : 0,
+                            "Mastery Level Avg.": (studentUsage.get("masteryLevel") !== null) ? numeral(studentUsage.get("masteryLevel")).format('0.00') : 0
                         });
                     }
 
-                    if (index == lastPosition) {
+                    if (index === lastPosition) {
                         var csv = Papa.unparse(json.sort(function (a, b) {
                             return (a.Name.toLowerCase() > b.Name.toLowerCase()) ? 1 : ((b.Name.toLowerCase() > a.Name.toLowerCase()) ? -1 : 0);
                         }));
@@ -280,13 +282,13 @@ SakuraiWebapp.ExportCsvLinkComponent = Ember.Component.extend({
                     json.push({
                             "Name": user.get("fullName"),
                             "Email Address": user.get("email"),
-                            "Number of Exams": (practiceExamResult.get("examsCompleted") != null) ? practiceExamResult.get("examsCompleted") : 0,
-                            "Last Exam": (practiceExamResult.get("lastExamAt") != null) ? component.formatDate(practiceExamResult.get("lastExamAt")) : '-',
-                            "Questions Answered": (practiceExamResult.get("questionsAnswered") != null) ? practiceExamResult.get("questionsAnswered") : 0,
-                            "Mastery Level Avg.": (practiceExamResult.get("masteryLevel") != null) ? numeral(practiceExamResult.get("masteryLevel")).format('0.00') : 0
+                            "Number of Exams": (practiceExamResult.get("examsCompleted") !== null) ? practiceExamResult.get("examsCompleted") : 0,
+                            "Last Exam": (practiceExamResult.get("lastExamAt") !== null) ? component.formatDate(practiceExamResult.get("lastExamAt")) : '-',
+                            "Questions Answered": (practiceExamResult.get("questionsAnswered") !== null) ? practiceExamResult.get("questionsAnswered") : 0,
+                            "Mastery Level Avg.": (practiceExamResult.get("masteryLevel") !== null) ? numeral(practiceExamResult.get("masteryLevel")).format('0.00') : 0
                     });
 
-                    if (index == lastPosition) {
+                    if (index === lastPosition) {
                         var csv = Papa.unparse(json.sort(function (a, b) {
                             return (a.Name.toLowerCase() > b.Name.toLowerCase()) ? 1 : ((b.Name.toLowerCase() > a.Name.toLowerCase()) ? -1 : 0);
                         }));

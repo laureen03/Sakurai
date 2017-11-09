@@ -1,0 +1,13 @@
+<a class="previous {{if morePreviousPages '' 'invisible'}}" {{action "showPreviousPage"}}>
+    <span>{{previous-label}}</span>
+</a>
+<ol class="tabs">
+    {{#each pageTabs as |tab|}}
+        <li class="{{if tab.active 'active' ''}}">
+            <a {{action "showPage" tab.number}}>{{tab.number}}</a>
+        </li>
+    {{/each}}
+</ol>
+<a class="next {{if moreSucceedingPages '' 'invisible'}}" {{action "showNextPage"}}>
+    <span>{{next-label}}</span>
+</a>

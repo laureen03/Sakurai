@@ -2,10 +2,13 @@
  * @param page-length {number} number of results displayed per page
  * @param current-page {number} page the component is currently on
  */
-SakuraiWebapp.StudentExamPerformanceChartComponent = Ember.Component.extend({
+
+import Ember from "ember"; 
+
+export default Ember.Component.extend({ 
 
     /**
-     * @property {SakuraiWebapp.ExamStat}
+     * @property {ExamStat}
      */
     examStat: null,
 
@@ -15,7 +18,7 @@ SakuraiWebapp.StudentExamPerformanceChartComponent = Ember.Component.extend({
     passThreshold: 0,
 
     /**
-     * @property {SakuraiWebapp.Exam} the selected exam
+     * @property {Exam} the selected exam
      */
     selectedExam: null,
 
@@ -58,7 +61,7 @@ SakuraiWebapp.StudentExamPerformanceChartComponent = Ember.Component.extend({
 
     getTicksNumber: function (threshold) {
         var maxValue = this.get("maxValue");
-        return (threshold ==  maxValue) ? maxValue+1 : maxValue;
+        return (threshold ===  maxValue) ? maxValue+1 : maxValue;
     },
 
     drawChart: Ember.observer('examStat', 'page-length', 'current-page', function() {
@@ -69,10 +72,9 @@ SakuraiWebapp.StudentExamPerformanceChartComponent = Ember.Component.extend({
             pageLen = this.get('page-length'),
             currentPage = this.get('current-page'),
             chartHeight = 350,
-            plotHeight = 246,
             ticksNumber = this.getTicksNumber(passThreshold),
             options = this.getChartOptions(ticksNumber, chartHeight, pageLen, currentPage),
-            context = SakuraiWebapp.context;
+            context = context;
 
 
         _dataTable = new google.visualization.DataTable(),   // Create the data table
@@ -114,7 +116,7 @@ SakuraiWebapp.StudentExamPerformanceChartComponent = Ember.Component.extend({
             selection = _columnChart.getSelection(),
             coord = selection && selection.length > 0 && selection[0];
 
-        if (typeof coord == 'object' && coord.column == 1) {
+        if (typeof coord === 'object' && coord.column === 1) {
             this.selectExam(coord.row + ((currentPage - 1) * pageLen));
         }
     },
@@ -161,7 +163,7 @@ SakuraiWebapp.StudentExamPerformanceChartComponent = Ember.Component.extend({
 
     /**
      * @param {number} index of the data row
-     * @returns {SakuraiWebapp.Exam} exam corresponding to the selected data row
+     * @returns {Exam} exam corresponding to the selected data row
      */
     selectExam: function(index) {
         var self = this;
@@ -184,7 +186,7 @@ SakuraiWebapp.StudentExamPerformanceChartComponent = Ember.Component.extend({
     /**
      * Adds the data items to the chart
      * @param dataTable
-     * @param {SakuraiWebapp.ExamStat} examStat
+     * @param {ExamStat} examStat
      * @param {number} pageLen number of results per results page
      * @param {number} currentPage index of the current page
      */
@@ -236,11 +238,11 @@ SakuraiWebapp.StudentExamPerformanceChartComponent = Ember.Component.extend({
      * Return chart options
      * @returns {Object} options
      */
-    getChartOptions: function(ticksNumber, height, pageLen, currentPage){
+    getChartOptions: function(ticksNumber, height, pageLen){
 
         var ticks = [];
         for(var i=1; i<=ticksNumber; i++) {
-            ticks.push(i==9 ? '_' : i);
+            ticks.push(i===9 ? '_' : i);
         }
         return {
             tooltip : { trigger: 'none' },
@@ -300,7 +302,7 @@ SakuraiWebapp.StudentExamPerformanceChartComponent = Ember.Component.extend({
                 ticks: ticks,
                 baselineColor: "#e5e5e5"
             }
-        }
+        };
     },
 
     actions:{

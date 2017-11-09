@@ -1,0 +1,117 @@
+<div class="container class-container-instructor clearfix">
+    {{#unless hasClasses}}
+	    <h1 class="auto-center col-sm-4 section-header dark">{{t "classes.insTitle"}}</h1>
+	    <div class="center">
+	        <h4>{{t "classes.insAction"}}</h4>
+	        <div class="ins-btn-wrapper">
+                {{#if ccmNewClassEnabled }}
+                    {{ccm-link
+                        data-ccm-key="newClass"
+                        data-class-names="btn btn-blue create-class"
+                        data-i18n-label="classes.insCreateClass"
+                        data-class=class data-product-isbn=isbn }}
+                {{else}}
+                    {{#link-to 'instructor.addEditClass' '0' class="btn btn-blue create-class"}}{{t "classes.insCreateClass"}}{{/link-to}}
+                {{/if}}
+	        </div>
+	        <div>
+                {{#if joinCoInstructorEnabled}}
+                    {{#link-to 'instructor.coInstructor' class="btn btn-blue join-co-instructor"}}{{t "classes.insCoInstructor"}}{{/link-to}}
+                {{/if}}
+	        </div>
+	    </div>
+	{{else}}
+		<div class="clearfix">
+			<h1 class="col-sm-6">{{t "classes.myClasses"}}</h1>
+			<div class="pull-right col-sm-6 options-container">
+            {{#if ccmNewClassEnabled }}
+                {{ccm-link
+                data-ccm-key="newClass"
+                data-class-names="btn btn-default add-class"
+                data-i18n-label="classes.addClass"
+                data-class=class data-product-isbn=isbn }}
+            {{else}}
+                {{#link-to 'instructor.addEditClass' '0' class="btn btn-default add-class"}}{{t "classes.addClass"}}{{/link-to}}
+            {{/if}}
+
+            {{#if joinCoInstructorEnabled}}
+				{{#link-to 'instructor.coInstructor' class="btn btn-default join-co-instructor"}}{{t "classes.joinClassCoInstructor"}}{{/link-to}}
+            {{/if}}
+	 		</div>
+
+		</div>
+
+        {{#unless isCCMAllowed}}
+		    <h2 class="active-classes-header">{{t "classes.active"}}</h2>
+        {{/unless}}
+
+		{{#if hasActiveClasses}}
+			<table class="table active-classes">
+				<thead>
+					<tr>
+						<th class="name-column">{{t "classes.name"}}</th>
+						<th class="term-column">{{t "classes.term"}}</th>
+						<th class="product-column">{{t "classes.product"}}</th>
+						{{#if showCodeAndEditEnabled}}
+                                                    <th class="code-column">{{t "classes.classCode"}}</th>
+                                                    <th class="edit-column">{{t "classes.edit"}}</th>
+                                                {{/if}}
+					</tr>
+				</thead>
+				<tbody>
+					{{#each activeClasses as |clazz|}}
+						<tr>
+							<td class="name-column" title="{{clazz.name}}">
+								{{#link-to 'instructor.hmcd' clazz.id}}{{clazz.name}}{{/link-to}}
+							</td>
+							<td class="term-column" title="{{clazz.term}}">{{clazz.term}}</td>
+							<td class="product-column" title="{{clazz.product.name}}">{{clazz.product.name}}</td>
+							{{#if showCodeAndEditEnabled}}
+                                <td class="code-column" title="{{clazz.classCode}}">{{clazz.classCode}}</td>
+    							<td class="edit-column">{{#link-to 'instructor.addEditClass' clazz.id}}{{t "classes.edit"}}{{/link-to}}</td>
+                            {{/if}}
+						</tr>
+					{{/each}}
+				</tbody>
+			</table>
+		{{else}}
+			{{t "classes.noHaveActiveClass"}}
+		{{/if}}
+
+        {{#unless isCCMAllowed}}
+		    <h2 class="inactive-classes-header">{{t "classes.inactive"}}</h2>
+            {{#if hasInactiveClasses}}
+                <table class="table inactive-classes">
+                    <thead>
+                        <tr>
+                            <th class="name-column">{{t "classes.name"}}</th>
+                            <th class="term-column">{{t "classes.term"}}</th>
+                            <th class="product-column">{{t "classes.product"}}</th>
+                            <th class="code-column">{{t "classes.classCode"}}</th>
+                            {{#if showCodeAndEditEnabled}}
+                            <th class="edit-column">{{t "classes.edit"}}</th>
+                            {{/if}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each inactiveClasses as |clazz|}}
+                            <tr>
+                                <td class="name-column" title="{{clazz.name}}">
+                                    {{#link-to 'instructor.hmcd' clazz.id}}{{clazz.name}}{{/link-to}}
+                                </td>
+                                <td class="term-column" title="{{clazz.term}}">{{clazz.term}}</td>
+                                <td class="product-column" title="{{clazz.product.name}}">{{clazz.product.name}}</td>
+                                <td class="code-column" title="{{clazz.classCode}}">{{clazz.classCode}}</td>
+                                {{#if showCodeAndEditEnabled}}
+                                <td class="edit-column">{{#link-to 'instructor.addEditClass' clazz.id}}{{t "classes.edit"}}{{/link-to}}</td>
+                                {{/if}}
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            {{else}}
+                {{t "classes.noHaveInactiveClass"}}
+            {{/if}}
+        {{/unless}}
+	{{/unless}}
+</div>

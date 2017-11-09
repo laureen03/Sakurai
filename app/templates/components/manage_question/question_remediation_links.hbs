@@ -1,0 +1,58 @@
+{{#if data-is-remediation-link-allowed}}
+	<div class="add-remediation-link-section">
+	<h2>{{t "questionLibrary.createQuestions.remediationLink"}}</h2>
+		{{add-remediation-link store=data-store}}
+		{{#if selectedRemediationLinks}}
+			<h2>{{t "questionLibrary.createQuestions.remediationLink"}}</h2>
+			{{#each selectedRemediationLinks as |remediationLink|}}
+				<div class="clearfix remediation-link-box">
+					<div>
+						<span><b>{{t "questionLibrary.createQuestions.source"}}:</b>&nbsp;</span>
+						{{#with remediationLink.type as |type|}}
+							{{t type}}
+						{{/with}}
+					</div>
+					<div class="remediation-name-section">
+                      {{#if remediationLink.editable }}
+                        <form class="form-inline">
+                          <div class="form-group">
+                              {{input id="remediation-link-input" type=text value=remediationLink.name class="form-control remediation-name-input"}}
+                          </div>
+                          <button class="btn btn-success btn-xs update-remediation-button" {{action 'onUpdateRemediationLink' remediationLink}}>
+                            <span class="glyphicon glyphicon-ok"></span>
+                          </button>
+                        </form>
+                      {{else}}
+                        <span><b>{{t "questionLibrary.createQuestions.linkName"}}:</b>&nbsp;</span>
+                            {{ remediationLink.name }}
+                        <button
+                          class="btn btn-primary btn-xs show-edit-remediation-button" {{action 'onShowEditRemediationLink' remediationLink}}>
+                          <span class="glyphicon glyphicon-edit"></span>
+                        </button>
+                      {{/if}}
+                    </div>
+					<div>
+						<span><b>{{t "questionLibrary.createQuestions.linkUrl"}}:</b>&nbsp;</span><a target="_blank" href={{remediationLink.fullUrl}} >{{remediationLink.fullUrl}}</a>
+					</div>
+					<button class="pull-right btn btn-dafault" {{action "onShowConfirmation" remediationLink}}>{{t "remove"}}</button>
+				</div>
+			{{/each}}
+		{{/if}}
+	</div>
+	<!--MODAL FOR SUCCESS-->
+	<div class="modal fade remove-remediation-message-modal">
+	    <div class="modal-dialog small-modal">
+	        <div class="modal-content">
+	            <div class="modal-body cf">
+	                <div class="success-body">
+	                    <span class="text">{{t "questionLibrary.createQuestions.removeRemediationMessage"}}</span>
+	                    <div class="btn-box margin-top-55">
+		                    <button type="submit" class="btn btn-blue" {{action "onRemoveRemediation"}}>{{t "remove"}}</button>
+		                    <button type="submit" class="btn btn-default space-btn" {{action "onCancelConfirmation"}}>{{t "cancel"}}</button>
+	                    </div>
+	                </div>
+	            </div>
+	        </div><!-- /.modal-content -->
+	    </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+{{/if}}

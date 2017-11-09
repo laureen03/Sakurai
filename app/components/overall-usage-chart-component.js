@@ -1,4 +1,8 @@
-SakuraiWebapp.OverallUsageChartComponent = Ember.Component.extend({
+import Ember from "ember"; 
+import context from "utils/context-utils";
+import DateUtil from "utils/Date-util";
+
+export default Ember.Component.extend({
     /**
      * Observes the overall performance to refresh the chart
      */
@@ -10,7 +14,7 @@ SakuraiWebapp.OverallUsageChartComponent = Ember.Component.extend({
         var component = this;
         component.drawChart();
 
-        SakuraiWebapp.context.addWindowResizeListener(function(){
+        context.addWindowResizeListener(function(){
             if (!component.get("isDestroyed")){
                 component.drawChart();
             }
@@ -21,7 +25,6 @@ SakuraiWebapp.OverallUsageChartComponent = Ember.Component.extend({
      * Draws the overall performance chart
      */
     drawChart: function () {
-        var component = this;
         // Create and populate the data table.
         var dataTable = new google.visualization.DataTable();
 
@@ -63,7 +66,7 @@ SakuraiWebapp.OverallUsageChartComponent = Ember.Component.extend({
     addQuestionAnsweredRows:function(dataTable, overallUsage){
         var highest = 0;
         var overallUsageArray = overallUsage.toArray();
-        var dateUtil = new SakuraiWebapp.DateUtil();
+        var dateUtil = new DateUtil();
 
         $.each(overallUsageArray, function(index, item){
             var date = dateUtil.format(item.get("date"), dateUtil.graphFormat);
@@ -77,16 +80,10 @@ SakuraiWebapp.OverallUsageChartComponent = Ember.Component.extend({
      * Return chart options
      * @returns {} options
      */
-    getChartOptions: function(overallUsage, max){
+    getChartOptions: function(overallUsage){
         var component = this,
         //Fix the issue if there are less quizzes than values in Y axis
-            _hTicks = component.calculateHTicks(overallUsage),
-            _startsAt = 0,
-            _totalClassUsage = overallUsage.get("length"),
-            _maxValue = max,
-            _lineDashStyle = [2,2],
-            _primaryColor = "#999";
-
+            _hTicks = component.calculateHTicks(overallUsage);
 
 
         return {
@@ -167,22 +164,22 @@ SakuraiWebapp.OverallUsageChartComponent = Ember.Component.extend({
             },
             lineWidth: 2
 
-        }
+        };
     },
 
     calculateHTicks: function(overallUsage){
 
         var ticks = [];
-        var dateUtil = new SakuraiWebapp.DateUtil();
+        var dateUtil = new DateUtil();
         var overallUsageArray = overallUsage.toArray();
-        var date, mod;
+        var date;
 
         var mod = Math.ceil( overallUsageArray.length / 10 );
             mod = (mod < 2) ? 2 : mod; //Min value
 
         $.each(overallUsageArray, function(index, overall){
             date = dateUtil.format(overall.get("date"), dateUtil.graphFormat);
-            if (index % mod == 0){
+            if (index % mod === 0){
                 ticks.push({v:overall.get("date"), f:date});
             }
         });

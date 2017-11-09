@@ -1,0 +1,107 @@
+{{#if dragNdop}}
+    <ul class="answer-choices question-choices">
+
+        {{#each questionChoices as |questionChoice|}}
+            <li>
+                {{questionChoice}}
+            </li>
+        {{/each}}
+    </ul>
+{{/if}}
+
+{{#if has-class-percentages}}
+    <div class="answer-choices class-percentages">
+        <div class="header">
+            <div class="all-stats">{{t "common.allStudents"}}</div>
+            <div class="class-stats">{{t "common.thisClass"}}</div>
+        </div>
+        {{#each answerChoices as |ac|}}
+            <div class="answer-choice">
+                <div class="stats-container clearfix">
+                    <div>
+                        <div class="stats all-stats">
+                            <span class="percentage">{{ac.answerChoice.answerPercentage}}%</span>
+
+                            <div class="progress">
+                                {{progress-bar isCorrect=ac.correct percentage=ac.answerChoice.answerPercentage}}
+                            </div>
+
+                            {{#if ac.correct}}
+                                <span class="circle-ok glyphicon glyphicon-ok"></span>
+                            {{else}}
+                                <span class="circle-wrong glyphicon glyphicon-remove"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div>
+                        <div class="stats class-stats">
+                            <span class="percentage">{{ac.classPercentage}}%</span>
+
+                            <div class="progress">
+                                {{progress-bar isCorrect=ac.classIsCorrect percentage=ac.classPercentage}}
+                            </div>
+
+                            {{#if ac.classIsCorrect}}
+                                <span class="circle-ok glyphicon glyphicon-ok"></span>
+                            {{else}}
+                                <span class="circle-wrong glyphicon glyphicon-remove"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+                {{#unless ac.answerChoice.media}}
+                    <div class="answer {{if ac.answerChoice.link 'link' 'text'}}">
+                        {{#if ac.answerChoice.link}}
+                        {{!-- applies to questions of type: text_entry --}}
+                            <a {{action "showMoreAnswers" ac.answerChoice.otherAnswers true}} href="#">{{ac.answerChoice.link}}</a>
+                        {{else}}
+                            {{safe-html ac.answerChoice.text}}
+                        {{/if}}
+                    </div>
+                {{/unless}}
+                {{#if ac.answerChoice.media}}
+                    <div class="answer media">
+                        <img src={{ac.answerChoice.media}} />
+                    </div>
+                {{/if}}
+            </div>
+        {{/each}}
+    </div>
+
+{{else}}
+    <ul class="answer-choices">
+        {{#each answerChoices as |ac|}}
+            <li>
+                <div class="stats">
+                    <span class="percentage">{{ac.answerChoice.answerPercentage}}%</span>
+
+                    <div class="progress">
+                        {{progress-bar isCorrect=ac.correct percentage=ac.answerChoice.answerPercentage}}
+                    </div>
+
+                    {{#if ac.correct}}
+                        <span class="circle-ok glyphicon glyphicon-ok"></span>
+                    {{else}}
+                        <span class="circle-wrong glyphicon glyphicon-remove"></span>
+                    {{/if}}
+                </div>
+                {{#if ac.answerChoice.media}}
+                    <div class="answer media">
+                        <img src={{ac.answerChoice.media}} />
+                    </div>
+                {{else}}
+                    {{#if ac.answerChoice.link}}
+                        {{!-- applies to questions of type: text_entry --}}
+                        <a {{action "showMoreAnswers" ac.answerChoice.otherAnswers}} href="#">{{ac.answerChoice.link}}</a>
+                    {{else}}
+                        <div class="answer text">
+                            {{#with ac.answerChoice.text as |text|}}
+                                {{safe-html text}}
+                            {{/with}}
+                        </div>
+                    {{/if}}
+                {{/if}}
+            </li>
+        {{/each}}
+    </ul>
+{{/if}}

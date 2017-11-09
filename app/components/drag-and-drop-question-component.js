@@ -1,10 +1,14 @@
 /**
  *
- * @type {SakuraiWebapp.DragAndDropQuestionComponent}
+ * @type {DragAndDropQuestionComponent}
  */
-SakuraiWebapp.DragAndDropQuestionComponent = Ember.Component.extend(
-    SakuraiWebapp.ManageQuestionComponentMixin,
-    {
+import Ember from "ember"; 
+import ManageQuestionComponentMixin from "mixins/manage-question-component";
+import Question from "models/question";
+import Interaction from "objects/interaction";
+
+export default Ember.Component.extend(
+    ManageQuestionComponentMixin, {
 
     /**
      * @property {[]} question answer choices
@@ -32,8 +36,8 @@ SakuraiWebapp.DragAndDropQuestionComponent = Ember.Component.extend(
 
     /**
      * Setups the interaction during the didInsertElement
-     * @see SakuraiWebapp.ManageQuestionComponentMixin#didInsertElement
-     * @see SakuraiWebapp.ManageQuestionComponentMixin#didInsertElementInteraction
+     * @see ManageQuestionComponentMixin#didInsertElement
+     * @see ManageQuestionComponentMixin#didInsertElementInteraction
      */
     didInsertElementInteraction: function () {
         this.$( ".question-container-dragn-drop" ).sortable();
@@ -42,13 +46,13 @@ SakuraiWebapp.DragAndDropQuestionComponent = Ember.Component.extend(
 
     /**
      * Initializes the question interaction
-     * @param {SakuraiWebapp.Question} question
+     * @param {Question} question
      * @param {bool} createMode
      *
      * It is called by
-     * @see SakuraiWebapp.ManageQuestionComponentMixin#initQuestion
+     * @see ManageQuestionComponentMixin#initQuestion
      *
-     * @see SakuraiWebapp.ManageQuestionComponentMixin#initInteraction
+     * @see ManageQuestionComponentMixin#initInteraction
      */
     initInteraction: function (question, createMode) {
         var component = this,
@@ -100,9 +104,9 @@ SakuraiWebapp.DragAndDropQuestionComponent = Ember.Component.extend(
      * @return {bool}
      *
      * It is called by
-     * @see SakuraiWebapp.ManageQuestionComponentMixin#saveQuestion
+     * @see ManageQuestionComponentMixin#saveQuestion
      *
-     * @see SakuraiWebapp.ManageQuestionComponentMixin#validateInteraction
+     * @see ManageQuestionComponentMixin#validateInteraction
      */
     validateInteraction: function(){
         return !this.get("answerChoiceInvalid");
@@ -111,14 +115,14 @@ SakuraiWebapp.DragAndDropQuestionComponent = Ember.Component.extend(
     /**
      * Set all values for Interaction and return a Json
      *
-     * @see SakuraiWebapp.ManageQuestionComponentMixin#saveQuestion
-     * @see SakuraiWebapp.ManageQuestionComponentMixin#getInteractions
+     * @see ManageQuestionComponentMixin#saveQuestion
+     * @see ManageQuestionComponentMixin#getInteractions
      **/
     getInteractions: function () {
         var self = this;
-        return new Em.RSVP.Promise( function(resolve, reject) {
+        return new Ember.RSVP.Promise( function(resolve) {
 
-            var interaction = SakuraiWebapp.Interaction.create({}),
+            var interaction = Interaction.create({}),
                 fixedAnswerCount = 0,
                 answerChoices = self.get('answerChoices'),
                 maxAnswerChoices = self.get('maxAnswerChoices'),
@@ -126,8 +130,8 @@ SakuraiWebapp.DragAndDropQuestionComponent = Ember.Component.extend(
                 answerChoice, fixed, text, correctId, correctAnswerChoices=[];
             
             interaction.setProperties({
-                "type": SakuraiWebapp.Question.DRAG_AND_DROP,
-                "subType": SakuraiWebapp.Question.DRAG_AND_DROP,
+                "type": Question.DRAG_AND_DROP,
+                "subType": Question.DRAG_AND_DROP,
                 "minChoices": answerChoices.get("length"),
                 "maxChoices": answerChoices.get("length") });
 
@@ -156,7 +160,7 @@ SakuraiWebapp.DragAndDropQuestionComponent = Ember.Component.extend(
             }
 
             // if all answer choices are fixed the shuffle is false
-            if (fixedAnswerCount == interaction.get('expectedLength')) {
+            if (fixedAnswerCount === interaction.get('expectedLength')) {
                 interaction.set("shuffle", false);
             }
 

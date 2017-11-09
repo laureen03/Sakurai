@@ -1,4 +1,8 @@
-SakuraiWebapp.InstructorCopyAssignmentsView = Ember.View.extend(SakuraiWebapp.UserInterfaceFeaturesMixin, {
+import Ember from "ember";
+import UserInterfaceFeaturesMixin from "mixins/user-interface-features";
+
+export default Ember.Component.extend(
+    UserInterfaceFeaturesMixin, {
     layoutName: 'layout/forInstructorComplete',
 
     didRender: function() {
@@ -31,7 +35,7 @@ SakuraiWebapp.InstructorCopyAssignmentsView = Ember.View.extend(SakuraiWebapp.Us
         var controller = this.get('controller');
         var nowTemp = new Date();
         var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
-        controller.get("copyAssignments").forEach(function(copyAssignment, index){
+        controller.get("copyAssignments").forEach(function(copyAssignment){
             var checkout = $('#datesAssignment'+ copyAssignment.get("parentAssignment").get("id") +' .dueDate').datepicker({
                 onRender: function(date) {
                     return date.valueOf() <= checkin.getDate().valueOf() ? 'disabled' : '';
@@ -93,7 +97,7 @@ SakuraiWebapp.InstructorCopyAssignmentsView = Ember.View.extend(SakuraiWebapp.Us
             onkeyup: function(element) { $(element).valid(); }
         });
         var controller = this.get('controller');
-        controller.get("copyAssignments").forEach(function(copyAssignment, index){
+        controller.get("copyAssignments").forEach(function(copyAssignment){
             $("#copy-assignments .assignment-name input[name=" + copyAssignment.get("parentAssignment").get("id") + "]").rules("add", {
                 required: true,
                 maxlength: 50,

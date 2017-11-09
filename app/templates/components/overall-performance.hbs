@@ -1,0 +1,8 @@
+<div class="overall-performance">
+    {{#unless isInstructor }}
+        <p> {{t "overallPerformance.youHaveAnswered"}} {{overallPerformance.totalQuestions}} {{t "overallPerformance.questions"}}.</p>
+        <p class="performance-sub-title">
+            {{t "overallPerformance.youCurrentlyAt"}}<span> {{t "overallPerformance.ml"}} {{overallPerformance.masteryLevel}}</span></p>
+    {{/unless}}
+    <div id="chart"></div>
+</div>

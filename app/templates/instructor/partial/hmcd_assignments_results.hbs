@@ -1,0 +1,167 @@
+<div id="questionCollectionResults">
+    <div class="ml-results">
+        <h3 class="questionCollectionResults-title normal-weight">{{t "hmcd.assignmentsResults.questionCollectionTitle"}}</h3>
+        {{#if questionCollectionResultsSortable.hasElements}}
+        <table class="table table-striped tablesorter questionCollectionResults-table">
+            <thead>
+                <tr>
+                    <th class="visible-xs visible-sm no-arrow">{{t "expand"}}</th>
+                    <th class="header sort_name tleft">
+                        <a {{action 'onSortByCriteria' 'questionCollectionResults' 'name' }}>
+                            <span class="name-action action">{{t "assignments.name"}}</span>
+                        </a>
+                    </th>
+
+                    <th class="hidden-xs header sort_timestampAvailableDate">
+                            <a {{action 'onSortByCriteria' 'questionCollectionResults' 'timestampAvailableDate' }}>
+                            <span class="name-timestampAvailableDate action headerSortDown">{{t "assignments.startDate"}} </span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs header sort_timestampDueDate">
+                            <a {{action 'onSortByCriteria' 'questionCollectionResults' 'timestampDueDate' }}>
+                            <span class="name-timestampDueDate action">{{t "hmcd.assignmentsResults.endDate"}}</span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs sort_totalCompleted small-colunm completed">
+                        <a {{action 'onSortByCriteria' 'questionCollectionResults' 'totalCompleted' }}>
+                            <span class="name-totalCompleted action">{{t "hmcd.assignmentsResults.numCompleted"}}</span>
+                        </a>
+                    </th>
+                    <th class="sort_avgScore">
+                        <a {{action 'onSortByCriteria' 'questionCollectionResults' 'avgScore' }}>
+                            <span class="name-averageScore action">{{t "hmcd.assignmentsResults.avgScore"}}</span>
+                        </a>
+                    </th>
+                    </tr>
+                </thead>
+            <tbody>
+            {{#each questionCollectionResultsSortable.collection as |item|}}
+                {{#if item.isQuestionCollectionAssignment}}
+                <tr data-pos="{{item.id}}">
+                    <td class="visible-xs visible-sm">
+                        <a {{action 'showMore' item.id item item.isQuestionCollectionAssignment}} class="icon">
+                            <span data-arrow="{{item.id}}" class="glyphicon glyphicon-chevron-down"></span>
+                        </a>
+                    </td>
+                    <td class="name tleft" title="{{item.name}}">
+                        {{#link-to 'instructor.qcAssignmentSummary' class.id item.id class="underline assignment-name"}}{{item.name}}{{/link-to}}
+
+                         {{!-- * FIXME The i18n helper is unbound and does not seem to work with promises
+                              * It would be better to have something like:
+                              * <div class="text-muted">{{t "hmcd.assignmentsResults.totalQuestions" count=questionSet.totalQuestions}}</div>
+                              * but this doesn't work. On the other hand, a value that is not a promise like:
+                              * <div class="text-muted">{{t "hmcd.assignmentsResults.totalQuestions" count=item.points}}</div>
+                              * works fine
+                        --}}
+                        <div class="text-muted">{{item.totalQuestionsLabel}}</div>
+                    </td>
+
+                    <td class="hidden-xs date">
+                        <span class="date-format">{{format-date item.availableDate timezone=item.timeZone}}</span>
+                    </td>
+                    <td class="hidden-xs date">
+                        <span class="date-format">{{format-date item.dueDate timezone=item.timeZone}}</span>
+                    </td>
+                    <td class="hidden-xs ">{{item.totalCompleted}}</td>
+                    <td>
+                        {{#if item.totalCompleted}}
+                            {{numeral-format item.avgScore '0.00'}}/{{item.points}} ({{numeral-format item.avgScorePercent '0'}}&#37;)
+                        {{else}}
+                            0
+                        {{/if}}
+                    </td>
+                </tr>
+                {{/if}}
+            {{/each}}
+            </tbody>
+        </table>
+        {{else}}
+            <h4>{{t "assignments.noCreated"}}</h4>
+        {{/if}}
+    </div>
+</div>
+
+<!--Other Type Of assignment-->
+
+<div id="mlAssignmentResults">
+    <div class="ml-results">
+        <h3 class="assignmentResults-title normal-weight">{{t "hmcd.assignmentsResults.masteryLevelTitle"}}</h3>
+        {{#if assignmentResultsSortable.hasElements}}
+        <table class="table table-striped tablesorter assignmentResults-table">
+            <thead>
+                <tr>
+                    <th class="visible-xs visible-sm no-arrow">{{t "expand"}}</th>
+                    <th class="header sort_name tleft">
+                        <a {{action 'onSortByCriteria' 'assignmentResults' 'name' }}>
+                            <span class="name-action action">{{t "assignments.name"}}</span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs header sort_targetMasteryLevel tleft">
+                        <a {{action 'onSortByCriteria' 'assignmentResults' 'targetMasteryLevel' }}>
+                            <span class="targetMasteryLevel-action action">{{t "assignments.target"}}</span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs header sort_timestampAvailableDate">
+                            <a {{action 'onSortByCriteria' 'assignmentResults' 'timestampAvailableDate' }}>
+                            <span class="name-timestampAvailableDate action headerSortDown">{{t "assignments.startDate"}} </span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs header sort_timestampDueDate">
+                            <a {{action 'onSortByCriteria' 'assignmentResults' 'timestampDueDate' }}>
+                            <span class="name-timestampDueDate action">{{t "hmcd.assignmentsResults.endDate"}}</span>
+                        </a>
+                    </th>
+                    <th class="sort_totalCompleted small-colunm ">
+                        <a {{action 'onSortByCriteria' 'assignmentResults' 'totalCompleted' }}>
+                            <span class="name-totalCompleted action">{{t "hmcd.assignmentsResults.numCompleted"}}</span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs sort_avgScore">
+                        <a {{action 'onSortByCriteria' 'assignmentResults' 'avgScore' }}>
+                            <span class="name-averageScore action">{{t "hmcd.assignmentsResults.avgScore"}}</span>
+                        </a>
+                    </th>
+                    </tr>
+                </thead>
+            <tbody>
+            {{#each assignmentResultsSortable.collection as |item|}}
+                {{#if item.isMasteryLevelAssignment}}
+                <tr data-pos="{{item.id}}">
+                    <td class="visible-xs visible-sm">
+                        <a {{action 'showMore' item.id item}} class="icon">
+                            <span data-arrow="{{item.id}}" class="glyphicon glyphicon-chevron-down"></span>
+                        </a>
+                    </td>
+                    <td class="name tleft" title="{{item.name}}">
+                        {{#link-to 'instructor.assignmentSummary' class.id item.id class="underline assignment-name"}}{{item.name}}{{/link-to}}
+                        <div class="text-muted">{{t "hmcd.assignmentsResults.targetMl"}} &colon; {{item.targetMasteryLevel}}</div>
+                    </td>
+                    <td class="hidden-xs">
+                        {{item.targetMasteryLevel}}
+                    </td>
+                    <td class="hidden-xs date">
+                        <span class="date-format">{{format-date item.availableDate timezone=item.timeZone}}</span>
+                    </td>
+                    <td class="hidden-xs date">
+                        <span class="date-format">{{format-date item.dueDate timezone=item.timeZone}}</span>
+                    </td>
+                    <td>{{item.totalCompleted}}</td>
+                    <td class="hidden-xs">
+                        {{#if item.totalCompleted}}
+                            {{numeral-format item.avgScore '0.00'}}/{{item.points}} ({{numeral-format item.avgScorePercent '0'}}&#37;)
+                        {{else}}
+                            0
+                        {{/if}}
+                    </td>
+                </tr>
+                {{/if}}
+            {{/each}}
+            </tbody>
+        </table>
+        {{else}}
+            <h4>{{t "assignments.noCreated"}}</h4>
+        {{/if}}
+    </div>
+</div>
+
+

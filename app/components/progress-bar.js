@@ -1,4 +1,6 @@
-SakuraiWebapp.ProgressBarComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
     tagName: 'div',
     attributeBindings: ['style'],
     classNames: ['progress-bar'],
@@ -12,13 +14,13 @@ SakuraiWebapp.ProgressBarComponent = Ember.Component.extend({
 
     validateRange: function(value) {
 
-        if (typeof value == 'number') {
+        if (typeof value === 'number') {
 
             if (value >= 0 && value <= 100) {
                 return value;
             } else {
                 Ember.Logger.error('ProgressBarComponent: value is out of range. Expecting 0 <= value <= 100');
-                return 0
+                return 0;
             }
         } else {
             Ember.Logger.error('ProgressBarComponent: value is not a number. Expecting a number.');

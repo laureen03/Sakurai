@@ -1,0 +1,109 @@
+<div class="step2 stepsContent">
+
+    <h2>{{t "assignQuiz.createYourQuiz"}}</h2>
+    <form role="form" id="assign-a-quiz">
+        <div class="assign-quiz">
+            <div class="form-group">
+                <label>{{t "assignQuiz.assignName"}}</label>
+                {{input id="assignName" name="assignName" type="text" class="form-control" value=assignment.name}}
+                <div><p class="note-assignment-name">{{t "assignment.nameNote"}}</p></div>
+                <label id="assignName-error" for="assignName" class="error"></label>
+            </div>
+            {{#if assignment.isQuestionCollectionAssignment}}
+                <div class="form-group">
+                    <label class="clearfix">
+                        <div class="pull-left">
+                            {{t "assignQuiz.questionCol"}}
+                        </div>
+                    </label>
+                    <div class="qc-dropdown-container">
+                    {{my-select id="select-qc"
+                        content=questionSetsEnabled
+                        selectedValue = qcSelected
+                        optionValuePath = "id"
+                        optionLabelPath = "label"}}
+                    </div>
+                    {{#if questionSetsEnabled}}
+                        {{async-link data-component-class="preview"
+                                             data-text="preview"
+                                             action="onPreview"}}
+                    {{/if}}
+                </div>
+            {{else}}
+                <div class="form-group category clearfix">
+                    {{#if metadataDropDownEnabled }}
+                        <div class="pull-left metadata-dropdown-container">
+                            <label>{{t "assignQuiz.chooseCategory"}}</label>
+                            {{my-select id="select-category"
+                            content=manageAssignment.termTaxonomyTypeOptions
+                            selectedValue=manageAssignment.selectedTermTaxonomy
+                            optionValuePath = "id"
+                            optionLabelPath = "name"}}
+                        </div>
+                    {{/if}}
+                    <div class="pull-left select-topic">
+                        {{#if metadataDropDownEnabled }}
+                            <label>{{t "assignQuiz.filterBy"}}</label>
+                        {{/if}}
+                        {{#if isSectionAssignment}}
+                            {{my-select  id="select-chapter"
+                            content=sectionGroups
+                            optionGroupPath="group"
+                            prompt=""
+                            selectedValue=chapterSelected
+                            optionValuePath = "id"
+                            optionLabelPath = "name"}}
+                        {{else}}
+                            {{my-select id="select-metadata"
+                            content=metadataOptions
+                            optionGroupPath=group
+                            prompt=""
+                            selectedValue=metadataSelected
+                            optionValuePath = "id"
+                            optionLabelPath = "name"}}
+                        {{/if}}
+                    </div>
+                    {{#if hiddenFilterError}}
+                        <span class="error">{{t "error.hiddenFilterError"}}</span>
+                    {{/if}}
+                </div>
+                <div class="form-group">
+                    <label class="clearfix">
+                        <div class="pull-left">{{t "assignQuiz.targetMastery"}}</div>
+                        <a href="#" class="gray pull-left whatisthis hidden-xs" data-target="#whatsthis-mdl" data-toggle="modal">{{t "whatIsThis"}}</a>
+                    </label>
+                    <p>
+                        {{t "assignQuiz.legend"}}
+                    </p>
+                    {{view "instructorAssignSlider" data-value=assignment.targetMasteryLevel}}
+                    <div>
+                        <p>{{t "assignQuiz.note"}}</p>
+                    </div>
+                </div>
+            {{/if}}
+        </div>
+        <div class="btn-box">
+            <button type="submit" class="btn {{if enableContinueBtn 'btn-blue' 'disabled'}}" id="action-2" {{action "continueStepTwo"}}>{{t "classes.btnContinue"}}</button>
+
+            <a href="#" class="go-back" {{action "goBackStepOne"}}>{{t "assignQuiz.goBack"}}</a>
+        </div>
+    </form>
+    {{simple-modal idElement='whatsthis-mdl' title="assignQuiz.titleMasteryModal" bodyHtml=bodyMasteryModal}}
+</div>
+
+<div id='preview-modal' class="modal fade question-library">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">{{t "questionLibrary.modal.title"}} {{questionSet.name}}</h4>
+            </div>
+
+            {{partial 'library/preview_questions_body_partial'}}
+
+            <div class="modal-footer">
+                <button class="btn btn-blue btn-small" data-dismiss="modal">{{t "button.close"}}</button>
+            </div>
+        </div>
+    </div>
+</div>

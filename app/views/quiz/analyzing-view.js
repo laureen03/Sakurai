@@ -1,4 +1,6 @@
-SakuraiWebapp.QuizAnalyzingView = Ember.Component.extend({
+import Ember from "ember";
+
+export default Ember.Component.extend({
 
 	didInsertElement : function(){
 	    this._super();
@@ -20,7 +22,7 @@ SakuraiWebapp.QuizAnalyzingView = Ember.Component.extend({
         setTimeout(function(){
             $("."+section+" .circle").removeClass("inprogress").addClass("ready");
             $("."+section+" .circle").html('<span class="glyphicon glyphicon-ok"></span>');
-            if (index != 3) {
+            if (index !== 3) {
                 index += 1;
                 self.animateCircle("div"+ index, index);
             }

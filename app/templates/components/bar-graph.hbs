@@ -1,0 +1,13 @@
+
+<div class="background"></div>
+{{#if baselineValue}}
+    <div class="baseline {{if isUnderBaseline 'fail' 'default'}}" style={{baselineWidth}}></div>
+    <div class="line {{if isOverBaseline 'success' 'default'}}" style={{lineWidth}}></div>
+    <div class="value {{valueClass}}" style={{valueOffset}}>{{currentDisplayValue}}</div>
+{{else}}
+    <div class="line" style={{lineWidth}}></div>
+    <div class="value" style={{valueOffset}}>{{currentDisplayValue}}</div>
+{{/if}}
+{{#if caption}}
+    <figcaption>{{t caption}}</figcaption>
+{{/if}}

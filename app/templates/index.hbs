@@ -1,0 +1,36 @@
+<section class="access-area">
+    <div class="container cf">
+        <h3 class="section-header light">{{t "login.titleSignIn"}}</h3>
+        <div class="panel">
+			<div class="auto-center col-sm-6">
+				<form id="login-form" role="form">
+					<div class="row margin-top-55">
+						<div class="col-sm-6">
+							<label>{{t "login.email"}}</label>
+							{{input type="email" id="email" name="email" value=email}}
+						</div>
+						<div class="col-sm-6">
+							<label>{{t "login.pass"}}</label>
+							{{input type="password" id="password" name="password" value=password}}
+						</div>
+					</div>
+					{{#if errorLogin}}
+						<div class="error">{{t "login.loginError"}}</div>
+					{{/if}}
+					<div class="row">
+                        <div class="col-sm-8 auto-center">
+                            <button type="submit" class="btn btn-blue auto-center btn-expand " {{action 'login'}}>{{t "login.signin"}}</button><br>
+                            <div class="cf row text-center">
+                                <div class="col-sm-12">
+                                    <label class="inline-block">
+                                        {{#link-to 'login.forgotPassword' class='grey'}}{{t "login.forgotPassword"}}{{/link-to}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>

@@ -1,0 +1,64 @@
+<div id="examSummary">
+    <div class="examSummary clearfix">
+        <div class="explanation-box">
+            <h2>{{t "examReports.title"}}</h2>
+            {{#if examStat.exams}}
+                {{#if examStat.notPassed}}
+                <div class="exam-status red">
+                    <span class="glyphicon glyphicon-flag"></span>{{{t "exam.yourPerformanceNotPass"}}}
+                </div>
+                {{/if}}
+                {{#if examStat.passed}}
+                <div class="exam-status green">
+                    <span class="glyphicon glyphicon-flag"></span>{{{t "exam.yourPerformancePass"}}}
+                </div>
+                {{/if}}
+                {{#if examStat.barelyPassed}}
+                <div class="exam-status yellow">
+                    <span class="glyphicon glyphicon-flag"></span>{{{t "exam.yourPerformancePassCloserNotPass"}}}
+                </div>
+                {{/if}}
+                {{#if examStat.almostPassed}}
+                <div class="exam-status yellow">
+                    <span class="glyphicon glyphicon-flag"></span>{{{t "exam.yourPerformanceNotPassCloserPass"}}}
+                </div>
+                {{/if}}
+            {{/if}}
+            <div class="exam-reports-header">
+                <div class="exams-complete">
+                    <div class="title">
+                        {{t "examReports.examsCompleted"}}
+                    </div>
+                    <div class="summary-item-content">
+                        <span class="glyphicon glyphicon-file circle-icon"></span>
+                                <span class="item-text">
+                                    {{examStat.completed}}
+                                </span>
+                    </div>
+                </div>
+                <div class="exams-questions">
+                    <div class="title">
+                        {{t "examReports.questionAnswered"}}
+                    </div>
+                    <div class="summary-item-content">
+                        <span class="glyphicon glyphicon-ok circle-icon"></span>
+                                <span class="item-text">
+                                    {{examStat.questionsAnswered}}
+                                </span>
+                    </div>
+                </div>
+                <div class="exams-average-ml">
+                    <div class="title">
+                        {{t "examReports.averageMl"}}
+                    </div>
+                    <div class="summary-item-content">
+                        <span class="glyphicon glyphicon-star circle-icon"></span>
+                                <span class="item-text">
+                                    {{examStat.avgMLAchieved}}
+                                </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

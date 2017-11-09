@@ -1,4 +1,6 @@
-SakuraiWebapp.RadioButtonComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
   tagName: 'input',
   type: 'radio',
   attributeBindings: ['type', 'htmlChecked:checked', 'value', 'name', 'disabled'],
@@ -13,8 +15,9 @@ SakuraiWebapp.RadioButtonComponent = Ember.Component.extend({
 
   _updateElementValue: Ember.observer('htmlChecked', function() {
     Ember.run.next(this, function() {
-      if (this.$() != undefined)
+      if (this.$() !== undefined){
         this.$().prop('checked', this.get('htmlChecked'));
+      }
     });
   })
 });

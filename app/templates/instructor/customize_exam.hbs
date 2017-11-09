@@ -1,0 +1,32 @@
+<div class="container customize-exam manage-assignment">
+    <div class="customize-exam-container customizeContent">
+        {{#if assignmentCreated }}
+            {{partial "instructor/partial/assign_exam_created"}}
+        {{else}}
+            <h2>{{t "assignExam.manageExams"}}</h2>
+            <div class="instructions">
+                {{customOverallExamSettingsDescription}}
+            </div>
+        {{/if}}
+
+        <ul>
+            <li class="clearfix">
+                <div class="radio-box">
+                    {{radio-button id="customizeOverall" name="customize-radios" value="customize_setting" checked=customize}}
+                </div>
+                <div class="text-box"><label for="customizeOverall"><strong>{{{t "assignExam.customizeLabel"}}}</strong></label></div>
+            </li>
+            <li class="clearfix">
+                <div class="radio-box">
+                    {{radio-button id="AssignExam" name="customize-radios" value="manage_exam" checked=customize}}
+                </div>
+                <div class="text-box"><label for="AssignExam"><strong>{{{t "assignExam.assignExamLabel"}}}</strong></label></div>
+            </li>
+        </ul>
+
+        <div class="btn-box">
+            <button class="btn btn-blue" id="action-1" {{action "continueManageExam"}}>{{t "classes.btnContinue"}}</button>
+        </div>
+    </div>
+</div>
+

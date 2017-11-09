@@ -1,0 +1,325 @@
+<div class="container assign-exam-container">
+    {{#if assignmentCreated }}
+        {{partial "instructor/partial/assign_exam_created"}}
+    {{else}}
+    {{#if allowThresholdControl}}
+        {{#if isEditMode}}
+            {{#if isCopyMode}}
+                <h2>{{t "assignExam.copyAssignment"}}</h2>
+            {{else}}
+                {{#if assignment.staggered}}
+                    <h2>{{t "assignExam.editStaggerClassLabel"}} <span id="stagger-edit-class-name">{{{assignment.firstClass.name}}}</span></h2>
+                {{else}}
+                    <h2>{{t "assignExam.assignComprehensiveExamLabel"}}</h2>
+                {{/if}}
+            {{/if}}
+        {{else}}
+            <h2>{{t "assignExam.assignComprehensiveExamLabel"}}</h2>
+        {{/if}}
+    {{else}}
+        <h2>{{t "assignExam.manageExams"}}</h2>
+    {{/if}}
+    {{#unless isCopyMode}}
+        <div class="instructions">
+            {{t "assignExam.instructions" numQuestions=numQuestion}}
+        </div>
+    {{/unless}}
+    <form role="form" id="assign-an-exam">
+        <div class="assign-exam-form">
+            <div class="assign-name form-group">
+                <label>{{t "assignExam.assignmentName"}}:</label>
+                {{input id="assignmentName" name="assignmentName" type="text" class="form-control" value=assignment.name}}
+                {{#if isEditMode}}
+                    {{#if isCopyMode}}
+                        <div><p class="note-assignment-name">{{t "assignment.nameNote"}}</p></div>
+                    {{else}}
+                        {{#unless assignment.staggered}}
+                            <div><p class="note-assignment-name">{{t "assignment.nameNote"}}</p></div>
+                        {{/unless}}
+                    {{/if}}
+                    
+                {{else}}
+                    <div><p class="note-assignment-name">{{t "assignment.nameNote"}}</p></div>
+                {{/if}}
+                <label id="assignmentName-error" for="assignmentName" class="error"></label>
+            </div>
+            {{#if isEditMode}}
+                {{#if isCopyMode}}
+                    {{partial 'instructor/assign/choose_class_list'}}
+                {{else}}
+                    {{#unless assignment.staggered}}
+                        {{partial 'instructor/assign/choose_class_list'}}
+                    {{/unless}}
+                {{/if}}
+            {{else}}
+                {{partial 'instructor/assign/choose_class_list'}}
+            {{/if}}
+            {{#if allowAutoShutoff}}
+            <div class="assign-auto-shutoff form-group">
+                <div class="clearfix">
+                    <label class="pull-left">{{t "assignExam.autoShutoff"}}:</label>
+                    <a href="#" class="autoShutoff-mdl gray pull-left whatisthis hidden-xs" data-target="#what-is-autoShutoff" data-toggle="modal">{{t "whatIsThis"}}</a>
+                </div>
+                <div>
+                    {{radio-button id="autoShutoffYes" name="autoShutoff-radios" value=true checked=assignment.autoShutoff}}&nbsp;
+                    <span> &nbsp;{{t "assignExam.autoShutoffYes"}}</span>
+                </div>
+                <div>
+                    {{radio-button id="autoShutoffNo" name="autoShutoff-radios" value=false checked=assignment.autoShutoff}}&nbsp;
+                    <span> &nbsp;{{t "assignExam.autoShutoffNo"}}</span>
+                </div>
+            </div>
+            {{/if}}
+            <div class="assign-number-question {{if assignment.hasBeenCompletedAtLeastOnce 'disabled' 'enable'}}">
+                <div class="form-group">
+                    <label class="clearfix">
+                        <label class="pull-left">{{t "assignExam.numberQuestion"}}:</label>
+                        <a href="#" class="numberQuestion-mdl gray pull-left whatisthis hidden-xs" data-target="#what-is-numberQuestion" data-toggle="modal">{{t "whatIsThis"}}</a>
+                    </label>
+
+                    {{my-select 
+                        disabled=selectedClass
+                        name=question_number
+                        content=numQuestions
+                        selectedValue=assignment.numberQuestion}}
+                </div>
+            </div>
+            <div class="assign-points {{if assignment.hasPassedDueDate 'disabled' 'enable'}}">
+                <div class="assign-points form-group">
+                <label>{{t "assignExam.pointValue"}}:</label>
+                <div class="clearfix">
+                    {{input type="text" class="pointClassName pull-left" name="points" id="points" value=assignment.points maxlength="6"}}
+                    <span class="pull-left points">{{t "assignExam.points"}}</span>
+                </div>
+                <label id="points-error" class="error" for="points"></label>
+            </div>
+            </div>
+            <div class="assign-time-limit {{if assignment.hasBeenCompletedAtLeastOnce 'disabled' 'enable'}}">
+                 <div class="clearfix">
+                    <label class="pull-left">{{t "assignExam.examTimeLimit"}}:</label>
+                    <a href="#" class="timeLimit-mdl gray pull-left whatisthis hidden-xs" data-target="#what-is-timeLimit" data-toggle="modal">{{t "whatIsThis"}}</a>
+                </div>
+                <div>
+                    <input id="noTimeLimitRadio" type="radio" name="timeLimit" value="0" checked class="{{if assignment.autoShutoff 'disabled' 'enable'}}"/>
+                    <span> &nbsp;{{t "assignExam.noTimeLimit"}}</span>
+                </div>
+                <div id="time-limit-lbl">
+                    <input id="timeLimitRadio" type="radio" name="timeLimit" value="1" class="{{if assignment.autoShutoff 'disabled' 'enable'}}"/>
+                    <span id="time-limit-text" class="disabled"> &nbsp;{{t "assignExam.limitTimeTo"}}</span>
+                </div>
+                {{my-select 
+                    class="disabled"
+                    id="minutes_limit"
+                    name=minutes_limit
+                    content=minutesLimitList
+                    optionValuePath="value"
+                    optionLabelPath="label"
+                    selectedValue=assignment.timeLimit}}
+            </div>
+            {{#if isEditMode}}
+                {{#if isCopyMode}}
+                    {{#if showStaggeredOptions}}
+                        {{#if hasManyClasses}}
+                            <br/>
+                            <div class="clearfix">
+                                <div class="dates-radio">
+                                    <div>
+                                        {{radio-button id="changeDatesRadio" name="keepDates" value="changeDates" checked=changeDatesRadio}}
+                                    </div>
+                                    <div>
+                                        <label class="labels" for="changeDatesRadio">
+                                            <span>{{{t "assignExam.changeDates"}}}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="dates-radio">
+                                    <div>
+                                        {{radio-button id="keepDatesRadio" name="keepDates" value="keepDates" checked=changeDatesRadio}}
+                                    </div>
+                                    <div>
+                                        <label class="labels" for="keepDatesRadio">
+                                            <span>{{{t "assignExam.keepDates"}}}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/if}}
+                    {{/if}}
+                {{/if}}
+            {{else}}
+                {{#if showStaggeredOptions}}
+                    {{#if hasManyClasses}}
+                        <br/>
+                        <div class="clearfix">
+                            <div class="dates-radio">
+                                <div>
+                                    {{radio-button id="changeDatesRadio" name="keepDates" value="changeDates" checked=changeDatesRadio}}
+                                </div>
+                                <div>
+                                    <label class="labels" for="changeDatesRadio">
+                                        <span>{{{t "assignExam.changeDates"}}}</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="dates-radio">
+                                <div>
+                                    {{radio-button id="keepDatesRadio" name="keepDates" value="keepDates" checked=changeDatesRadio}}
+                                </div>
+                                <div>
+                                    <label class="labels" for="keepDatesRadio">
+                                        <span>{{{t "assignExam.keepDates"}}}</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+                {{/if}}
+            {{/if}}
+            {{#if changeDatesEnable}}
+                {{#each customClasses as |customClass|}}
+                    {{manage-date-classes customClass=customClass defaultTimeZone=assignment.timeZone
+                                          timezones=timezones isQC=assignment.isQuestionCollectionAssignment
+                                          defaultStartDate=startDate defaultDueDate=dueDate defaultStartHour=startHour
+                                          defaultDueHour=dueHour}}
+                {{else}}
+                    <h4>{{t "assignExam.pleaseSelectClass"}}</h4>
+                {{/each}}
+            {{else}}
+            <div class="assign-dates dates custom-dates clearfix">
+                <div class="col-md-6 {{if assignment.hasBeenCompletedAtLeastOnce 'disabled' 'enable'}}">
+                    <label>{{t "assignExam.availableOn"}}:</label>
+                    {{input id="startDate" name="startDate" class="date-input" type="text" value=startDate readonly="true" }}
+
+                    {{my-select 
+                        id="startHour"
+                        class="hour-input custom-select startHour"
+                        content=timeList
+                        optionValuePath="value"
+                        optionLabelPath="hour"
+                        selectedValue=startHour}}
+
+                    <div class="dropdown form-group dropup">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                            {{zone-abbr assignment.timeZone}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                            {{#each timezones as |timezone|}}
+                                 <li role="presentation"><a role="menuitem" tabindex="-1" {{action "setTimeZone" timezone}}><strong>{{zone-abbr timezone}}</strong> ({{ timezone }})</a></li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                    <label id="startDate-error" class="error" for="startDate"></label>
+                </div>
+                <div class="col-md-6">
+                    <label>{{t "assignExam.dueOn"}}:</label>
+                    {{input id="dueDate" name="dueDate" class="date-input" type="text" value=dueDate readonly="true"}}
+
+                    {{my-select 
+                        id="dueHour"
+                        class="hour-input custom-select endHour"
+                        content=timeList
+                        optionValuePath="value"
+                        optionLabelPath="hour"
+                        selectedValue=dueHour}}
+
+                    <span class="label-timezone">{{zone-abbr assignment.timeZone}}</span>
+                    <label id="dueDate-error" class="error" for="dueDate"></label>
+                </div>
+                {{#if dueDateBeforeMessage}}
+                    <label class="dueDateBefore-error error error-classes">{{t "assignExam.dueDateBeforeAvailableDate"}}</label>
+                {{/if}}
+            </div>
+            {{/if}}
+            {{#if allowThresholdControl}}
+            <div class=" assign-all-nclex-proficiency form-group">
+                <div class="clearfix">
+                    <label class="pull-left"> {{t "assignExam.proficiencyAllLabel"}}: </label>
+                    <a href="#" class="customizeProficiency-mdl gray pull-left whatisthis hidden-xs" data-target="#what-is-customizeProficiency" data-toggle="modal">{{t "whatIsThis"}}</a>
+                </div>
+                <div class="customizeContent">
+                    <span>
+                        {{t "assignExam.proficiencyAllStatus"}}:
+                        {{#if classExamOverallSettings.hideThresholdLabels}}
+                            <b>{{t "assignExam.proficiencyAllStatusHidden"}}</b>
+                        {{else}}
+                            <b>{{t "assignExam.proficiencyAllStatusNotHidden"}}</b>
+                            <br/>
+                            <span>{{t "assignExam.proficiencyAllCustomThreshold"}} <b>{{{defaultMinimumThreshold}}}</b>. </span>
+                        {{/if}}
+                    </span>
+                </div>
+                <div class="clearfix">
+                    <br/>
+                    <span> {{t "assignExam.proficiencyChangeForAllAssignments"}}.</span>
+                </div>
+            </div>
+            <div class="assign-all-nclex-proficiency form-group">
+                <div class="clearfix customizeContent">
+                    <label class="pull-left">{{t "assignExam.proficiencyThisLabel"}}:</label>
+                </div>
+                <ul>
+                    <li class="clearfix">
+                        <div class="radio-box">
+                            {{radio-button id="hideProficiency" name="customizeProficiency-radios" value=true checked=assignment.hideThresholdLabels}}  
+                        </div>
+                        <div class="text-box"><label for="customizeOverall"><strong>{{{t "assignExam.proficiencyThisHideLabel"}}}</strong></label></div>
+
+                        <div>
+                            <span> &nbsp;&nbsp;{{t "assignExam.proficiencyThisHideDescription"}} </span>
+                        </div>
+                    </li>
+                    <li class="clearfix">
+                        <div class="radio-box">
+                            {{radio-button id="customizeProficiency" name="customizeProficiency-radios" value=false checked=assignment.hideThresholdLabels}} 
+                        </div>
+                        <div class="text-box"><label for="AssignExam"><strong>{{{t "assignExam.proficiencyThisCustomizeLabel"}}}</strong></label></div>
+                        <div>
+                        <span>&nbsp;&nbsp; {{t "assignExam.proficiencyThisCustomizeDescription1"}}
+                        {{my-select 
+                            disabled=isAssignmentHideThresholdOn
+                            name=nclex_proficiency_threshold
+                            content=nclexProficiencyLevels
+                            selectedValue=assignmentCustomThreshold}}
+                            
+                        {{t "assignExam.proficiencyThisCustomizeDescription2"}}</span>
+                    </div>
+                    </li>
+                </ul>
+            </div>
+            {{/if}}
+        </div>
+        <div class="btn-box">
+            {{#if isEditMode}}
+                {{#if isCopyMode}}
+                    {{async-button
+                    data-button-class="btn btn-blue assign-exam-btn"
+                    data-text="assign"
+                    action="assignExam" }}
+                    {{#link-to 'instructor.assignments' class.product.id class.id class="go-back"}}{{t "cancel"}}{{/link-to}}
+                {{else}}
+                    {{async-button
+                        data-button-class="btn btn-blue edit-exam-btn"
+                        data-text="save"
+                        action="assignExam" }}
+                    <a class="go-back" {{action 'goBack' class.product.id class.id}}>{{t "cancel"}}</a>
+                {{/if}}
+            {{else}}
+                {{async-button
+                    data-button-class="btn btn-blue assign-exam-btn"
+                    data-text="assign"
+                    action="assignExam" }}
+            {{/if}}
+
+        </div>
+    </form>
+
+    {{simple-modal idElement='what-is-numberQuestion' title="assignExam.numberQuestion" bodyHtml=numberQuestionDescription}}
+
+    {{simple-modal idElement='what-is-timeLimit' title="assignExam.examTimeLimit" bodyHtml=timeLimitDescription}}
+
+    {{simple-modal idElement='what-is-autoShutoff' title="assignExam.autoShutoff" bodyHtml=autoShutoffDescription}}
+
+    {{simple-modal idElement='what-is-customizeProficiency' title="assignExam.proficiencyAllLabel" body="assignExam.proficiencyAllDescription"}}
+    {{/if}}
+</div>

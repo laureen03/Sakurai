@@ -1,0 +1,30 @@
+<div class="haid-strength-weaknesses {{data-type}}">
+	<h4 class="title"><span class="capitalize">{{labelTitle}}</span> {{t "haid.strengthsWeaknesses"}}</h4>
+    <a href="#" class="gray"  data-target="#whatsthis-chapter" data-toggle="modal">{{t "whatIsThis"}}</a>
+    <p class="explanation"></p>
+    <h5 class="semi-title">{{t "haid.strengths"}}</h5>
+    <ul class="haid-list list-strengths text-muted">
+        {{#each strengths as |strength|}}
+            <li><a href="#" {{action 'pre_select' strength.owner.id data-type}} class="gray {{if data-is-impersonated 'disabled' ''}}">{{#unless data-is-metadata-allowed}}{{t "haid.chapter"}}&nbsp;{{/unless}}{{strength.owner.name}}</a></li>
+        {{else}}
+            -
+        {{/each}}
+    </ul>
+    <h5 class="semi-title">{{t "haid.weaknesses"}}</h5>
+    <ul class="haid-list list-weaknesses">
+        {{#each weaknesses as |weakness|}}
+            <li>
+                <a href="#" {{action 'pre_select' weakness.owner.id data-type}} class="gray {{if data-is-impersonated 'disabled' ''}}">{{#unless data-is-metadata-allowed}}{{t "haid.chapter"}}&nbsp;{{/unless}}{{weakness.owner.name}}</a>
+            </li>
+        {{else}}
+            -
+        {{/each}}
+    </ul>
+    {{#if weaknesses}}
+        {{#unless data-is-impersonated}}
+            <p>
+                <a href="#" id="take-a-practice-quiz" class="btn btn-blue" {{action 'selectWeakest' data-type}}>{{t "haid.takePracticelink"}}<br/>{{labelBtn}}</a>
+            </p>
+        {{/unless}}
+    {{/if}}
+</div>

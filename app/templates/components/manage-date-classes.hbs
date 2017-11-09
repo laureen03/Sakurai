@@ -1,0 +1,48 @@
+	<div id="datesClass{{customClass.id}}" data-init="false" class="section dates custom-dates clearfix">
+        <div>
+            <h4><span class="black-title">For Class</span>&nbsp;<span class="class-name"><i>{{customClass.name}}</i></span>:&nbsp;{{t "assignQuiz.availableOn"}}</h4>
+            {{input name="startDate" class="date-input startDate" type="text" readonly="true"}}
+            
+            {{my-select 
+                class="hour-input custom-select startHour"
+                content=timeList
+                optionValuePath="value"
+                optionLabelPath="hour"}}
+            <div class="dropdown dropup">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                    <span id="firstTimeZone{{customClass.id}}" class="tZLabel"></span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    {{#each timezones as |timezone|}}
+                        <li role="presentation"><a role="menuitem" tabindex="-1" {{action "setTimeZone" timezone customClass.id}}><strong>{{zone-abbr timezone}}</strong> ({{ timezone }})</a></li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+        <div>
+            <h4>{{t "assignQuiz.dueOn"}}</h4>
+            {{input name="dueDate" class="date-input dueDate" type="text" readonly="true"}}
+
+            {{my-select 
+                class="hour-input custom-select endHour"
+                content=timeList
+                optionValuePath="value"
+                optionLabelPath="hour"}}
+            <span id="secondTimeZone{{customClass.id}}" class="label-timezone tZLabel" data-timezone=""></span>
+        </div>
+        <label id="error-dates-{{customClass.id}}"class="error hide">{{t "assignQuiz.dueDateBeforeAvailableDate"}}</label>
+        
+        {{#if isQC}}
+            <div class="autosubmit-box clearfix">
+                <label class="labels" for="autoSubmit">
+                    <div class="pull-left">
+                        <input id="autoSubmit{{customClass.id}}" name="autoSubmit" type="checkbox">
+                        &nbsp;
+                        {{t "assignQuiz.autoSubmit"}}
+                    </div>
+                    <a href="#" class="autosubmit-mdl gray pull-left whatisthis" data-target="#what-is-autosubmit" data-toggle="modal">{{t "whatIsThis"}}</a>
+                </label>
+            </div>
+        {{/if}}
+    </div>

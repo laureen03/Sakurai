@@ -1,0 +1,155 @@
+<div class="container assignment-summary">
+	<div class="assignment-info clearfix margin-top-55">
+	    <div class="assignment-content clearfix">
+	        <div class="qc-name">
+	            {{t "assignmentSummary.questionCollectionAssignment"}}
+	            <h2>{{assignment.name}}</h2>
+	            <span class="chapter question-number">{{assignment.numberQuestion}} {{t "assignmentSummary.questions"}}</span>
+	        </div>
+	    </div>
+	    <div class="details">
+	        <div>{{t "assignQuiz.assignedTo"}}:</div>
+			<div class="classes-list">
+                <div>
+                    <span class="assignment-class highlight">{{class.name}}</span>&nbsp;-&nbsp;
+                    {{class.term}}
+                </div>
+			</div>
+			<div>{{t "assignQuiz.deadlines"}}:</div>
+			<div class="highlight">
+				<span>{{t "assignQuiz.availableOn"}}</span>&nbsp;
+				{{format-date assignment.availableDate timezone=assignment.timeZone}}&nbsp;
+
+				<span>{{t "assignQuiz.andDueOn"}}</span>&nbsp;
+				{{format-date assignment.dueDate timezone=assignment.timeZone}}.
+			</div>
+	    </div>
+	    <div class="details number-completed">
+	    	{{t "assignmentSummary.numberCompleted"}}:
+	    	<h3>{{assignment.totalCompleted}}&nbsp;/&nbsp;{{assignment.totalStudents}}&nbsp;{{t "assignmentSummary.students"}}</h3>
+	    </div>
+        <div class="details average-score">
+            {{t "assignmentSummary.averageScore"}}
+            <h3>
+                {{#if assignment.hasBeenCompletedAtLeastOnce }}
+                    {{#if assignment.totalCompleted }}
+                        {{numeral-format assignment.avgScorePercent '0.00'}}&#37;
+                    {{else}}
+                        &#8212;
+                    {{/if}}
+                {{else}}
+                    0&#37;
+                {{/if}}
+            </h3>
+        </div>
+	</div>
+    {{#if assignment.hasBeenCompletedAtLeastOnce}}
+        {{export-csv-link
+            assignment=assignment
+            type="qc"}}
+    {{/if}}
+    {{#if assignment.totalCompleted}}
+    <div class="qc-question-results">
+        <h2>{{t "qcAssignmentSummary.performanceByQuestion"}}</h2>
+        <div class="question-container clearfix">
+            <div class="header">
+                <h4 class="total-questions">{{assignment.numberQuestion}} {{t "assignmentSummary.questions"}}</h4>
+            </div>
+
+            {{#each questions as |question index|}}
+                {{partial 'library/question_partial'}}
+            {{/each}}
+        </div>
+        {{#if showPaging}}
+            {{async-link data-component-class="paging"
+                         data-text="questionLibrary.showMore"
+                         action="showMoreQuestions"}}
+        {{/if}}
+    </div>
+    {{/if}}
+	<div class="margin-top-55 student-results">
+		<h2>{{t "qcAssignmentSummary.studentResults"}}</h2>
+
+        <table class="table tablesorter studentResults-table">
+            <thead>
+                <tr>
+                    <th class="visible-xs no-arrow">{{t "expand"}}</th>
+                    <th class="header sort_user_fullName">
+                        <a {{action 'onSortByCriteria' 'user.fullName'}} href="#">
+                            <span class="fullName-action action">{{t "qcAssignmentSummary.studentResultsTable.name"}}</span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs header sort_questionsAnswered">
+                        <a {{action 'onSortByCriteria' 'questionsAnswered'}} href="#">
+                            <span class="questionsAnswered-action action">{{t "qcAssignmentSummary.studentResultsTable.answered"}}</span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs header sort_questionsCorrect">
+                        <a {{action 'onSortByCriteria' 'questionsCorrect'}} href="#">
+                            <span class="questionsCorrect-action action">{{t "qcAssignmentSummary.studentResultsTable.correct"}}</span>
+                        </a>
+                    </th>
+                    <th class="header sort_score">
+                        <a {{action 'onSortByCriteria' 'score'}} href="#">
+                            <span class="score-action action">{{t "qcAssignmentSummary.studentResultsTable.score"}}</span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs header sort_timeToComplete">
+                        <a {{action 'onSortByCriteria' 'timeToComplete'}} href="#">
+                            <span class="timeToComplete-action action">{{t "qcAssignmentSummary.studentResultsTable.time"}}</span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs header sort_answerKeyViews">
+                        <a {{action 'onSortByCriteria' 'answerKeyViews'}} href="#">
+                            <span class="answerKeyViews-action action">{{t "qcAssignmentSummary.studentResultsTable.answerKeyViews"}}</span>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each studentResultsSortable.collection as |result index|}}
+                    <tr data-pos="{{index}}">
+                        <td class="visible-xs">
+                            <a {{action 'showMore' index result}} class="icon" href="#">
+                                <span data-arrow="{{index}}" class="glyphicon glyphicon-chevron-down"></span>
+                            </a>
+                        </td>
+                        <td>
+                            {{result.user.fullName}}
+                        </td>
+                        {{#if result.isComplete}}
+                            {{!-- student has already completed the assignment --}}
+                            <td class="hidden-xs">
+                                {{result.questionsAnswered}}
+                            </td>
+                            <td class="hidden-xs">
+                                {{result.questionsCorrect}}
+                            </td>
+                            <td>
+                                {{numeral-format result.score '0.00'}} / {{assignment.points}} ({{numeral-format result.scorePercentage '0'}}&#37;)
+                            </td>
+                            <td class="hidden-xs">
+                                {{result.timeToComplete}}
+                            </td>
+                            <td class="hidden-xs">
+                                {{result.answerKeyViews}}
+                            </td>
+                        {{else}}
+                            {{!-- student has NOT done the assignment: set default values --}}
+                            <td class="hidden-xs">0</td>
+                            <td class="hidden-xs">0</td>
+                            <td>&mdash;</td>
+                            <td class="hidden-xs">&mdash;</td>
+                            <td class="hidden-xs">{{result.answerKeyViews}}</td>
+                        {{/if}}
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+	</div>
+
+    <div class="btn-box">
+        {{#link-to 'instructor.assignments' class.product.id class.id class="btn btn-blue"}}{{t "button.returnToAssignmentList"}}{{/link-to}}
+    </div>
+</div>

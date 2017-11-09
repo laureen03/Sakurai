@@ -1,0 +1,152 @@
+<div class="left-menu">
+    <ul class="question-sets">
+        <li class="divider"></li>
+        <li>
+            {{#link-to 'library.home' class.id class="gray subtitle search-library no-underline"}} {{t "questionLibrary.searchLibrary"}} {{/link-to}}
+        </li>
+        <!--Filter Options-->
+        <li>
+            <a class="options filter filter-term" {{action "activeKeyWord"}} href="#">
+                    {{t "questionLibrary.filter.keyword"}}
+            </a>
+        </li>
+        {{#if isAuthoringEnabled}}  {{! Filter only for Admins }}
+        <li>
+            <a class="options filter filter-question-id" {{action "activeQuestionId"}} href="#">
+                    {{t "questionLibrary.filter.questionId"}}
+            </a>
+        </li>
+        {{/if}}
+        <li>
+            <a href="#" data-target="#chapter-mdl" data-toggle="modal" class="options filter search-library filter-chapter">
+                <span class="capitalize">{{filterChapterTitle}}</span>
+            </a>
+        </li>
+        {{#each termTaxonomiesAllowedForTagging as |termTaxonomy|}}
+            <li>
+                <a class="options filter filter-{{termTaxonomy.key}}"
+                    {{action "openTaxonomyModal" termTaxonomy.key termTaxonomy.label}} href="#" data-toggle="modal" data-target="#taxonomy-mdl">
+                    {{termTaxonomy.label}}
+                </a>
+            </li>
+        {{/each}}
+        <li>
+            <a class="options filter question-type" {{action 'showModalQuestionTypeFilter'}}
+               href="#" data-toggle="modal" data-target=".modal-question-type-selection">{{t "common.questionType.one"}}</a>
+        </li>
+        {{#if isAuthoringEnabled}}  <!--Filter only for Admins-->
+            <li>
+                <a class="options filter filter-author" data-target="#author-mdl" data-toggle="modal"
+                   href="#">{{t "questionLibrary.author"}}</a>
+            </li>
+            <li>
+                <a class="options filter filter-status" data-target="#status-mdl" data-toggle="modal"
+                   href="#">{{t "questionLibrary.questionStatus"}}</a>
+            </li>
+        {{else}}  <!--Filter only for Instructors-->
+            {{#if showFilterByDifficulty}}
+                <li>
+                    <a class="options filter filter-difficulty" data-target="#difficulty-mdl" data-toggle="modal"
+                       href="#">{{t "questionLibrary.filter.difficulty"}}</a>
+                </li>
+            {{/if}}
+            <li>
+                <a class="options filter filter-class-data" data-target="#class-data-mdl" data-toggle="modal"
+                   href="#">{{t "questionLibrary.filter.classData"}}</a>
+            </li>
+        {{/if}}
+        <!--Filter Options-->
+        <li class="divider"></li>
+        <li>
+            <a class="created-questions" {{action 'searchByInstructor'}} href="#">{{t "questionLibrary.createdQuestions"}}</a>
+            <span class="total-questions created">({{totalCreatedQuestions}})</span>
+        </li>
+        <li>
+            {{#if isAuthoringEnabled}}
+                {{#link-to 'library.selectQuestion' class.id class="gray create-q"}}
+                    +&nbsp;{{t "questionLibrary.createQuestion"}}
+                {{/link-to}}
+            {{else}}
+                {{#link-to 'library.createQuestion' class.id 0 class="gray create-q"}}
+                    +&nbsp;{{t "questionLibrary.createQuestion"}}
+                {{/link-to}}
+            {{/if}}
+        </li>
+        <li class="divider"></li>
+        <li class="subtitle">{{t "questionLibrary.myCollections"}}</li>
+        <li><a class="gray create-ql" href="#" {{action 'openCreateQC'}}>+&nbsp;{{t "questionLibrary.createQuestionCollection"}}</a></li>
+        {{#if isAuthoringEnabled}} <!--Filter only for Admins-->
+            <li class="divider"></li>
+            <li>
+                <a class="view-other-product" data-target="#other-product-questions-mdl" data-toggle="modal" href="#">{{t "questionLibrary.viewOtherProducts"}}</a>
+            </li>
+            <li class="divider"></li>
+        {{/if}}
+    </ul>
+    <ul class="question-sets collections">
+        {{#each groupedQuestionSets as |group_item|}}
+            <li>
+                {{#if group_item.parentOwnerId}}
+                    <h5>{{t "common.from"}} {{group_item.parentOwnerFullNameInformal}}</h5>
+                {{/if}}
+                <ul>
+                    {{#each group_item.contents as |questionSet|}}
+                        <li>
+                            <a class="options qc-link" {{action 'searchByQuestionSet' questionSet.id}} title="{{questionSet.name}}" href="#">
+                            {{#if questionSet.name}}
+                                {{truncate-text questionSet.name 20 true}}
+                            {{else}}
+                                {{t "questionLibrary.favoriteQuestion"}}
+                            {{/if}}
+                            </a>&nbsp;
+                            <span class="total-questions">({{questionSet.totalQuestions}})</span>
+                        </li>
+                    {{/each}}
+                </ul>
+            </li>
+        {{/each}}
+    </ul>
+</div>
+
+<div class="form-group mobile-menu">
+    <div class="btn-group">
+            <button type="button" {{action 'onShowSearchLibrary'}}
+                class="search-library-btn truncate btn {{if searchLibrarySelected 'btn-primary' 'btn-primary-disable'}}">
+                {{t "questionLibrary.searchLibrary"}}
+            </button>
+      <button type="button" {{action 'onShowQuestionSetList'}}
+          class="my-collections-btn btn {{if searchLibrarySelected 'btn-primary-disable' 'btn-primary'}}">{{t "questionLibrary.myCollections"}}</button>
+    </div>
+    {{#link-to 'library.createQuestion' class.id 0 class="pull-right create-q hidden-xs"}}+&nbsp;{{t "questionLibrary.createQuestion"}}{{/link-to}}
+</div>
+<div class="question-set-list {{if hideQuestionSetList 'hidden' 'block'}}">
+    <h3>{{t "questionLibrary.myCollections"}}<a class="create-ql" href="#" {{action 'openCreateQC'}}>+&nbsp;{{t "questionLibrary.createCollection"}}</a></h3>
+    <ul class="question-sets">
+        {{#each groupedQuestionSets as |group_item|}}
+            <li>
+                {{#if group_item.parentOwnerId}}
+                    <h5>{{t "common.from"}} {{group_item.parentOwnerFullNameInformal}}</h5>
+                {{/if}}
+                <ul>
+                    {{#each group_item.contents as |questionSet|}}
+                        <li>
+                            <a class="options" {{action 'searchByQuestionSet' questionSet.id}} href="#">
+                            {{#if questionSet.name}}
+                                {{questionSet.name}}
+                            {{else}}
+                                {{t "questionLibrary.favoriteQuestion"}}
+                            {{/if}}
+                            </a>&nbsp;
+                            <span class="total-questions">({{questionSet.totalQuestions}})</span>
+                        </li>
+                    {{/each}}
+                </ul>
+            </li>
+        {{/each}}
+        <li class="divider"></li>
+        <li>
+            <a class="created-questions" {{action 'searchByInstructor'}} href="#">{{t "questionLibrary.createdQuestions"}}</a>
+            <span class="total-questions">({{totalCreatedQuestions}})</span>
+        </li>
+    </ul>
+</div>

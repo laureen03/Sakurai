@@ -1,0 +1,20 @@
+<div class="qc-wrapper-title {{if questionSet 'left-space'}}">
+    <div class="number">{{increment-int index}}</div>
+    {{#if question.questionMedia}}
+        <div>
+            <img src="{{question.questionMedia}}" />
+        </div>
+    {{/if}}
+    <div class="text">{{safe-html question.questionText}}</div>
+</div>
+
+<div class="qc-wrapper-body {{question.questionType}}">
+
+    {{#each question.interactions as |interaction|}}
+        {{library-answer-choices
+            interaction=interaction
+            has-class-percentages=question.hasProductClassPercentage
+            action="showMoreAnswers" }}
+    {{/each}}
+
+</div>

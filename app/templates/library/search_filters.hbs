@@ -1,0 +1,345 @@
+<div class="clearfix search-filter">
+
+	<div class="search-criteria">
+		<i class="glyphicon glyphicon-search"></i>
+        {{#if searchByQuestionIdEnabled }}
+            {{input id="filter-question-id-input" placeholder=placeholder value=questionId action="onInputSearch" onEvent="keypress"}}
+            {{#if questionId}}
+              <a class="gray glyphicon glyphicon-remove" {{action 'removeQuestionIdFilter'}} href="#"></a>
+            {{/if}}
+        {{else}}
+            {{input id="filter-term-input" placeholder=placeholder value=term action="onInputSearch" onEvent="keypress"}}
+            {{#if term}}
+                <a class="gray glyphicon glyphicon-remove" {{action 'removeTermFilter'}} href="#"></a>
+            {{/if}}
+        {{/if}}
+    </div>
+    <button class="btn btn-blue btn-search" {{action "onInputSearch"}}>{{t "search"}}</button>
+    <!--Menu Filters-->
+    <div class="menu-filter dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-filter"></span>
+	    <span class="hidden-mob">{{t "questionLibrary.addFilter"}}
+	    <span class="caret"></span></span>
+        </button>
+        <ul class="dropdown-menu search-filter-items" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation">
+                <a class="filter filter-chapter" role="menuitem" tabindex="-1" href="#" data-target="#chapter-mdl" data-toggle="modal">
+                    {{#if isMetadataAllowed}}
+                        {{t "questionLibrary.filter.nursingTopic"}}
+                    {{else}}
+                        {{t "questionLibrary.filter.chapter"}}
+                    {{/if}}
+                </a>
+            </li>
+            {{#each termTaxonomiesAllowedForTagging as |termTaxonomy|}}
+                <li role="presentation">
+                    <a class="filter filter-{{termTaxonomy.key}}" role="menuitem" tabindex="-1"
+                        {{action "openTaxonomyModal" termTaxonomy.key termTaxonomy.label}} href="#" data-toggle="modal" data-target="#taxonomy-mdl">
+                        {{termTaxonomy.label}}
+                    </a>
+                </li>
+            {{/each}}
+            <li role="presentation">
+                <a class="filter-created-questions" {{action 'searchByInstructor'}}
+                   role="menuitem" tabindex="-1" href="#">{{t "questionLibrary.createdQuestions"}}</a>
+            </li>
+            <li role="presentation">
+                <a class="filter question-type" {{action 'showModalQuestionTypeFilter'}}
+                   role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target=".modal-question-type-selection">{{t "common.questionType.one"}}</a>
+            </li>
+            {{#if isAuthoringEnabled}}  <!--Filter only for Admins-->
+                <li role="presentation">
+                    <a class="filter filter-author" data-target="#author-mdl" data-toggle="modal"
+                       role="menuitem" tabindex="-1" href="#">{{t "questionLibrary.author"}}</a>
+                </li>
+                <li role="presentation">
+                    <a class="filter filter-status" data-target="#status-mdl" data-toggle="modal"
+                       role="menuitem" tabindex="-1" href="#">{{t "questionLibrary.questionStatus"}}</a>
+                </li>
+            {{else}}  <!--Filter only for Instructors-->
+                <li role="presentation">
+                    <a class="filter filter-class-data" data-target="#class-data-mdl" data-toggle="modal"
+                       role="menuitem" tabindex="-1" href="#">{{t "questionLibrary.filter.classData"}}</a>
+                </li>
+            {{/if}}
+        </ul>
+    </div>
+
+</div>
+
+<!-- C h a p t e r   M o d a l -->
+<div id='chapter-mdl' class="modal fade filter-modal" tabindex="-1">
+    <div class="modal-dialog small-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">{{t "questionLibrary.filter.filteringBy"}} <span class="capitalize">{{filterChapterTitle}}</span></h4>
+            </div>
+            <div class="modal-body cf">
+               {{#each sections as |section|}}
+				<div class="units-chapter">
+					<h5>{{section.name}}</h5>
+					<ul>
+		                {{#each section.children as |child|}}
+							<li>
+								{{#in-array item=child.id array=controller.cid}}
+                                    <input type="checkbox" value="{{child.id}}" name="chapters" id="chapter_{{child.id}}" checked="checked"/>
+                                {{/in-array}}
+                                {{#not-in-array item=child.id array=controller.cid}}
+                                    <input type="checkbox" value="{{child.id}}" name="chapters" id="chapter_{{child.id}}"/>
+                                {{/not-in-array}}
+								&nbsp;<label for="chapter_{{child.id}}">{{child.name}}</label></li>
+		                {{/each}}
+					</ul>
+				</div>
+		        {{/each}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-blue" {{action 'filterByChapter'}}>{{t "questionLibrary.filter.apply"}}</button>
+                <a class="cancel" data-dismiss="modal" href="#">{{t "cancel"}}</a>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- T E R M   T A X O N O M Y   M o d a l -->
+<div id='taxonomy-mdl' class="modal fade filter-modal" tabindex="-1">
+    <div class="modal-dialog small-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">{{taxonomyModalTitle}}</h4>
+            </div>
+            <div class="modal-body cf">
+                {{#each termTaxonomies as |termTaxonomy|}}
+                <div class="units-chapter parent-taxonomy">
+                    <h5>{{termTaxonomy.name}}</h5>
+                    <ul>
+                        {{#each termTaxonomy.children as |child|}}
+                            <li>
+                                {{#in-array item=child.id array=controller.termTaxonomyIds}}
+                                    <input type="checkbox" value="{{child.id}}" name="taxonomy" id="taxonomy_{{child.id}}" checked="checked"/>
+                                {{/in-array}}
+                                {{#not-in-array item=child.id array=controller.termTaxonomyIds}}
+                                    <input type="checkbox" value="{{child.id}}" name="taxonomy" id="taxonomy_{{child.id}}"/>
+                                {{/not-in-array}}
+                                &nbsp;<label for="taxonomy_{{child.id}}">{{child.name}}</label></li>
+                        {{/each}}
+                    </ul>
+                </div>
+                {{/each}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-blue" {{action 'filterByTermTaxonomy' taxonomyModalType }}>{{t "questionLibrary.filter.apply"}}</button>
+                <a class="cancel" data-dismiss="modal" href="#">{{t "cancel"}}</a>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+{{#if isAuthoringEnabled}}  <!--Filter only for Admins-->
+    <!-- F I L T E R   A U T H O R    M o d a l -->
+    <div id='author-mdl' class="modal fade filter-modal" tabindex="-1">
+        <div class="modal-dialog small-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">{{t "questionLibrary.filter.filteringBy"}} {{t "questionLibrary.author"}}</h4>
+                </div>
+                <div class="modal-body cf">
+                    <div class="authors-content">
+                        <ul>
+                            {{#each authors as |author|}}
+                                <li>
+                                    {{#in-array item=author.id array=controller.authorIds}}
+                                        <input type="checkbox" value="{{author.id}}" name="author_checks" id="author_{{author.id}}" checked="checked"/>
+                                    {{/in-array}}
+                                    {{#not-in-array item=author.id array=controller.authorIds}}
+                                        <input type="checkbox" value="{{author.id}}" name="author_checks" id="author_{{author.id}}"/>
+                                    {{/not-in-array}}
+
+                                    <label for="author_{{author.id}}">{{author.firstName}}&nbsp;{{author.lastName}}</label>
+                                </li>
+                            {{else}}
+                                <h5>{{t "questionLibrary.filter.authorError"}}</h5>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    {{#if authors}}
+                        <button type="button" class="btn btn-blue" {{action 'filterByAuthor'}}>{{t "questionLibrary.filter.apply"}}</button>
+                    {{/if}}
+                    <a class="cancel" data-dismiss="modal" href="#">{{t "cancel"}}</a>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- F I L T E R   S T A T U S    M o d a l -->
+    <div id='status-mdl' class="modal fade filter-modal" tabindex="-1">
+        <div class="modal-dialog small-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">{{t "questionLibrary.filter.filteringBy"}} {{t "questionLibrary.questionStatus"}}</h4>
+                </div>
+                <div class="modal-body cf">
+                    <div class="status-content">
+                        <ul>
+                            {{#each questionStatusList as |questionStatus|}}
+                                <li>
+                                    {{#in-array item=questionStatus.type array=controller.questionStatus}}
+                                        <input type="checkbox" value="{{questionStatus.type}}" name="status_checks" id="status_{{questionStatus.type}}" checked="checked"/>
+                                    {{/in-array}}
+                                    {{#not-in-array item=questionStatus.type array=controller.questionStatus}}
+                                        <input type="checkbox" value="{{questionStatus.type}}" name="status_checks" id="status_{{questionStatus.type}}"/>
+                                    {{/not-in-array}}
+                                    <label for="status_{{questionStatus.type}}">{{questionStatus.label}}</label>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-blue" {{action 'filterByQuestionStatus'}}>{{t "questionLibrary.filter.apply"}}</button>
+                    <a class="cancel" data-dismiss="modal" href="#">{{t "cancel"}}</a>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- V I E W  Q U E S T I O N S  F R O M  O T H E R  P R O D U C T S  M o d a l -->
+    <div id='other-product-questions-mdl' class="modal fade filter-modal" tabindex="-1">
+        <div class="modal-dialog small-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">{{t "questionLibrary.filter.filteringBy"}} {{t "questionLibrary.questionsFromOtherProducts"}}</h4>
+                </div>
+                <div class="modal-body cf">
+                    <div class="other-product-questions-content">
+                        <ul>
+                            {{#each otherProducts as |product|}}
+                                <li>
+                                    {{#in-array item=product.id array=controller.otherProductIds}}
+                                        <input type="checkbox" value="{{product.id}}" name="product_checks" id="product_{{product.id}}" checked="checked"/>
+                                    {{/in-array}}
+                                    {{#not-in-array item=product.id array=controller.otherProductIds}}
+                                        <input type="checkbox" value="{{product.id}}" name="product_checks" id="product_{{product.id}}"/>
+                                    {{/not-in-array}}
+                                    <label for="product_{{product.id}}">{{product.name}}</label>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-blue" {{action 'filterByProducts'}}>{{t "questionLibrary.filter.apply"}}</button>
+                    <a class="cancel" data-dismiss="modal" href="#">{{t "cancel"}}</a>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+{{else}} <!--Filter only for Instructors-->
+    <!-- C L A S S   D A T A   M o d a l -->
+    <div id='difficulty-mdl' class="modal fade filter-modal" tabindex="-1">
+        <div class="modal-dialog small-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">{{t "questionLibrary.filter.filteringBy"}} {{t "questionLibrary.filter.difficulty"}}</h4>
+                </div>
+                <div class="modal-body cf">
+                    <div class="difficulty">
+                        <h5>{{t "questionLibrary.filter.selectDifficulty"}}</h5>
+                        <ul>
+                            {{#each difficultyRangeLevels as |level|}}
+                                <li>
+                                    {{#in-array item=level.keyCode array=controller.difficulty}}
+                                        <input type="checkbox" value="{{level.keyCode}}" name="difficulty" id="difficulty_{{level.display}}" checked="checked"/>
+                                    {{/in-array}}
+                                    {{#not-in-array item=level.keyCode array=controller.difficulty}}
+                                        <input type="checkbox" value="{{level.keyCode}}" name="difficulty" id="difficulty_{{level.display}}"/>
+                                    {{/not-in-array}}
+                                    &nbsp;<label for="difficulty_{{level.display}}">{{level.display}}</label>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-blue" {{action 'filterByDifficulty'}}>{{t "questionLibrary.filter.apply"}}</button>
+                    <a class="cancel" data-dismiss="modal" href="#">{{t "cancel"}}</a>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <!-- C L A S S   D A T A   M o d a l -->
+    <div id='class-data-mdl' class="modal fade filter-modal" tabindex="-1">
+        <div class="modal-dialog small-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">{{t "questionLibrary.filter.filteringBy"}} {{t "questionLibrary.filter.classData"}}</h4>
+                </div>
+                <div class="modal-body cf">
+                    <div class="class-data">
+                        <ul>
+                            {{#each myClasses as |clazz|}}
+                                <li>
+                                    {{#in-array item=clazz.id array=controller.classIds}}
+                                        <input type="radio" value="{{clazz.id}}" name="class_data" id="class_data_{{clazz.id}}" checked="checked"/>
+                                    {{/in-array}}
+                                    {{#not-in-array item=id array=controller.classIds}}
+                                        <input type="radio" value="{{clazz.id}}" name="class_data" id="class_data_{{clazz.id}}"/>
+                                    {{/not-in-array}}
+
+                                    <label for="class_data_{{clazz.id}}">{{clazz.name}}</label>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-blue" {{action 'filterByClassData'}}>{{t "questionLibrary.filter.apply"}}</button>
+                    <a class="cancel" data-dismiss="modal" href="#">{{t "cancel"}}</a>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+{{/if}}
+
+{{modal-question-type-selection component-class="filter-modal"
+                                is-visible=isModalQuestionTypeSelectionVisible
+                                selected-question-types=selectedQuestionTypes
+                                on-apply="filterByQuestionTypes"}}

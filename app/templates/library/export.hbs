@@ -1,0 +1,49 @@
+<div class="export-question cf">
+    <h2>{{t "questionLibrary.modal.title"}} {{questionSet.name}}</h2>
+    <h3>{{questions.length}} {{t "questionLibrary.questions"}}</h3>
+
+    <div>
+        {{#each questions as |question index|}}
+            <h4>{{increment-int index}}.&nbsp;{{safe-html question.questionText}}</h4>
+            {{#unless question.isHotSpot}}
+                {{#if question.questionMedia}}
+                    <div>
+                        <img src="{{question.questionMedia}}" />
+                    </div>
+                {{/if}}
+                
+                {{#each question.interactions as |interaction|}}
+                    <ul class="question-list">
+                    {{#each interaction.answerChoices as |ac|}}
+                        {{#unless ac.media}}
+                            <li>
+                                {{safe-html ac.text}}
+                            </li>
+                        {{/unless}}
+                        {{#if ac.media}}
+                            <li>
+                                <img src="{{ac.media}}"/>
+                            </li>
+                        {{/if}}
+                    {{/each}}
+                    </ul>
+                {{/each}}
+                {{#if question.isFillInBlank}}
+                    <input class="box" type="text"/>
+                {{/if}}
+            {{else}}
+                {{select-point-result urlImage=question.questionMedia isAnswerKey=false correctResponse=question.interactions.0.correctResponse idQuestion=question.id answerChoicesPercentages=question.interactions.0.answerChoicesPercentages}}
+            {{/unless}}
+        {{/each}}
+        <div class="answer-key">
+            <hr>
+            <div class="title">{{t "questionLibrary.modal.answerKey"}}</div>
+            {{#each questions as |question index|}}
+                <div>
+                    <span class="number">{{increment-int index}}</span>
+                    <span class="answers">{{question.answerString}}</span>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+</div>

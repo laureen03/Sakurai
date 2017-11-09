@@ -1,0 +1,59 @@
+// h2.section-header{
+// 	margin-top:36px;
+// }
+.section-header{
+
+	margin-bottom:32px;
+	text-align:center;
+
+	&.light {
+		@include styled-light-border-bottom;
+		color: #fff;
+	}
+
+	&.dark {
+		@include styled-dark-border-bottom;
+	}
+}
+
+div.special-hr {
+	@include styled-dark-border-bottom;
+}
+
+.text-center {
+	text-align:center;
+}
+
+.contact-large {
+	font-size:21px;
+	font-weight:600;
+	line-height:1em;
+	margin:0;
+}
+
+cite {
+	font-weight:bold;
+	color:#444;
+}
+
+.grey {
+	color:#444;
+	&:hover, &:focus, &:active, a:visited{
+		color:#444;
+	}
+}
+
+span.speech-bubble {
+	display:block;
+	width:77px;
+	height:72px;
+	background:transparent url('#{$assetMarketingPath}/speech-bubble.gif') no-repeat left top;
+}
+
+.text-white {
+	color:#fff;
+	a, a:hover, a:focus, a:active, a:visited {
+		color:#fff;
+		text-decoration:underline;
+	}
+}

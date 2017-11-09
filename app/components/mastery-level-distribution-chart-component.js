@@ -10,9 +10,12 @@
  * @param data-height {number} chart height (optional, default = 250)
  * @param data-studentUsage {StudentUsage} student usage data
  *
- * @type {SakuraiWebapp.MasteryLevelDistributionChartComponent}
+ * @type {MasteryLevelDistributionChartComponent}
  */
-SakuraiWebapp.MasteryLevelDistributionChartComponent = Ember.Component.extend({
+import Ember from "ember"; 
+import context from "utils/context-utils";
+
+export default Ember.Component.extend({
 
 
     /**
@@ -36,7 +39,7 @@ SakuraiWebapp.MasteryLevelDistributionChartComponent = Ember.Component.extend({
     'data-height': 200,
 
     /**
-     * @property {SakuraiWebapp.StudentUsage}
+     * @property {StudentUsage}
      */
     'data-studentUsage': [],
 
@@ -68,7 +71,7 @@ SakuraiWebapp.MasteryLevelDistributionChartComponent = Ember.Component.extend({
         var component = this;
         component.drawChart();
 
-        SakuraiWebapp.context.addWindowResizeListener(function(){
+        context.addWindowResizeListener(function(){
             if (!component.get("isDestroyed")) {
                 component.drawChart();
             }
@@ -82,7 +85,7 @@ SakuraiWebapp.MasteryLevelDistributionChartComponent = Ember.Component.extend({
 
         // Create and populate the data table.
         var dataTable = new google.visualization.DataTable();
-        var studentUsage = (this.get("data-studentUsage") != null) ? this.get("data-studentUsage") : [];
+        var studentUsage = (this.get("data-studentUsage") !== null) ? this.get("data-studentUsage") : [];
         
         this.addDataTableColumns(dataTable);
         var maxValue = this.addMasteryLevelRows(dataTable, studentUsage);
@@ -137,7 +140,7 @@ SakuraiWebapp.MasteryLevelDistributionChartComponent = Ember.Component.extend({
     getDataItems: function(studentUsage){
         var items = {};
         for (var i = 0; i < 8; i++){
-            items[i+1] = { masteryLevel: i+1, numOfStudents: 0 }
+            items[i+1] = { masteryLevel: i+1, numOfStudents: 0 };
         }
         var studentUsageArray = studentUsage.toArray();
         $.each(studentUsageArray, function(index, usage){
@@ -220,11 +223,11 @@ SakuraiWebapp.MasteryLevelDistributionChartComponent = Ember.Component.extend({
         max = (max <= 5) ? 5 : max;
         var every = 1;
 
-        if (max > 5 && max <= 10) every = 1;
-        if (max > 10 && max <= 20 ) every = 2;
-        if (max > 20 && max <= 50 ) every = 5;
-        if (max > 50 && max <= 100 ) every = 10;
-        if (max > 100) every = 20;
+        if (max > 5 && max <= 10){ every = 1; }
+        if (max > 10 && max <= 20 ){ every = 2; }
+        if (max > 20 && max <= 50 ){ every = 5; }
+        if (max > 50 && max <= 100 ){ every = 10; }
+        if (max > 100){ every = 20; }
 
         var ticks = [];
         for(var i = 0; i <= max; i = i + every){

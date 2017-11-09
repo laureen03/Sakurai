@@ -5,7 +5,7 @@
  *
  * @extends Ember.Component
  * @param data-type {string} indicates the performance list type
- * @param data-stats {SakuraiWebapp.TermTaxonomyStat|SakuraiWebapp.ChapterStat} stats data
+ * @param data-stats {TermTaxonomyStat|ChapterStat} stats data
  * @param data-category {string} name of chapter or term taxonomy (optional)
  * @param data-category-i18n {string} i18n name of chapter or term taxonomy (e.g. common.nursingConcept) (optional)
  * @param data-filter-type {boolean} indicates if it should filter by type (optional)
@@ -13,7 +13,12 @@
  * @param data-item-click {function} action to execute when a performance item is clicked (optional)
  */
 
-SakuraiWebapp.PerformanceListComponent = Ember.Component.extend({
+import Ember from "ember"; 
+import DS from "ember-data";
+import context from "utils/context-utils";
+
+
+export default Ember.Component.extend({
     /*
      * === PROPERTIES
      */
@@ -66,7 +71,7 @@ SakuraiWebapp.PerformanceListComponent = Ember.Component.extend({
 
     /**
      * Returns the strengths filter by type and sorted
-     * @property {SakuraiWebapp.TermTaxonomyPerformance[]|SakuraiWebapp.ChapterPerformance[]}
+     * @property {TermTaxonomyPerformance[]|ChapterPerformance[]}
      */
     strengths: Ember.computed("data-stats.strengths.[]", "data-type", function(){
         var component = this;
@@ -74,10 +79,10 @@ SakuraiWebapp.PerformanceListComponent = Ember.Component.extend({
             this.get("data-stats").strengthsByType(this.get("data-type")) :
             this.get("data-stats").get("strengths");
         return DS.PromiseArray.create({
-            promise: new Ember.RSVP.Promise(function (resolve, reject) {
+            promise: new Ember.RSVP.Promise(function (resolve) {
                 items.then(function(strengths){
                     var maxItems = component.get('strengthsLimit');
-                    var sortedPerformances = SakuraiWebapp.Utils.sortObjects(strengths.toArray(), { 'classAverage': false, 'id': true });
+                    var sortedPerformances = Utils.sortObjects(strengths.toArray(), { 'classAverage': false, 'id': true });
 
                     if (maxItems) {
                         // only show a number of elements from the sorted list
@@ -97,7 +102,7 @@ SakuraiWebapp.PerformanceListComponent = Ember.Component.extend({
 
     /**
      * Returns the weaknesses filter by type and sorted
-     * @property {SakuraiWebapp.TermTaxonomyPerformance[]|SakuraiWebapp.ChapterPerformance[]}
+     * @property {TermTaxonomyPerformance[]|ChapterPerformance[]}
      */
     weaknesses: Ember.computed("data-stats.weaknesses.[]", "data-type", function(){
         var component = this;
@@ -105,11 +110,11 @@ SakuraiWebapp.PerformanceListComponent = Ember.Component.extend({
             this.get("data-stats").weaknessesByType(this.get("data-type")) :
             this.get("data-stats").get("weaknesses");
         return DS.PromiseArray.create({
-            promise: new Ember.RSVP.Promise(function (resolve, reject) {
+            promise: new Ember.RSVP.Promise(function (resolve) {
 
                 items.then( function(weaknesses) {
-                    var maxItems = component.get('weaknessesLimit')
-                    var sortedPerformances = SakuraiWebapp.Utils.sortObjects(weaknesses.toArray(), { 'classAverage': true, 'id': false });
+                    var maxItems = component.get('weaknessesLimit');
+                    var sortedPerformances = Utils.sortObjects(weaknesses.toArray(), { 'classAverage': true, 'id': false });
 
                     if (maxItems) {
                         // only show a number of elements from the sorted list
@@ -129,7 +134,7 @@ SakuraiWebapp.PerformanceListComponent = Ember.Component.extend({
 
     /**
      * Returns the performances filter by type and sorted
-     * @property {SakuraiWebapp.TermTaxonomyPerformance[]|SakuraiWebapp.ChapterPerformance[]}
+     * @property {TermTaxonomyPerformance[]|ChapterPerformance[]}
      */
     performances: Ember.computed('data-stats.performances.[]', function(){
         var component = this;
@@ -137,7 +142,7 @@ SakuraiWebapp.PerformanceListComponent = Ember.Component.extend({
             this.get("data-stats").performancesByType(this.get("data-type")) :
             this.get("data-stats").get("performances");
         return DS.PromiseArray.create({
-            promise: new Ember.RSVP.Promise(function (resolve, reject) {
+            promise: new Ember.RSVP.Promise(function (resolve) {
                 Ember.RSVP.hash({
                     performances: items,
                     strengths:  component.get('strengths'),
@@ -154,8 +159,8 @@ SakuraiWebapp.PerformanceListComponent = Ember.Component.extend({
                         // been sorted
                         performances.removeObjects(strengths.toArray());
                         performances.removeObjects(weaknesses.toArray());
-                        sortedPerformances = SakuraiWebapp.Utils.sortObjects(performances.toArray(), { 'classAverage': false, 'id': true });
-                        weaknessesDescending = SakuraiWebapp.Utils.sortObjects(weaknesses.toArray(), { 'classAverage': false });
+                        sortedPerformances = Utils.sortObjects(performances.toArray(), { 'classAverage': false, 'id': true });
+                        weaknessesDescending = Utils.sortObjects(weaknesses.toArray(), { 'classAverage': false });
 
                         // Create list again with sorted performances (minus the strengths and the weaknesses)
                         outputList = Ember.ArrayProxy.create({ content: Ember.A(sortedPerformances)});
@@ -189,7 +194,7 @@ SakuraiWebapp.PerformanceListComponent = Ember.Component.extend({
             var strengths = this.get('strengths') || [],
                 weaknesses = this.get('weaknesses') || [],
                 subsetListsLength = strengths.get('length') + weaknesses.get('length');
-            return (subsetListsLength == 0);
+            return (subsetListsLength === 0);
         }
         return false;
     }),
@@ -235,11 +240,11 @@ SakuraiWebapp.PerformanceListComponent = Ember.Component.extend({
                         someStatsContainer.animate({
                             opacity: 1
                         }, speed);
-                    })
+                    });
                 }
             }
 
-            if (!SakuraiWebapp.context.isEnvironment('test')) {
+            if (!context.isEnvironment('test')) {
                 $root.animate({
                     scrollTop: $('#' + anchorId).offset().top
                 }, speed).promise().done( function() {
@@ -248,7 +253,7 @@ SakuraiWebapp.PerformanceListComponent = Ember.Component.extend({
                         //
                         // after the animation, toggle the property
                         animateToggleView(self, self.get('data-show-all'));
-                    })
+                    });
             } else {
                 // in testing, the root element will probably be missing
                 // (besides, the animations won't be necessary anyways)

@@ -8,7 +8,9 @@
  * @extends Ember.Component
  */
 
-SakuraiWebapp.AsyncLinkComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 
     /*
      * === PROPERTIES
@@ -42,7 +44,7 @@ SakuraiWebapp.AsyncLinkComponent = Ember.Component.extend({
 
         var id = this.get('elementId');
 
-        if (id == componentId) {
+        if (id === componentId) {
             // Make sure we are restoring the right link
             Ember.Logger.debug(this.toString() + ': restore link in component #' + componentId);
             this.$('.glyphicon').addClass('invisible')

@@ -1,4 +1,6 @@
-SakuraiWebapp.SelectPointResultComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 	
 	/**
 	* Paremeters 
@@ -124,8 +126,9 @@ SakuraiWebapp.SelectPointResultComponent = Ember.Component.extend({
 		point = point - half_size_box; 
 		
 		//If the point is < than 0
-		if (point < 0)
+		if (point < 0){
 			point = 0;
+		}
 		else if ((point + (half_size_box * 2)) > maxValue){ //If the point is > than total size
 			point = maxValue - (half_size_box * 2); 
 		}

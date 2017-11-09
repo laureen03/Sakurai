@@ -1,0 +1,119 @@
+    <a id={{anchor-id}} name={{anchor-id}} class="visuallyhidden">&nbsp;</a>
+    <div class="all-stats">
+        <div class="performance-bars bar-graph-container">
+            {{#if categoryTitle}}
+                <h3>{{categoryTitle}} {{t "common.performance"}}</h3>
+            {{else}}
+                <h3>{{t "common.performance"}}</h3>
+            {{/if}}
+            <div>
+                {{#if hasPerformances}}
+                    <em>
+                        {{#if categoryTitle}}
+                            {{t "common.clickOn"}} {{categoryTitleSingular}}{{t "common.clickEndPerformance"}}
+                        {{else}}
+                            {{t "common.clickOn"}} {{t "common.chapter" count=1}}{{t "common.clickEndPerformance"}}
+                        {{/if}}
+                    </em>
+                    <div class="content">
+                        {{#each performances as |stat|}}
+                            <div class="unit {{stat.className}}">
+                                <h4 {{action "onPerformanceClick" stat.owner.id}}>{{stat.owner.name}}</h4>
+                                <small>{{t "common.basedOn"}} {{stat.numStudents}} {{t "common.student.other"}}</small>
+                                {{bar-graph currentValue=stat.classAverage caption="common.classAverageMasteryLevel" }}
+                            </div>
+                        {{/each}}
+                    </div>
+                {{else}}
+                    <strong>{{t "common.noPerformances"}}</strong>
+                {{/if}}
+            </div>
+        </div>
+        {{#if toggleLinkEnabled}}
+            {{#if categoryTitle}}
+                <a class="toggle" {{action "toggleView" anchor-id}}>{{t "common.hide"}} {{categoryTitle}}</a>
+            {{else}}
+                <a class="toggle" {{action "toggleView" anchor-id}}>{{t "common.hide"}}</a>
+            {{/if}}
+        {{/if}}
+    </div>
+
+    <div class="filtered-stats">
+        {{#unless noStrengthsOrWeaknessesForClientNeeds}}
+        <div class="strengths-bars bar-graph-container">
+            {{#if categoryTitle}}
+                <h3>{{categoryTitle}} {{t "common.strengths"}}</h3>
+            {{else}}
+                <h3>{{t "common.strengths"}}</h3>
+            {{/if}}
+            <div>
+                {{#if hasStrengths}}
+                    <em>
+                        {{#if categoryTitle}}
+                            {{t "common.clickOn"}} {{categoryTitleSingular}}{{t "common.clickEndPerformance"}}
+                        {{else}}
+                            {{t "common.clickOn"}} {{t "common.chapter" count=1}}{{t "common.clickEndPerformance"}}
+                        {{/if}}
+                    </em>
+                    <div class="content">
+                        {{#each strengths as |stat|}}
+                            <div class="unit">
+                                <h4 {{action "onPerformanceClick" stat.owner.id}}>{{stat.owner.name}}</h4>
+                                <small>{{t "common.basedOn"}} {{stat.numStudents}} {{t "common.student.other"}}</small>
+                                {{bar-graph currentValue=stat.classAverage caption="common.classAverageMasteryLevel" }}
+                            </div>
+                        {{/each}}
+                    </div>
+                {{else}}
+                    <strong>{{t "common.noStrengths"}}</strong>
+                {{/if}}
+            </div>
+        </div>
+        <div class="weaknesses-bars bar-graph-container">
+            {{#if categoryTitle}}
+                <h3>{{categoryTitle}} {{t "common.weaknesses"}}</h3>
+            {{else}}
+                <h3>{{t "common.weaknesses"}}</h3>
+            {{/if}}
+            <div>
+                {{#if hasWeaknesses}}
+                    <em>
+                        {{#if categoryTitle}}
+                            {{t "common.clickOn"}} {{categoryTitleSingular}}{{t "common.clickEndPerformance"}}
+                        {{else}}
+                            {{t "common.clickOn"}} {{t "common.chapter" count=1}}{{t "common.clickEndPerformance"}}
+                        {{/if}}
+                    </em>
+                    <div class="content">
+                        {{#each weaknesses as |stat|}}
+                            <div class="unit">
+                                <h4 {{action "onPerformanceClick" stat.owner.id}}>{{stat.owner.name}}</h4>
+                                <small>{{t "common.basedOn"}} {{stat.numStudents}} {{t "common.student.other"}}</small>
+                                {{bar-graph currentValue=stat.classAverage caption="common.classAverageMasteryLevel" }}
+                            </div>
+                        {{/each}}
+                    </div>
+                {{else}}
+                    <strong>{{t "common.noWeaknesses"}}</strong>
+                {{/if}}
+            </div>
+        </div>
+            {{else}}
+                {{#if categoryTitle}}
+                <div id="noStrengthsNoWeaknesses" class="bar-graph-container">
+                    <h3>{{categoryTitle}}</h3>
+                    <div>
+                        <strong>{{t "common.noPerformances"}}</strong>
+                    </div>
+                </div>
+                {{/if}}
+        {{/unless}}
+        {{#if toggleLinkEnabled}}
+            {{#if categoryTitle}}
+                <a class="toggle" {{action "toggleView" anchor-id}}>{{t "common.viewClassMastery"}} {{categoryTitle}}</a>
+            {{else}}
+                <a class="toggle" {{action "toggleView" anchor-id}}>{{t "common.viewClassMastery"}}</a>
+            {{/if}}
+        {{/if}}
+    </div>
+

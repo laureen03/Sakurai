@@ -1,0 +1,42 @@
+<div id="overall-usage">
+	<h2>{{t "hmcd.overallUsage.title"}}</h2>
+    <div class="chart">
+        <div class="header">
+            <div class="primary">
+                <em>{{overallUsageMetadata.totalStudents}}</em>
+                <span>{{t "hmcd.overallUsage.students"}}</span>
+            </div>
+            {{#with overallUsageMetadata as |overallUsageMetadata|}}
+            <div class="secondary top">
+                <div>
+                    <em>{{numeral-format overallUsageMetadata.quizzesTaken "0,0"}}</em>
+                    <span>{{t "hmcd.overallUsage.quizzes"}}</span>
+                </div>
+                <div>
+                    <span>{{t "hmcd.overallUsage.equivalence"}}</span>
+                </div>
+                <div>
+                    <em>{{numeral-format overallUsageMetadata.averageQuizzes "0,0.0"}}</em>
+                    <span>{{t "hmcd.overallUsage.averageQuizzes"}}</span>
+                </div>
+            </div>
+            <div class="secondary bottom">
+                <div>
+                    <em>{{numeral-format overallUsageMetadata.questionsAnswered "0,0"}}</em>
+                    <span>{{t "hmcd.overallUsage.questions"}}</span>
+                </div>
+                <div>
+                    <span>{{t "hmcd.overallUsage.equivalence"}}</span>
+                </div>
+                <div>
+                    <em>{{numeral-format overallUsageMetadata.averageQuestions "0,0.0"}}</em>
+                    <span>{{t "hmcd.overallUsage.averageQuestions"}}</span>
+                </div>
+            </div>
+            {{/with}}
+        </div>
+        <div class="content">
+            {{overall-usage-chart overallUsage=classUsage store=controller.store}}
+        </div>
+    </div>
+</div>

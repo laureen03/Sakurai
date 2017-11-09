@@ -1,0 +1,44 @@
+<div class="step1 stepsContent">
+    {{#unless activeSettings}}
+        <h2>{{t "assignQuiz.manageQuizzing"}}</h2>
+        <ul>
+            <li class="clearfix">
+                <div class="radio-box">
+                    {{radio-button id="masteryLevel"  name="assigmentType-radios" value='mastery_level' checked=assigmentType}}
+                </div>
+                <div class="text-box"><label for="masteryLevel">{{{t "assignQuiz.assignmentType1"}}}</label></div>
+            </li>
+            <li class="clearfix">
+                <div class="radio-box">
+                    {{radio-button id="questionCollection" name="assigmentType-radios" value='question_collection' checked=assigmentType}}
+                </div>
+                <div class="text-box"><label for="questionCollection">{{{t "assignQuiz.assignmentType2"}}}</label></div>
+            </li>
+            {{#unless activeSettings}}
+                <li class="clearfix">
+                    <div class="radio-box">
+                        {{radio-button id="existingAssignment" name="assigmentType-radios" value='existing_assignment' checked=assigmentType}}
+                    </div>
+                    <div class="text-box"><label for="existingAssignment">{{{t "assignQuiz.lookingForAssignments"}}}</label></div>
+                </li>
+            {{/unless}}
+            {{#if allowReviewAndRefresh}}
+                <li class="clearfix">
+                    <div class="radio-box">
+                        {{radio-button id="changeSettings" name="assigmentType-radios" value='change_settings' checked=assigmentType}}
+                    </div>
+                    <div class="text-box">
+                        <label for="changeSettings">{{{t "reviewRefresh.changeSettings"}}}</label>
+                        <a href="#" {{action "onShowAboutReviewAndRefresh"}} id="moreAboutRR"><u>{{t "reviewRefresh.moreAboutReviewAndRefreshExplanation"}}</u></a>
+                    </div>
+                </li>
+            {{/if}}
+        </ul>
+        <div class="btn-box">
+            <button class="btn btn-blue" id="action-1" {{action "continueStepOne"}}>{{t "classes.btnContinue"}}</button>
+        </div>
+    {{/unless}}
+    {{#if allowReviewAndRefresh}}
+        {{review-and-refresh _class=class _product=product activeAbout=activeAboutReviewAndRefresh activeSettings=activeReviewAndRefreshSettings data-store=controller.store}}
+    {{/if}}
+</div>

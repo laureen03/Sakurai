@@ -1,0 +1,106 @@
+<div class="assign-exam-created">
+    <h2 class="title">
+        {{t "assignExam.examCreated"}}
+    </h2>
+
+    <div class="assignment-info clearfix full-width">
+        <div class="assignment-content one-target clearfix">
+            <div class="name">
+                {{t "assignExam.practiceExam"}}
+                <h2>{{assignment.name}}</h2>
+                <span class="total_questions">{{assignment.totalQuestions}} {{t "assignExam.questionsTitle"}}</span>
+            </div>
+            <div class="target">
+                <div class="targets">
+                    <span>{{t "assignExam.pointValue"}}</span>
+
+                    <div class="points">
+                        {{assignment.points}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="details">
+            <div class="highlight">{{t "assignExam.assignedTo"}}:</div>
+            {{#if assignment.staggered}}
+                <div class="classes">
+                    {{#each classesAndDates as |classesDates|}}
+                        <div class="classes-list">
+                            <span class="highlight">{{classesDates.name}}</span>
+                            {{#unless classesDates.isUnknownTerm}}
+                                &nbsp;-&nbsp;{{classesDates.term}}
+                            {{/unless}}
+                            <div>{{t "assignExam.deadlines"}}:</div>
+                            <div class="highlight">
+                                <span>{{t "assignExam.availableOn"}}</span>&nbsp;
+                                {{format-date classesDates.availableDate timezone=classesDates.timeZone}}&nbsp;
+                                <span>{{t "assignExam.andDueOn"}}</span>&nbsp;
+                                {{format-date classesDates.dueDate timezone=classesDates.timeZone}}
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            {{else}}
+                <div class="classes">
+                    {{#each assignment.classes as |clazz|}}
+                        <div>
+                            <span>{{clazz.name}}</span>&nbsp;-&nbsp;
+                            {{clazz.term}}
+                        </div>
+                    {{/each}}
+                </div>
+            {{/if}}
+            {{#if assignment.autoShutoff}}
+            <div class="highlight"><span>{{t "assignmentSummary.type"}}:</span></div> <div> {{t "assignmentSummary.shutoff"}}</div>
+            {{/if}}
+    
+            {{#if assignment.hasTimeLimit}}
+                <div class="highlight time-limit">
+                    <span>{{t "assignExam.timeToComplete"}}:</span>
+                </div>
+                <div class="time-limit-hours">{{to-hours assignment.timeLimit base="minutes" format="HM"}}</div>
+            {{/if}}
+            {{#unless assignment.staggered}}
+            <div class="highlight deadlines">{{t "assignExam.deadlines"}}:</div>
+            <div>
+                <span>{{t "assignQuiz.availableOn"}}</span>&nbsp;
+                {{format-date assignment.availableDate timezone=assignment.timeZone}}&nbsp;
+                <span>{{t "assignQuiz.andDueOn"}}</span>&nbsp;
+                {{format-date assignment.dueDate timezone=assignment.timeZone}}
+            </div>
+            {{/unless}}
+            <br>
+
+            {{#if allowThresholdControl}}
+                <div class="highlight">
+                    <span> {{t "assignExam.displaySettings"}}: </span>
+                </div>
+                <div>
+                    <span> {{t "assignExam.displayHidden1"}}
+                        {{#if assignment.hideThresholdLabels}}
+                            <strong> {{t "assignExam.proficiencyAllStatusHidden"}} </strong>
+                        {{else}}
+                            <strong> {{t "assignExam.proficiencyAllStatusNotHidden"}} </strong>
+                        {{/if}}
+                        {{t "assignExam.displayHidden2"}}
+                    </span>
+                </div>
+                <div>
+                    <span> {{t "assignExam.displayThreshold1"}}
+                    <strong>
+                        {{#if assignment.targetMasteryLevel}}
+                            <strong>{{assignment.targetMasteryLevel}}</strong>
+                        {{else}}
+                            <strong>{{minimumThreshold}}</strong>
+                        {{/if}}
+                    </strong>
+                    {{t "assignExam.displayHidden2"}}
+                    </span>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+    <div class="btn-box margin-top-55 done-btn">
+        {{#link-to 'instructor.examSummary' class.id class="btn btn-blue" }}{{t "assignExam.done"}}{{/link-to}}
+    </div>
+</div>

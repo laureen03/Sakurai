@@ -1,0 +1,79 @@
+<a class="highlight-link {{if activeRemediationLinks 'hide' 'show'}}" {{action 'activeRemediation'}}>{{t "questionLibrary.createQuestions.addRemediationLink"}}</a>
+<div class="{{if activeRemediationLinks 'show' 'hide'}}">
+	<div class="types-section">
+		<span>{{t "questionLibrary.createQuestions.source"}}:&nbsp;</span>
+		{{my-select id="select-type" 
+					class="custom-select remediation-select"
+					content=typesRemediationLinks
+					optionValuePath = "id"
+                    optionLabelPath = "name"
+					selectedValue = typeRemediationLinks}}
+		
+    </div>
+    {{#if isWeb}}
+	    {{add-remediation-web}}
+	{{/if}}
+	<div class="{{if isWeb 'hide' 'show'}}">
+		<div>
+	    	{{radio-button name="remediation-radios" value='search' checked=remediationRadioVal}}&nbsp;
+	    	<span>{{t "search"}}</span>
+	    </div>
+	    <div>
+	    	{{radio-button name="remediation-radios" value='browse' checked=remediationRadioVal}}
+	    	&nbsp;
+			<span>{{t "questionLibrary.createQuestions.browse"}}</span>
+		</div>
+		<div class="search-section {{if isSearch 'show' 'hide'}}">
+			{{input class="search-remediation" value=searchTerm type="text" action="onSearch" onEvent="keypress"}}
+			<button class="btn btn-default search-button" {{action 'onSearch'}}>{{t "search"}}</button>&nbsp;<span class="search-spinner glyphicon glyphicon-refresh animate-spin hide"></span>
+		</div>
+		<div class="clearfix {{if isLA 'la-results' 'lp-results'}}">
+			<div class="col-md-6 browse-section {{if isSearch 'hide' 'show'}}">
+				<h5>{{t "questionLibrary.createQuestions.selectBook"}}&nbsp;<span class="book-spinner glyphicon glyphicon-refresh animate-spin hide"></span></h5>
+				{{view "select"
+					id="select-book"
+					class="list-select"
+                                        multiple="true"
+                                        content=books
+                                        optionValuePath="content.id"
+                                        optionLabelPath="content.title"
+		        	selection=bookIds}}
+                                <label class="custom-error {{if bookError 'show' 'hide'}}">{{t "questionLibrary.createQuestions.errorOnlyOne"}}</label>
+                                <h5>{{t "questionLibrary.createQuestions.selectCategory"}}&nbsp;<span class="category-spinner glyphicon glyphicon-refresh animate-spin hide"></span></h5>
+                                {{view "select"
+					id="select-category"
+					class="list-select"
+                                        multiple="true"
+                                        content=categories
+                                        optionValuePath="content.id"
+                                        optionLabelPath="content.name"
+		        	selection=categoryId}}
+                                <label class="custom-error {{if categoryError 'show' 'hide'}}">{{t "questionLibrary.createQuestions.errorOnlyOne"}}</label>
+                                <div id="select-subCategory-section" class="{{if hasSubCategory 'show' 'hide'}}">
+                                    <h5>{{t "questionLibrary.createQuestions.selectSubCategory"}}</h5>
+                                    {{view "select"
+                                            id="select-subCategory"
+                                            class="list-select"
+                                            multiple="true"
+                                            content=subCategories
+                                            optionValuePath="content.id"
+                                            optionLabelPath="content.name"
+                                    selection=subCategoryId}}
+                                    <label class="custom-error {{if subCategoryError 'show' 'hide'}}">{{t "questionLibrary.createQuestions.errorOnlyOne"}}</label>
+                                </div>
+			</div>
+			<div class="remediation-list col-md-6">
+				<span class="list-spinner glyphicon glyphicon-refresh animate-spin hide"></span>
+				<table class="remediation-table">
+					{{#each remediationLinks as |remediationLink|}}
+						<tr>
+							<td class="name">{{{remediationLink.name}}}</td>
+							<td class="actions"><a {{action "onRemediationLinkClick" remediationLink}}>{{t "questionLibrary.createQuestions.view"}}</a></td>
+							<td class="actions"><a {{action "addRemediation" remediationLink}} class="add-remediation-link">{{t "add"}}</a></td>
+						</tr>
+					{{/each}}
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

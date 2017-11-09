@@ -1,0 +1,20 @@
+<h2>
+    {{#with model.questionText as |questionText|}}
+        {{safe-html questionText}}
+    {{/with}}
+</h2>
+<div class="instruction-label">{{{model.interactions.0.prompt}}}</div>
+<ul class="question-container-dragn-drop">
+    {{#each model.interactions as |interaction|}}
+        {{#each interaction.answerChoices as |choice index|}}
+            <li data-id={{choice.id}}>
+                <label class="index-label">{{increment-int index}}</label>
+                <div class="item">
+                    <span class="icon-drag pull-left"></span>
+                    <span class="drag-text pull-left">{{choice.text}}</span>
+                </div>
+            </li>
+        {{/each}}
+    {{/each}}
+</ul>
+{{partial 'question/footer'}}

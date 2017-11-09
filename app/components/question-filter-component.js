@@ -11,8 +11,10 @@
  * @param create {string} controller action responsible for creating the question filter
  * @param delete {string} controller action responsible for removing the question filter
  */
+ 
+import Ember from "ember"; 
 
-SakuraiWebapp.QuestionFilterComponent = Ember.Component.extend({
+export default Ember.Component.extend({
 
     /*
      * === PROPERTIES
@@ -29,7 +31,7 @@ SakuraiWebapp.QuestionFilterComponent = Ember.Component.extend({
 
     setupFilter: function() {
         var self = this,
-            dataPromise = Em.RSVP.hash({
+            dataPromise = Ember.RSVP.hash({
                 question: this.get('question'),
                 product: this.get('product'),
                 instructor: this.get('user'),
@@ -44,7 +46,7 @@ SakuraiWebapp.QuestionFilterComponent = Ember.Component.extend({
                 var promises = questionFilters.map(function(filter){
                     return filter.get("resolve");
                 });
-                Em.RSVP.all(promises).then(function(){
+                Ember.RSVP.all(promises).then(function(){
                     questionFilters.forEach( function(filter) {
                         if ( self.isFilterFound(filter, data) ) {
                             self.set('checked', true);
@@ -54,7 +56,7 @@ SakuraiWebapp.QuestionFilterComponent = Ember.Component.extend({
 
                     // Ready to start processing 'check' events on the checkbox
                     self.set('ready', true);
-                })
+                });
             });
         });
     }.on('init'),
@@ -76,7 +78,7 @@ SakuraiWebapp.QuestionFilterComponent = Ember.Component.extend({
                     var promises = questionFilters.map(function(filter){
                         return filter.get("resolve");
                     });
-                    Em.RSVP.all(promises).then(function(){
+                    Ember.RSVP.all(promises).then(function(){
                         questionFilters.forEach( function(filter) {
                             if ( self.isFilterFound(filter, data) ) {
                                 self.set('filterId', filter.get('id'));
@@ -99,7 +101,7 @@ SakuraiWebapp.QuestionFilterComponent = Ember.Component.extend({
         var hasInstructor = (filter.get('instructor') && data.instructor);
         var instructorOk =  hasInstructor && (filter.get('instructor').get('id') === data.instructor.get('id'));
 
-        return ( filter.get('type') == data.type &&
+        return ( filter.get('type') === data.type &&
                  filter.get('product').get('id') === data.product.get('id') &&
                  instructorOk );
     },

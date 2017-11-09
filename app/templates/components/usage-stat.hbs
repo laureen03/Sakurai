@@ -1,0 +1,63 @@
+<div class="overview">
+    <em>{{totalStudents}}</em>
+    <span>{{t "common.student" count=totalStudents}}</span>
+</div>
+<div class="details">
+
+    <div>
+        <div>
+            <em>{{numWithCompletedExams}}</em>
+            <span>{{t "common.studentsWithExams"}}</span>
+        </div>
+        <div>
+            <span>{{t "common.equivalence"}}</span>
+        </div>
+        <div>
+            <em>{{percentageWithCompletedExams}}{{t "common.percentage"}}</em>
+            <span>{{t "common.ofEntireClass"}}</span>
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <em>{{totalCompletedExams}}</em>
+            <span>{{t "common.exam.other"}} {{t "common.taken"}}</span>
+        </div>
+        <div>
+            <span>{{t "common.equivalence"}}</span>
+        </div>
+        <div>
+            <em>{{averageExamsPerStudent}}</em>
+            <span>{{t "common.exam" count=averageExamsPerStudent}} {{t "common.perStudent"}}</span>
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <em>{{numWithMoreExams}}</em>
+            <span>{{t "common.studentsWithMoreExams"}}</span>
+        </div>
+        <div>
+            <span>{{t "common.equivalence"}}</span>
+        </div>
+        <div>
+            <em>{{percentageWithMoreExams}}{{t "common.percentage"}}</em>
+            <span>{{t "common.ofEntireClass"}}</span>
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <em>{{numWithHigherML}}</em>
+            <span>{{t "common.student" count=numWithHigherML}} {{t "common.withHigherML"}}</span>
+        </div>
+        <div>
+            <span>{{t "common.equivalence"}}</span>
+        </div>
+        <div>
+            <em>{{percentageWithHigherML}}{{t "common.percentage"}}</em>
+            <span>{{t "common.ofEntireClass"}}</span>
+        </div>
+    </div>
+
+</div>

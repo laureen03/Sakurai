@@ -1,0 +1,23 @@
+<div class="hotSpot-question">
+    <h2>
+        {{#with model.questionText as |questionText|}}
+        	{{safe-html questionText}}
+    	{{/with}}
+    </h2>
+    {{#each model.interactions as |interaction|}}
+        <div class="instruction-label top">
+            {{#if interaction.prompt}}
+                {{safe-html interaction.prompt}}
+            {{else}}
+                {{t "quiz.promptSelectPoint"}}
+            {{/if}}
+        </div>
+    {{/each}}
+    <div class="body">
+        <div class="bg-hotspot">
+            <img class="bg" src={{model.questionMedia}} />
+            <div class="clickable-area"></div>
+        </div>
+    </div>
+    {{partial 'question/footer'}}
+</div>

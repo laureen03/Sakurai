@@ -1,0 +1,186 @@
+<div class="container assignment-summary">
+<div class="assignment-info clearfix margin-top-55">
+    <div class="assignment-content clearfix">
+        <div class="name">
+            {{t "assignmentSummary.masteryLevelAssignment"}}
+            <h2>{{assignment.name}}</h2>
+                <span class="chapter">
+                    {{#if isMetadataAllowed}}
+                        {{#if isTermTaxonomyNursingTopic}}
+                            {{#if usesNursingTopics}}
+                                <div class="mtdt-category capitalize">{{t "type"}}: {{terminologyTermPlural}}</div>
+                                <div class="mtdt-subcategory">{{t "category"}}: {{assignment.chapter.name}}</div>
+                            {{else}}
+                                {{assignment.chapter.name}}
+                            {{/if}}
+                        {{else}}
+                            <div class="category-title">
+                                {{termTaxonomyLabel}}
+                            </div>
+                        <div class="nrsg-subcategory">{{t "category"}}: {{assignment.termTaxonomy.name}}</div>
+                        {{/if}}
+                    {{else}}
+                        {{assignment.chapter.name}}
+                    {{/if}}
+                </span>
+        </div>
+        <div class="target">
+            <div class="targets">
+                {{t "assignmentSummary.classAverage"}}
+                <div class="ml">
+                    {{#with assignment.classAverageMasteryLevel as |classAverageMasteryLevel|}}
+                        <div class="ml">{{numeral-format classAverageMasteryLevel '0.0'}}</div>
+                    {{/with}}
+                </div>
+            </div>
+            <div class="targets right">
+                {{t "assignment.targetMastery"}}
+                <div class="ml">{{assignment.targetMasteryLevel}}</div>
+            </div>
+        </div>
+    </div>
+    {{partial "instructor/partial/assignment_summary_header"}}
+</div>
+{{export-csv-link
+  assignment=assignment
+  type="ml"}}
+<div class="bar-graph-container performance-chapter">
+    <div class="header">
+        <h2 >
+            {{#if isMetadataAllowed}}
+                {{#if isTermTaxonomyNursingTopic}}
+                    {{t "assignmentSummary.performanceBy"}} <span class="capitalize">{{terminologyTermSingular}}</span>
+                {{else}}
+                    {{#if assignment.termTaxonomy.isClientNeeds}}
+                        {{t "assignmentSummary.performanceByClientNeeds"}}
+                    {{else}}
+                        {{t "assignmentSummary.performanceByNursingConcept"}}
+                    {{/if}}
+                {{/if}}
+            {{else}}
+                {{t "assignmentSummary.performanceByTopic"}}
+            {{/if}}
+        </h2>
+        <a href="#" data-target="#whatsthis-performance" data-toggle="modal">{{t "whatIsThis"}}</a>
+    </div>
+    {{#each statsPerformance as |stat|}}
+        <div class="content">
+            <div class="unit">
+                <h4>{{stat.owner.name}}</h4>
+
+                {{bar-graph currentValue=stat.classAverage
+                caption="assignmentSummary.classAverage" }}
+
+                {{bar-graph baselineValue=stat.oldMasteryLevel
+                currentValue=assignment.targetMasteryLevel
+                caption="assignmentSummary.targetMastery" }}
+
+
+            </div>
+        </div>
+    {{/each}}
+</div>
+<div class="margin-top-55 student-results">
+    <h2>{{t "assignmentSummary.studentResults"}}</h2>
+    {{#if studentResultsSortable.collection}}
+        <table class="table tablesorter studentResults-table">
+            <thead>
+            <tr>
+                <th class="visible-xs no-arrow">{{t "expand"}}</th>
+                <th class="header sort_user_fullName">
+                    <a {{action 'onSortByCriteria' 'user.fullName'}}>
+                        <span class="fullName-action action">{{t "assignmentSummary.studentResultsTable.name"}}</span>
+                    </a>
+                </th>
+                <th class="hidden-xs header sort_numQuizzes">
+                    <a {{action 'onSortByCriteria' 'numQuizzes' }}>
+                        <span class="numQuizzes-action action">{{t "assignmentSummary.studentResultsTable.numQuizzes"}}</span>
+                    </a>
+                </th>
+                <th class="hidden-xs header sort_masteryLevel">
+                    <a {{action 'onSortByCriteria' 'masteryLevel' }}>
+                        <span class="masteryLevel-action action">
+                        {{#if assignment.hasPassedDueDate}}
+                            {{t "assignmentSummary.studentResultsTable.masteryLevel"}}
+                        {{else}}
+                            {{t "assignmentSummary.studentResultsTable.currentMasteryLevel"}}
+                        {{/if}}
+                        </span>
+                    </a>
+                </th>
+                <th class="hidden-xs header sort_timeToComplete">
+                    <a {{action 'onSortByCriteria' 'timeToComplete' }}>
+                        <span class="timeToComplete-action action">{{t "assignmentSummary.studentResultsTable.timeToComplete"}}</span>
+                    </a>
+                </th>
+                <th class="header sort_isComplete">
+                    <a {{action 'onSortByCriteria' 'isComplete' }}>
+                        <span class="isComplete-action action">{{t "assignmentSummary.studentResultsTable.status"}}</span>
+                    </a>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each studentResultsSortable.collection as |studentResult index|}}
+                <tr data-pos="{{index}}">
+                    <td class="visible-xs">
+                        <a {{action 'showMore' index studentResult.numQuizzes studentResult.masteryLevel }} class="icon">
+                            <span data-arrow="{{index}}" class="glyphicon glyphicon-chevron-down"></span>
+                        </a>
+                    </td>
+                    <td class="quiz-name">
+                        {{studentResult.user.fullName}}
+                    </td>
+                    <td class="hidden-xs">
+                        {{studentResult.numQuizzes}}
+                    </td>
+                    <td class="hidden-xs">
+                        {{studentResult.masteryLevel}}
+                        {{#if assignment.hasPassedDueDate}}
+                            <span class="gray">&nbsp;{{t "assignmentSummary.studentResultsTable.onDueDate"}}</span>
+                        {{/if}}
+                    </td>
+                    <td class="hidden-xs">
+                        {{#if studentResult.isComplete}}
+                            {{studentResult.timeToComplete}}
+                        {{/if}}
+                        {{#if studentResult.isInCompleted}}
+                            &mdash;
+                        {{/if}}
+                        {{#if studentResult.isPastDue}}
+                            &mdash;
+                        {{/if}}
+                        {{#if studentResult.isAutoCompleted}}
+                            <span class="label label-success" title="{{controller.autoCompletedDescription}}">{{t "assignments.autoCompleted"}}</span>
+                        {{/if}}
+                    </td>
+                    <td>
+                        {{#if studentResult.isComplete}}
+                            <span class="label label-success">{{t "assignments.complete"}}</span>
+                        {{/if}}
+                        {{#if studentResult.isAutoCompleted}}
+                            <span class="label label-success">{{t "assignments.complete"}}</span>
+                        {{/if}}
+                        {{#if studentResult.isPastDue}}
+                            <span class="label label-danger">{{t "assignments.pastDue"}}</span>
+                        {{/if}}
+                        {{#if studentResult.isInCompleted}}
+                            <span class="label label-danger">{{t "assignments.pastDue"}}</span>
+                        {{/if}}
+                    </td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    {{else}}
+        <h5>{{t "assignmentSummary.noStudentsEnrolled"}}</h5>
+    {{/if}}
+</div>
+
+<div class="btn-box">
+    {{#link-to 'instructor.assignments' class.product.id class.id class="btn btn-blue"}}{{t "button.returnToAssignmentList"}}{{/link-to}}
+</div>
+
+{{simple-modal idElement="whatsthis-performance" title="assignmentSummary.titlePerformanceModal" body="assignmentSummary.bodyPerformanceModal"}}
+
+</div>

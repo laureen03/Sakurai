@@ -1,0 +1,12 @@
+{{#if references}}
+  <div class="question-legacy-references">
+    <h4>
+      {{title}}:
+    </h4>
+    {{#each references as |reference|}}
+      <p>
+        {{{reference.text}}}
+      </p>
+    {{/each}}
+  </div>
+{{/if}}

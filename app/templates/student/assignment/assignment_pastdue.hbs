@@ -1,0 +1,15 @@
+<div class="assignment-info clearfix">
+    {{partial "student/partials/assignment_header_2_col"}}
+    <div class="details">
+        {{t "assignment.youDidNotReach"}}
+    </div>
+    <div class="details">
+        <span class="label label-danger">{{t "assignments.pastDue"}}</span>
+        <span class="points highlight">
+            {{assignment.score}}/{{assignment.points}}&nbsp;{{t "assignment.pointsText"}}
+        </span>
+    </div>
+</div>
+<div class="btn-box clearfix margin-btn">
+    {{#link-to 'student.assignments' class.id class="btn btn-blue"}}{{t "assignQuiz.done"}}{{/link-to}}
+</div>

@@ -1,0 +1,66 @@
+<div class="container question-library">
+	<div class="menu">
+		{{partial "library/left_menu"}}
+	</div>
+	<div class="home-content content-ql {{if hideQuestionSetList 'block' 'hidden'}}">
+		{{partial "library/search_filters"}}
+
+        <div class="chapter-filters">
+            <div class="header">
+                <h2>{{t "common.questionsBy"}} {{sakurai-data-type component-class='capitalize' data-product=class.product}}</h2>
+                {{#if isAuthoringEnabled}}
+                    {{#link-to 'library.dataTypeFilters' class.id class="hide-from-quiz"}}
+                        {{t "questionLibrary.blockContent"}}
+                    {{/link-to}}
+                {{else}}
+                    {{#link-to 'library.dataTypeFilters' class.id class="hide-from-quiz"}}
+                        {{t "common.hide"}}
+                        {{sakurai-data-type component-class='capitalize' data-product=class.product is-plural=true}}
+                        {{t "common.fromPracticeQuiz"}}
+                    {{/link-to}}
+                {{/if}}
+            </div>
+            {{#if isDataTypeTermTaxonomy}}
+                {{#each termTaxonomyList as |termTaxonomy|}}
+                <ol class="chapter-list term-taxonomy-list">
+                    <li>
+                        <strong>{{termTaxonomy.name}}</strong>
+                        <ol>
+                            {{#each termTaxonomy.children as |child|}}
+                            <li>
+                                {{data-type-filter filterVarName='termTaxonomyFilters'
+                                                     dataType=child
+                                                     instructor=user
+                                                     type=controller.typeFilter
+                                                     select="searchByTermTaxonomy" }}
+                            </li>
+                            {{/each}}
+                        </ol>
+                    </li>
+                </ol>
+                {{/each}}
+            {{else}}
+            <ol class="chapter-list chapter-results-list">
+                {{#each sections as |section|}}
+                    <li>
+                        <strong>{{section.name}}</strong>
+                        <ol>
+                            {{#each section.children as |chapter|}}
+                                <li>
+                                    {{data-type-filter filterVarName='chapterFilters'
+                                                     dataType=chapter
+                                                     instructor=user
+                                                     type=controller.typeFilter
+                                                     select="searchByChapter" }}
+                                </li>
+                            {{/each}}
+                        </ol>
+                    </li>
+                {{/each}}
+            </ol>
+            {{/if}}
+
+        </div>
+	</div>
+</div>
+{{render "library.create_question_collection"}}

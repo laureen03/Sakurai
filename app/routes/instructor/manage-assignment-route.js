@@ -48,6 +48,9 @@ export default Route.extend(
         controller.set('isCopyMode', model.isCopyMode);
 
         controller.get("instructorAssignStep3").initController();
+        if(!model.assignment || !model.assignment.get("id")) {
+            $(".step3.stepsContent").hide();
+        }
         if (model.isEditMode) {
             var assignment = model.assignment;
             controller.identifyTermTaxonomyTypeIfNecessary(assignment);

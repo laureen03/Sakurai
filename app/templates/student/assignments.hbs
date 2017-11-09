@@ -1,0 +1,347 @@
+<div class="assignments-container container">
+    <!-- mastery level questions -->
+    <div class="assignments">
+        <h2>{{t "assignments.masteryLevelAssignments"}}</h2>
+        {{#unless class.selfStudying}}
+            {{#if mlAssignmentsQuizzesSortable.collection}}
+            <table class="table tablesorter mlAssignmentsQuizzes-table" id="assignmentsQuizzes-table" >
+                <thead>
+                    <tr>
+                        <th class="visible-xs visible-sm no-arrow">{{t "expand"}}</th>
+                        <th class="header sort_name tleft">
+                            <a {{action 'onSortByCriteria' 'mlAssignmentsQuizzes' 'name' }}>
+                                <span class="name-action action">{{t "assignments.name"}}</span>
+                            </a>
+                        </th>
+                        <th>{{t "assignments.status"}}</th>
+                        <th class="hidden-xs hidden-sm header sort_timestampAvailableDate">
+                            <a {{action 'onSortByCriteria' 'mlAssignmentsQuizzes' 'timestampAvailableDate' }}>
+                                <span class="name-timestampAvailableDate action">{{t "assignments.startDate"}} </span>
+                            </a>
+                        </th>
+                        <th class="hidden-xs header sort_timestampDueDate">
+                            <a {{action 'onSortByCriteria' 'mlAssignmentsQuizzes' 'timestampDueDate' }}>
+                                <span class="name-timestampDueDate action">{{t "assignments.dueDate"}}</span>
+                             </a>
+                        </th>
+                        <th class="hidden-xs header sort_orderScore">
+                            <a  {{action 'onSortByCriteria' 'mlAssignmentsQuizzes' 'orderScore' }}>
+                                <span class="name-orderScore action">{{t "assignments.score"}}</span>
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                 {{#each mlAssignmentsQuizzesSortable.collection as |assignment index|}}
+                        <tr data-pos-quiz="{{index}}">
+                            <td class="visible-xs visible-sm">
+                                <a {{action 'showMoreAssignmentQuiz' index assignment}} class="icon">
+                                    <span data-arrow-quiz="{{index}}" class="glyphicon glyphicon-chevron-right"></span>
+                                </a>
+                            </td>
+                            <td class="name tleft" title="{{assignment.name}}">
+                                {{#if assignment.isNotAvailable}}
+                                    <span class="assignment-name">{{assignment.name}}</span>
+                                {{else}}
+                                    {{#if assignment.isAvailable}}
+                                        {{#if controller.isImpersonated}}
+                                            <span class="assignment-name">{{assignment.name}}</span>
+                                        {{else}}
+                                            {{#link-to 'student.assignment' controller.class.id assignment.id class="dark-gray assignment-name"}}{{assignment.name}}{{/link-to}}
+                                        {{/if}}
+                                    {{else}}
+                                        {{#link-to 'student.assignment' controller.class.id assignment.id class="dark-gray assignment-name"}}{{assignment.name}}{{/link-to}}
+                                    {{/if}}
+                                {{/if}}
+                            </td>
+                            <td class="status">
+
+                                {{#if assignment.isCompleted}}
+                                    <span class="label label-success" title="test">{{t "assignments.complete"}}</span>
+                                {{/if}}
+                                {{#if assignment.isAutoCompleted }}
+                                    <span class="label label-success" title="{{controller.autoCompletedDescription}}">{{t "assignments.autoCompleted"}}</span>
+                                {{/if}}
+                                {{#if assignment.isAutoSubmitted}}
+                                    <span class="label label-success" title="{{controller.autoSubmittedDescription}}">{{t "assignments.autoSubmitted"}}</span>
+                                {{/if}}
+                                {{#if assignment.isPastDue }}
+                                    <span class="label label-danger">{{t "assignments.pastDue"}}</span>
+                                {{/if}}
+                                {{#if assignment.isTimeOut }}
+                                    <span class="label label-danger">{{t "assignments.pastDue"}}</span>
+                                {{/if}}
+
+                            </td>
+                            <td class="hidden-xs hidden-sm date"><span class="date-format">{{format-date assignment.availableDate}}</span></td>
+                            <td class="hidden-xs date"><span class="date-format">{{format-date assignment.dueDate}}</span></td>
+                            <td class="hidden-xs">
+                                {{assignment.score}}/{{assignment.points}}
+                            </td>
+                        </tr>
+                {{/each}}
+                </tbody>
+            </table>
+            {{else}}
+                <h3 class="title-no-class no-ml-assignments">{{t "assignments.noClasses"}}</h3>
+            {{/if}}
+        {{else}}
+            <p>
+                {{t 'assignments.selfStudyText1'}}
+                {{#link-to 'student.class'}}{{t 'assignments.selfStudyLink'}}{{/link-to}}
+                {{t 'assignments.selfStudyText2'}}
+            </p>
+        {{/unless}}
+    </div>
+
+
+
+
+
+
+
+    <!-- question collections -->
+    <div class="assignments">
+        <h2 class="margin-top-55">{{t "assignments.questionCollectionAssignments"}}</h2>
+        {{#unless class.selfStudying}}
+            {{#if qcAssignmentsQuizzesSortable.collection}}
+                <table class="table tablesorter qcAssignmentsQuizzes-table" id="qc-assignmentsQuizzes-table" >
+                    <thead>
+                    <tr>
+                        <th class="visible-xs visible-sm no-arrow">{{t "expand"}}</th>
+                        <th class="header sort_name tleft">
+                            <a {{action 'onSortByCriteria' 'qcAssignmentsQuizzes' 'name' }}>
+                                <span class="name-action action">{{t "assignments.name"}}</span>
+                            </a>
+                        </th>
+                        <th>{{t "assignments.status"}}</th>
+                        <th class="hidden-xs hidden-sm header sort_timestampAvailableDate">
+                            <a {{action 'onSortByCriteria' 'qcAssignmentsQuizzes' 'timestampAvailableDate' }}>
+                                <span class="name-timestampAvailableDate action">{{t "assignments.startDate"}} </span>
+                            </a>
+                        </th>
+                        <th class="hidden-xs header sort_timestampDueDate">
+                            <a {{action 'onSortByCriteria' 'qcAssignmentsQuizzes' 'timestampDueDate' }}>
+                                <span class="name-timestampDueDate action">{{t "assignments.dueDate"}}</span>
+                            </a>
+                        </th>
+                        <th class="hidden-xs hidden-sm">
+                            {{t "assignments.nQuestions"}}
+                        </th>
+                        <th class="hidden-xs header sort_orderScore">
+                            <a  {{action 'onSortByCriteria' 'qcAssignmentsQuizzes' 'orderScore' }}>
+                                <span class="name-orderScore action">{{t "assignments.score"}}</span>
+                            </a>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {{#each qcAssignmentsQuizzesSortable.collection as |assignment index|}}
+                        <tr data-pos-quiz="{{index}}">
+                            <td class="visible-xs visible-sm">
+                                <a {{action 'showMoreAssignmentQuiz' index assignment}} class="icon">
+                                    <span data-arrow-quiz="{{index}}" class="glyphicon glyphicon-chevron-right"></span>
+                                </a>
+                            </td>
+                            <td class="name tleft" title="{{assignment.name}}">
+                                {{#if assignment.isNotAvailable}}
+                                    <span class="assignment-name">{{assignment.name}}</span>
+                                {{else}}
+                                    {{#if assignment.isAvailable}}
+                                        {{#if controller.isImpersonated}}
+                                            <span class="assignment-name">{{assignment.name}}</span>
+                                        {{else}}
+                                            {{#link-to 'student.assignment' controller.class.id assignment.id class="dark-gray assignment-name"}}{{assignment.name}}{{/link-to}}
+                                        {{/if}}
+                                    {{else}}
+                                        {{#link-to 'student.assignment' controller.class.id assignment.id class="dark-gray assignment-name"}}{{assignment.name}}{{/link-to}}
+                                    {{/if}}
+                                {{/if}}
+                            </td>
+                            <td class="status">
+
+                                {{#if assignment.isCompleted}}
+                                    <span class="label label-success" title="test">{{t "assignments.complete"}}</span>
+                                {{/if}}
+                                {{#if assignment.isAutoCompleted }}
+                                    <span class="label label-success" title="{{controller.autoCompletedDescription}}">{{t "assignments.autoCompleted"}}</span>
+                                {{/if}}
+                                {{#if assignment.isAutoSubmitted}}
+                                    <span class="label label-success" title="{{controller.autoSubmittedDescription}}">{{t "assignments.autoSubmitted"}}</span>
+                                {{/if}}
+                                {{#if assignment.isPastDue }}
+                                    <span class="label label-danger">{{t "assignments.pastDue"}}</span>
+                                {{/if}}
+                                {{#if assignment.isTimeOut }}
+                                    <span class="label label-danger">{{t "assignments.pastDue"}}</span>
+                                {{/if}}
+                            </td>
+                            <td class="hidden-xs hidden-sm date"><span class="date-format">{{format-date assignment.availableDate}}</span></td>
+                            <td class="hidden-xs date"><span class="date-format">{{format-date assignment.dueDate}}</span></td>
+                            <td class="hidden-xs hidden-sm total-questions">
+                                {{#if assignment.isQuestionCollectionAssignment}}
+                                    {{assignment.totalQuestions}}
+                                {{else}}
+                                    n/a
+                                {{/if}}
+                            </td>
+                            <td class="hidden-xs">
+                                {{assignment.score}}/{{assignment.points}}
+                            </td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            {{else}}
+                <h3 class="title-no-class no-qc-assignments">{{t "assignments.noClasses"}}</h3>
+            {{/if}}
+        {{else}}
+            <p>
+                {{t 'assignments.selfStudyText1'}}
+                {{#link-to 'student.class'}}{{t 'assignments.selfStudyLink'}}{{/link-to}}
+                {{t 'assignments.selfStudyText2'}}
+            </p>
+        {{/unless}}
+    </div>
+
+    <!-- Exam Assignments -->
+    {{#if isExamAllowed}}
+        <div class="assignments">
+            <h2 class="margin-top-55">{{t "assignments.comprehensiveExams"}}</h2>
+            {{#unless class.selfStudying}}
+                {{#if assignmentsExamsSortable.collection}}
+                    <table class="table tablesorter assignmentsExams-table" id="assignmentsExams-table" >
+                        <thead>
+                        <tr>
+                            <th class="visible-xs visible-sm no-arrow">{{t "expand"}}</th>
+                            <th class="header sort_name tleft">
+                                <a {{action 'onSortByCriteria' 'assignmentsExams' 'name' }}>
+                                    <span class="name-action action">{{t "assignments.name"}}</span>
+                                </a>
+                            </th>
+                            <th>{{t "assignments.status"}}</th>
+                            <th class="hidden-xs hidden-sm header sort_timestampAvailableDate">
+                                <a {{action 'onSortByCriteria' 'assignmentsExams' 'timestampAvailableDate' }}>
+                                    <span class="name-timestampAvailableDate action">{{t "assignments.startDate"}} </span>
+                                </a>
+                            </th>
+                            <th class="hidden-xs header sort_timestampDueDate">
+                                <a {{action 'onSortByCriteria' 'assignmentsExams' 'timestampDueDate' }}>
+                                    <span class="name-timestampDueDate action">{{t "assignments.dueDate"}}</span>
+                                </a>
+                            </th>
+                            <th class="hidden-xs sort_totalQuestions small-column">
+                                <a  {{action 'onSortByCriteria' 'assignmentsExams' 'totalQuestions' }}>
+                                    <span class="name-totalQuestions action">{{t "assignments.nQuestions"}}</span>
+                                </a>
+                            </th>
+                            <th class="hidden-xs hidden-sm sort_studentStatus_masteryLevel small-column">
+                                <a  {{action 'onSortByCriteria' 'assignmentsExams' 'studentStatus.masteryLevel' }}>
+                                    <span class="name-studentStatusMasteryLevel action">{{t "assignments.examMastery"}}</span>
+                                </a>
+                            </th>
+                            <th class="hidden-xs hidden-sm sort_exam_averageTimeOnQuestion small-column">
+                                <a  {{action 'onSortByCriteria' 'assignmentsExams' 'exam.averageTimeOnQuestion' }}>
+                                    <span class="name-examAverageTimeOnQuestion action">{{t "assignments.timePerQuestion"}}</span>
+                                </a>
+                            </th>
+                            <th class="hidden-xs header sort_orderScore">
+                                <a  {{action 'onSortByCriteria' 'assignmentsExams' 'orderScore' }}>
+                                    <span class="name-orderScore action">{{t "assignments.score"}}</span>
+                                </a>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {{#each assignmentsExamsSortable.collection as |assignment index|}}
+                            <tr data-pos-exam="{{index}}">
+                                <td class="visible-xs visible-sm">
+                                    <a {{action 'showMoreAssignmentExam' index assignment}} class="icon">
+                                        <span data-arrow-exam="{{index}}" class="glyphicon glyphicon-chevron-right"></span>
+                                    </a>
+                                </td>
+                                <td class="name tleft" title="{{assignment.name}}">
+                                    {{#if assignment.isNotAvailable }}
+                                        <span class="assignment-name">{{assignment.name}}</span>
+                                    {{else}}
+                                        {{#if assignment.isAvailable}}
+                                            {{#if controller.isImpersonated}}
+                                                <span class="assignment-name">{{assignment.name}}</span>
+                                            {{else}}
+                                                {{#link-to 'student.assignment' controller.class.id assignment.id class="dark-gray assignment-name"}}{{assignment.name}}{{/link-to}}
+                                            {{/if}}
+                                        {{else}}
+                                            {{#link-to 'student.assignment' controller.class.id assignment.id class="dark-gray assignment-name"}}{{assignment.name}}{{/link-to}}
+                                        {{/if}}
+                                    {{/if}}
+                                </td>
+                                <td class="status">
+                                    {{#if assignment.isCompleted}}
+                                        <span class="label label-success">{{t "assignments.complete"}}</span>
+                                    {{/if}}
+                                    {{#if assignment.isPastDue }}
+                                        <span class="label label-danger">{{t "assignments.pastDue"}}</span>
+                                    {{/if}}
+                                    {{#if assignment.isTimeOut }}
+                                        <span class="label label-danger">{{t "assignments.pastDue"}}</span>
+                                    {{/if}}
+                                    {{#if assignment.isAutoCompleted }}
+                                        <span class="label label-danger">{{t "assignments.pastDue"}}</span>
+                                    {{/if}}
+                                </td>
+                                <td class="hidden-xs hidden-sm date"><span class="date-format">{{format-date assignment.availableDate}}</span></td>
+                                <td class="hidden-xs date"><span class="date-format">{{format-date assignment.dueDate}}</span></td>
+                                <td class="hidden-xs total-questions">
+                                    {{assignment.totalQuestions}}
+                                </td>
+                                <td class="hidden-xs hidden-sm">
+                                    {{#if assignment.isCompleted}}
+                                        {{assignment.studentStatus.masteryLevel}}
+                                    {{/if}}
+                                    {{#if assignment.isPastDue }}
+                                        -
+                                    {{/if}}
+                                    {{#if assignment.isTimeOut }}
+                                        -
+                                    {{/if}}
+                                    {{#if assignment.isAutoCompleted }}
+                                        -
+                                    {{/if}}
+                                </td>
+                                <td class="hidden-xs hidden-sm">
+                                    {{#if assignment.isCompleted}}
+                                        {{to-hours assignment.exam.averageTimeOnQuestion base="seconds" format="hms"}}
+                                    {{/if}}
+                                    {{#if assignment.isPastDue }}
+                                        -
+                                    {{/if}}
+                                    {{#if assignment.isTimeOut }}
+                                        -
+                                    {{/if}}
+                                    {{#if assignment.isAutoCompleted }}
+                                        -
+                                    {{/if}}
+                                </td>
+                                <td class="hidden-xs">
+                                    {{assignment.score}}/{{assignment.points}}
+                                </td>
+                            </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                {{else}}
+                    <h3 class="title-no-class no-exam-assignments">{{t "assignments.noClasses"}}</h3>
+                {{/if}}
+            {{else}}
+                <p>
+                    {{t 'assignments.selfStudyText1'}}
+                    {{#link-to 'student.class'}}{{t 'assignments.selfStudyLink'}}{{/link-to}}
+                    {{t 'assignments.selfStudyText2'}}
+                </p>
+            {{/unless}}
+        </div>
+    {{/if}}
+</div>

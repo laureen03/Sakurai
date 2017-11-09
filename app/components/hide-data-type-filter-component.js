@@ -4,7 +4,10 @@
  * @extends Ember.Component
  */
 
-SakuraiWebapp.HideDataTypeFilterComponent = Ember.Component.extend({
+import Ember from "ember"; 
+import ChapterFilter from "models/chapter-filter";
+
+export default Ember.Component.extend({
 
     /*
      * === PROPERTIES
@@ -31,7 +34,7 @@ SakuraiWebapp.HideDataTypeFilterComponent = Ember.Component.extend({
     setupFilter: function() {
 
         var self = this,
-            dataPromise = Em.RSVP.hash({
+            dataPromise = Ember.RSVP.hash({
                 type: this.get('type'),
                 instructor: this.get('instructor'),
                 dataType: this.get('dataType')
@@ -52,14 +55,14 @@ SakuraiWebapp.HideDataTypeFilterComponent = Ember.Component.extend({
 
                         if (data.instructor.get('isInstructor') &&
                             filterAuthor.get('isAdmin') &&
-                            filterType == SakuraiWebapp.ChapterFilter.HIDDEN_FILTER) {
+                            filterType === ChapterFilter.HIDDEN_FILTER) {
                             // If the filter is of type 'hidden', then mark it visually but do not alter
                             // its 'checked' status
                             self.set('isInDevelopment', true);
                         }
 
 
-                        if ((filterType == data.type && filterAuthor.get('id') == data.instructor.get('id'))) {
+                        if ((filterType === data.type && filterAuthor.get('id') === data.instructor.get('id'))) {
 
                             self.sendAction('add', {
                                 id: item.get('id'),
@@ -76,7 +79,7 @@ SakuraiWebapp.HideDataTypeFilterComponent = Ember.Component.extend({
     }.on('init'),
 
     isFilterEnabled: function(id) {
-        var filter = undefined;
+        var filter;
         if (this.get('filterMap')) {
             filter = this.get('filterMap').findBy('dataType.id', id);
         }

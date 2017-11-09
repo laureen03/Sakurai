@@ -1,0 +1,24 @@
+<div id="answer-key-{{increment-int index}}" class="{{if answerKey.result.correct 'correct-answer' 'incorrect-answer'}}">
+	<div class="question-result answer-key-select-point">
+		<h4>{{t "quiz.question"}} {{increment-int index}}&nbsp;&nbsp;<small><a class="gray see-full-question" {{action "showFullQuestion" answerKey "question-hot-spot"}}>{{t "quiz.seeFullQuestion"}}</a></small></h4>
+		<p>{{safe-html answerKey.question.questionText}}</p>
+		<h5>{{t "quiz.youSelected"}}</h5>
+		<div>
+			<ul class="correct-response-list answer-choices clearfix">
+				<li class="select_point_answer">
+					{{#if answerKey.result.correct}}
+			    		<span class="circle-ok glyphicon glyphicon-ok"></span>
+			    	{{else}}
+			    		<span class="circle-wrong glyphicon glyphicon-remove"></span>
+			    	{{/if}}
+			    	<div class="image">
+						{{select-point-result urlImage=answerKey.question.questionMedia isAnswerKey=true correctResponse=answerKey.question.interactions.0.correctResponse result=answerKey.result idQuestion=answerKey.question.id}}
+						<span>{{t "quiz.yourSelectionGreenBox"}}</span>
+					</div>
+
+				</li>
+			</ul>
+			{{partial "question/explanation_remediation"}}
+		</div>
+	</div>
+</div>

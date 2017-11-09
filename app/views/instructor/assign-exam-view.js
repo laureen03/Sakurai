@@ -1,4 +1,8 @@
-SakuraiWebapp.InstructorAssignExamView = Ember.Component.extend(SakuraiWebapp.UserInterfaceFeaturesMixin, {
+import Ember from "ember";
+import UserInterfaceFeaturesMixin from "mixins/user-interface-features";
+
+export default Ember.Component.extend(
+    UserInterfaceFeaturesMixin, {
     layoutName: 'layout/forInstructorComplete',
     _controller: null,
 
@@ -15,10 +19,12 @@ SakuraiWebapp.InstructorAssignExamView = Ember.Component.extend(SakuraiWebapp.Us
         this.setupDateHours();
         this.disableEnterKey();
         if (this._controller.isEditMode) {
-            if (this._controller.assignment.get("timeLimit"))
+            if (this._controller.assignment.get("timeLimit")){
                 $('#timeLimitRadio').click();
-            else
+            }
+            else{
                 this._controller.assignment.set('timeLimit', this._controller.get("minutesLimit")[0]);
+            }
         }
 
         this.activeHeaderMenu("menu-assignExam");
@@ -33,7 +39,7 @@ SakuraiWebapp.InstructorAssignExamView = Ember.Component.extend(SakuraiWebapp.Us
     disableEnterKey : function(){
         $('#assign-an-exam').on("keyup keypress", function(e) {
             var code = e.keyCode || e.which;
-            if (code  == 13) {
+            if (code  === 13) {
                 e.preventDefault();
                 return false;
             }
@@ -70,7 +76,7 @@ SakuraiWebapp.InstructorAssignExamView = Ember.Component.extend(SakuraiWebapp.Us
             "No message"
         );
 
-        var validator = $("#assign-an-exam").validate({
+        $("#assign-an-exam").validate({
             ignore: 'input[type=hidden]',
             onsubmit: false,
             onkeyup: function(element) { $(element).valid(); },

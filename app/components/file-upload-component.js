@@ -3,7 +3,9 @@
  *
  * @extends Ember.Component
  */
-SakuraiWebapp.FileUploadComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
     /*
      * === PROPERTIES
      */
@@ -68,7 +70,7 @@ SakuraiWebapp.FileUploadComponent = Ember.Component.extend({
 
             Ember.Logger.debug('changing the uploaded image');
 
-            file = input.prop('files')[0]; // file object of element
+            var file = input.prop('files')[0]; // file object of element
 
             if (file.size < maxSize) {
 

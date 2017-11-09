@@ -1,0 +1,19 @@
+<div class="container enroll-container">
+
+	{{#if isSuccessCode}}
+		<h1 class="section-header dark">{{t "classes.classJoined"}}</h1>
+		<div class="success">{{t "classes.successJoined" className=classCreated.name}}</div>
+        <button type="submit" class="btn btn-blue auto-center" {{action "continueHMID"}}>{{t "classes.btnContinue"}}</button>
+
+	{{else}}
+        <h1 class="section-header dark">{{t "classes.joinClass"}}</h1>
+        <div>
+            <div>{{t "classes.classCodeExplanation"}}</div>
+            {{input id="classCode" name="classCode" placeholder=placeholder value=classCode}}
+            {{#if isFailedCode}}
+                <div class="error">{{failedMessage}}</div>
+            {{/if}}
+        </div>
+        <button type="submit" class="btn btn-blue auto-center" {{action "saveCode"}}>{{t "enroll.joinClass"}}</button>
+	{{/if}}
+</div>

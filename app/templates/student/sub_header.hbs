@@ -1,0 +1,114 @@
+{{#if isImpersonated}}
+    {{partial "instructor/subHeader"}}
+{{/if}}
+<!-- H E A D E R -->
+<div class="sub-header navbar-default student-submenu" role="banner">
+    <div class="container">
+        {{#unless isInFrame}}
+            <h1>
+                {{#if isStudentView}}
+                    <span class="student-view">{{t "haid.studentView"}}:</span>
+                {{/if}}
+                {{class.name}}
+                {{#if class.selfStudying}}
+                    <div class="pull-right self-study-join-max">
+                        {{#link-to "student.enroll" class="btn btn-blue"}}{{t "classes.joinClass"}}{{/link-to}}
+                    </div>
+                {{/if}}
+            </h1>
+            <div class="term-class">
+                {{#if class.selfStudying}}
+                    <label class="gray">{{t "classes.selfStudy"}}</label>
+                    <span class="self-study-join-min">&nbsp;&middot;&nbsp;</span>
+                    {{#link-to "student.enroll" class="orange self-study-join-min"}}{{t "classes.joinClass"}}{{/link-to}}
+                {{else}}
+                    <label class="gray">{{class.term}}</label>
+                    {{#if isImpersonated}}
+                        &nbsp;•&nbsp;
+                        <span class="student-name">{{t "header.viewingStudent"}}&nbsp;{{impersonatedUser.firstName}}&nbsp;{{impersonatedUser.lastName}}</span>
+                    {{/if}}
+                {{/if}}
+            </div>
+        {{else}}
+            {{#if isStudentView}}
+                <h2><span class="student-view">{{t "haid.studentView"}}:</span> {{class.name}}</h2>
+            {{/if}}
+        {{/unless}}
+
+        <ul class="menu-mob nav menu-dropdown menu-center" role="tablist">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    {{#if (is-equal applicationModule 'student-haid')}}
+                        {{t "header.howIDoing"}}
+                    {{/if}}
+                     {{#if (is-equal applicationModule 'student-history')}}
+                        {{#if isImpersonated}} {{t "header.howMyClassDoing"}} {{else}} {{t "header.howIDoing"}} {{/if}}
+                    {{/if}}
+                    {{#if (is-equal applicationModule 'student-section')}}
+                        {{t "header.practiceQuiz"}}
+                    {{/if}}
+                    {{#if (is-equal applicationModule 'student-metadata')}}
+                        {{t "header.practiceQuiz"}}
+                    {{/if}}
+                    {{#if (is-equal applicationModule 'exam-create')}}
+                        {{t "header.practiceExam"}}
+                    {{/if}}
+                    {{#if (is-equal applicationModule 'student-examReports')}}
+                        {{t "header.examReports"}}
+                    {{/if}}
+                    {{#if (is-equal applicationModule 'student-examHistory')}}
+                        {{t "header.examReports"}}
+                    {{/if}}
+                    {{#if (is-equal applicationModule 'student-assignments')}}
+                        {{t "header.assignments"}}
+                    {{/if}}
+                    {{#if (is-equal applicationModule 'student-assignment')}}
+                        {{t "header.assignments"}}
+                    {{/if}}
+                    &nbsp;<span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+
+                    <li> {{#link-to 'student.haid' class.id}}
+                            {{t "header.howIDoing"}}{{/link-to}}
+                    </li>
+
+                    <li>{{#link-to 'student.assignments' class.id}} {{t "header.assignments"}} {{/link-to}} </li>
+                    
+                    {{#unless isImpersonated}}
+                        {{metadata-fork-link data-class=class label='header.practiceQuiz'}}
+                    {{/unless}}
+
+                    {{#if isExamAllowed}}
+                        {{#unless isImpersonated}}
+                            <li>{{#link-to 'exam.create' class.id}} {{t "header.practiceExam"}} {{/link-to}}</li>
+                        {{/unless}}
+                        <li>{{#link-to 'student.examReports' class.id}} {{t "header.examReports"}} {{/link-to}}</li>
+                    {{/if}}
+                </ul>
+            </li>
+        </ul>
+
+        <nav class="collapse navbar-collapse" role="navigation">
+            <ul id="menu-primary-navigation" class="nav navbar-nav nav-student">
+                <li class="active menu-haid">
+                    {{#link-to 'student.haid' class.id}}
+                        {{t "header.howIDoing"}}{{/link-to}}
+                </li>
+                <li class="menu-assignments">{{#link-to 'student.assignments' class.id}}{{t "header.assignments"}}{{/link-to}}</li>
+                {{#unless isImpersonated}}
+                    {{metadata-fork-link data-component-class='menu-practiceQuiz'
+                                         data-class=class
+                                         label='header.practiceQuiz'}}
+                {{/unless}}
+
+                {{#if isExamAllowed}}
+                    {{#unless isImpersonated}}
+                        <li class="menu-exam ">{{#link-to 'exam.create' class.id}} {{t "header.practiceExam"}} {{/link-to}}</li>
+                    {{/unless}}
+                        <li class="menu-exam-reports">{{#link-to 'student.examReports' class.id}} {{t "header.examReports"}} {{/link-to}}</li>
+                {{/if}}
+            </ul>
+        </nav>
+    </div>
+</div>

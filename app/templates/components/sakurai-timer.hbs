@@ -1,0 +1,11 @@
+{{#if data-label}}
+    <span class="text">{{t data-label}}</span>
+{{/if}}
+<span class="time">{{timeString}}</span>
+
+{{#if data-hide-link}}
+<span class="toggle">
+    <a class="contract" {{action 'toggleView'}}>{{t "common.hide"}}</a>
+    <a class="expand" {{action 'toggleView'}}>{{t data-show-label}}</a>
+</span>
+{{/if}}

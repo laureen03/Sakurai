@@ -1,0 +1,16 @@
+{{#if questionReferences.length}}
+    <div class="references">
+        <h2>References</h2>
+        {{#each questionReferences as |reference|}}
+            <h4>{{reference.title}}</h4>
+            {{#if reference.text}}
+                {{textarea value=reference.text name="reference-text"}}
+            {{else if reference.publicationFacts}}
+                {{input type="text" value=reference.secondaryInfo placeholder="secondary reference information (e.g., table number, heading, etc.)"}}
+                {{input type="text" value=reference.pageNumber placeholder="page number"}}
+            {{else}}
+                {{textarea value=reference.text name="reference-text"}}
+            {{/if}}
+        {{/each}}
+    </div>
+{{/if}}

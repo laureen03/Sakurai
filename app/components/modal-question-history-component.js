@@ -4,7 +4,10 @@
  * @extends Ember.Component
  *
  */
-SakuraiWebapp.ModalQuestionHistoryComponent = Ember.Component.extend({
+import Ember from "ember"; 
+import QuestionAudit from "models/question-audit";
+
+export default Ember.Component.extend({
 
     /*
      * === PROPERTIES
@@ -81,7 +84,7 @@ SakuraiWebapp.ModalQuestionHistoryComponent = Ember.Component.extend({
         items = auditEvents.map( function(auditEvent) {
             return auditEvent.get('createdBy').then( function(user) {
                 var displayLabel = '',
-                    action = SakuraiWebapp.QuestionAudit.getAction(auditEvent.get('action')),
+                    action = QuestionAudit.getAction(auditEvent.get('action')),
                     username = user ? user.get('fullNameInformal'): null,
                     isMajorEdit = auditEvent.get('isMajorEdit'),
                     majorEditLabel = auditEvent.get('majorEditLabel');
@@ -102,7 +105,7 @@ SakuraiWebapp.ModalQuestionHistoryComponent = Ember.Component.extend({
             });
         });
 
-        Em.RSVP.Promise.all(items).then( function(itemsArray) {
+        Ember.RSVP.Promise.all(items).then( function(itemsArray) {
 
             var items = Ember.A(itemsArray);
 

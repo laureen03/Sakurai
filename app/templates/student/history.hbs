@@ -1,0 +1,255 @@
+<div class="container quiz-history">
+    {{#if isQuizHistory}}
+        <h3 class="margin-top-55">{{t "quizHistory.practiceQuizHistory"}}</h3>
+    {{/if}}
+    {{#if hasQuizzes}}
+        {{#if isQuizHistory}}
+            <div class="form-group">
+                <div class="qh-filter-dropdown-container pull-left select-topic">
+                    <span>{{t "quizHistory.searchQuizzes"}}</span>
+                    {{# if isCategoryEnabled }}
+                            {{my-select class="ml-select qh-filter-dropdown select-category __category__"
+                                        name="quiz_categories"
+                                        content=categoryList
+                                        optionValuePath = "id"
+                                        optionLabelPath = "name"
+                                        selectedValue = currentCategory
+                                        prompt=categoryPrompt}}
+
+                            {{my-select class="ml-select qh-filter-dropdown select-subcategory __subcategory__"
+                                        name="quiz_subcategories"
+                                        content=sortedSubCategoryList
+                                        optionValuePath = "id"
+                                        optionLabelPath = "name"
+                                        selectedValue = currentSubcategory
+                                        prompt=subcategoryPrompt
+                                        optionGroupPath="group"}}
+                    {{ else }}
+                        {{my-select class="ml-select qh-filter-dropdown select-subcategory __chapter__"
+                                    name="quiz_chapters"
+                                    content=sortedChapterList
+                                    optionValuePath = "id"
+                                    optionLabelPath = "name"
+                                    selectedValue = currentChapter
+                                    prompt=selectPrompt
+                                    optionGroupPath="group"}}
+                                    
+                    {{/if}}
+                    {{# if showAllQuizzesLink }}
+                        <a class="view-quiz-history highlight-link" {{action 'allQuizzes'}} href="#">
+                            {{t "quizHistory.allQuizzes"}}
+                        </a>
+                    {{/if}}
+                </div>
+            </div>
+        {{/if}}
+        {{#if quizzesML}}
+            <table class="table tablesorter quizzesML-table">
+                <thead>
+                <tr>
+                    <th class="header sort_quizIndex tleft">
+                        <a {{action 'onSortByCriteria' 'ML' 'quizIndex'}} href="#">
+                            <span class="quizIndex-action action">{{t "quizHistory.name"}}</span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs header sort_isComplete">
+                        <a {{action 'onSortByCriteria' 'ML' 'isComplete'}} href="#">
+                            <span class="isComplete-action action">{{t "quizHistory.status"}}</span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs header sort_startedOn">
+                        <a {{action 'onSortByCriteria' 'ML' 'startedOn'}} href="#">
+                            <span class="startedOn-action action">{{t "quizHistory.startDate"}}</span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs header sort_correctResultsCount">
+                        <a {{action 'onSortByCriteria' 'ML' 'correctResultsCount'}} href="#">
+                            <span class="correctResultsCount-action action">{{t "quizHistory.noCorrect"}}</span>
+                        </a>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each quizzesML as |quiz|}}
+                    <tr id="quiz-row-{{quiz.quizIndex}}">
+                        <td class="quiz-name tleft">
+                            {{#if quiz.isComplete }}
+                                <h5><a class="gray" {{action 'viewResults' quiz.id false}} href="#">{{t "quizHistory.quiz"}}&nbsp;{{quiz.quizIndex}}</a></h5>
+                            {{else}}
+                                <h5>{{t "quizHistory.quiz"}}&nbsp;{{quiz.quizIndex}}&nbsp;-&nbsp;
+                                    <a {{action 'goToQuiz' quiz.id false}} class="link-finish-quiz" href="#">
+                                        {{t "quizHistory.finishQuiz"}}</a>
+                                </h5>
+                            {{/if}}
+                            {{#each quiz.chapters as |chapter|}}
+                                <label class="gray">{{chapter.name}}</label>
+                            {{/each}}
+                            {{#each quiz.termTaxonomies as |taxonomy|}}
+                                <label class="gray">{{taxonomy.name}}</label>
+                            {{/each}}
+                        </td>
+                        <td class="hidden-xs">
+                            {{#if quiz.isComplete}}
+                                <span class="label label-success">{{t "assignments.complete"}}</span>
+                            {{else}}
+                                <span class="label label-warning">{{t "quizHistory.incomplete"}}</span>
+                            {{/if}}
+                        </td>
+                        <td class="hidden-xs date"><span class="date-format">{{format-date quiz.startedOn}}</span></td>
+                        <td class="hidden-xs">{{quiz.numComplete}}</td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+            
+        {{else}}
+            <h4>{{t "quizHistory.noQuizzesTaken"}}</h4>
+        {{/if}}
+    {{/if}}
+    <div id="pager-ML" class="pull-right"></div>
+    {{#if isQuizHistory}}
+        {{#if hasQuizzes}}
+            {{#unless class.selfStudying}}
+                <h3 class="margin-top-55 clearfix">{{t "quizHistory.qcAssignmentQuizHistory"}}</h3>
+
+                {{#if quizzesQC}}
+                    <table class="table tablesorter quizzesQC-table">
+                        <thead>
+                        <tr>
+                            <th class="header sort_quizIndex tleft">
+                                <a {{action 'onSortByCriteria' 'QC' 'quizIndex'}} href="#">
+                                    <span class="quizIndex-action action">{{t "quizHistory.name"}}</span>
+                                </a>
+                            </th>
+                            <th class="hidden-xs header sort_isComplete">
+                                <a {{action 'onSortByCriteria' 'QC' 'isComplete'}} href="#">
+                                    <span class="isComplete-action action">{{t "quizHistory.status"}}</span>
+                                </a>
+                            </th>
+                            <th class="hidden-xs header sort_startedOn">
+                                <a {{action 'onSortByCriteria' 'QC' 'startedOn'}} href="#">
+                                    <span class="startedOn-action action">{{t "quizHistory.startDate"}}</span>
+                                </a>
+                            </th>
+                            <th class="hidden-xs header sort_correctResultsCount">
+                                <a {{action 'onSortByCriteria' 'QC' 'correctResultsCount'}} href="#">
+                                    <span class="correctResultsCount-action action">{{t "quizHistory.noCorrect"}}</span>
+                                </a>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each quizzesQC as |quiz|}}
+                            {{#if quiz.assignment.isQuestionCollectionAssignment}}
+                                <tr id="quiz-row-{{quiz.quizIndex}}">
+                                    <td class="quiz-name tleft">
+                                        {{#if quiz.isComplete}}
+                                            <h5><a class="gray" {{action 'viewResults' quiz.id false}} href="#">{{quiz.assignment.name}}</a></h5>
+                                        {{else}}
+                                            {{#if quiz.assignment.isAvailable}}
+                                                <h5>{{quiz.assignment.name}}
+                                                    &nbsp;-&nbsp;
+                                                    <a {{action 'goToQuiz' quiz.id false}} class="link-finish-quiz" href="#">
+                                                        {{t "quizHistory.finishQuiz"}}</a>
+                                                </h5>
+                                            {{else}}
+                                                <h5>{{#link-to 'student.assignment' quiz.class.id quiz.assignment.id class='gray'}}
+                                                    {{quiz.assignment.name}}
+                                                {{/link-to}}
+                                                </h5>
+                                            {{/if}}
+                                        {{/if}}
+                                    </td>
+                                    <td class="hidden-xs">
+                                        {{#if quiz.isComplete}}
+                                            <span class="label label-success">{{t "assignments.complete"}}</span>
+                                        {{else}}
+                                            <span class="label label-warning">{{t "quizHistory.incomplete"}}</span>
+                                        {{/if}}
+                                    </td>
+                                    <td class="hidden-xs date"><span class="date-format">{{format-date quiz.startedOn}}</span></td>
+                                    <td class="hidden-xs">{{quiz.numComplete}}</td>
+                                </tr>
+                            {{/if}}
+                        {{/each}}
+                        </tbody>
+                    </table>
+                    <div id="pagination-metadataQC"></div>
+                {{else}}
+                    <h4>{{t "quizHistory.noQuizzesTaken"}}</h4>
+                {{/if}}
+            {{/unless}}
+        {{/if}}
+        <div id="pager-QC" class="pull-right"></div>
+
+        {{#if hasQuizzes}}
+            {{#if quizzesRR}}
+                <h3 class="margin-top-55">{{t "quizHistory.reviewRefreshHistory"}}</h3>
+                <table class="table tablesorter quizzesRR-table">
+                    <thead>
+                    <tr>
+                        <th class="header sort_quizIndex tleft">
+                            <a {{action 'onSortByCriteria' 'RR' 'quizIndex'}} href="#">
+                                <span class="quizIndex-action action">{{t "quizHistory.name"}}</span>
+                            </a>
+                        </th>
+                        <th class="hidden-xs header sort_isComplete">
+                            <a {{action 'onSortByCriteria' 'RR' 'isComplete'}} href="#">
+                                <span class="isComplete-action action">{{t "quizHistory.status"}}</span>
+                            </a>
+                        </th>
+                        <th class="hidden-xs header sort_startedOn">
+                            <a {{action 'onSortByCriteria' 'RR' 'startedOn'}} href="#">
+                                <span class="startedOn-action action">{{t "quizHistory.startDate"}}</span>
+                            </a>
+                        </th>
+                        <th class="hidden-xs header sort_correctResultsCount">
+                            <a {{action 'onSortByCriteria' 'RR' 'correctResultsCount'}} href="#">
+                                <span class="correctResultsCount-action action">{{t "quizHistory.noCorrect"}}</span>
+                            </a>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each quizzesRR as |quiz|}}
+                        <tr id="quiz-row-{{quiz.quizIndex}}">
+                            <td class="quiz-name tleft">
+                                {{#if quiz.isComplete }}
+                                    <h5><a class="gray" {{action 'viewResults' quiz.id true}} href="#">{{t "quizHistory.quiz"}}&nbsp;{{quiz.quizIndex}}</a></h5>
+                                {{else}}
+                                    <h5>{{t "quizHistory.quiz"}}&nbsp;{{quiz.quizIndex}}&nbsp;-&nbsp;
+                                        <a {{action 'goToQuiz' quiz.id true}} class="link-finish-quiz" href="#">
+                                            {{t "quizHistory.finishQuiz"}}</a>
+                                    </h5>
+                                {{/if}}
+                                {{#each quiz.chapters as |chapter|}}
+                                    <label class="gray">{{chapter.name}}</label>
+                                {{/each}}
+                                {{#each quiz.termTaxonomies as |taxonomy|}}
+                                    <label class="gray">{{taxonomy.name}}</label>
+                                {{/each}}
+                            </td>
+                            <td class="hidden-xs">
+                                {{#if quiz.isComplete}}
+                                    <span class="label label-success">{{t "assignments.complete"}}</span>
+                                {{else}}
+                                    <span class="label label-warning">{{t "quizHistory.incomplete"}}</span>
+                                {{/if}}
+                            </td>
+                            <td class="hidden-xs date"><span class="date-format">{{format-date quiz.startedOn}}</span></td>
+                            <td class="hidden-xs">{{quiz.numComplete}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>            
+            {{/if}}
+        {{/if}}
+        <div id="pager-RR" class="pull-right"></div>
+
+        {{#unless hasQuizzes}}
+             <h4 class="no-quizzes">
+                {{t "quizHistory.youHaveNotQuizzes"}} {{metadata-fork-link tagName="span" data-class=class label='quizHistory.takePracticeQuiz'}}
+            </h4>
+        {{/unless}}
+    {{/if}}
+</div>

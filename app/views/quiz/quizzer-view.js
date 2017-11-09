@@ -1,4 +1,8 @@
-SakuraiWebapp.QuizQuizzerView = Ember.Component.extend({
+import Ember from "ember";
+import Exam from "models/exam";
+import Quiz from "models/quiz";
+
+export default Ember.Component.extend({
 
     timeRemaining: 0,
     timeOnCurrentQuestion: 0,
@@ -11,7 +15,7 @@ SakuraiWebapp.QuizQuizzerView = Ember.Component.extend({
         $(document).on('visibilitychange', function () {
             if ((selectedQuiz) && (selectedQuiz.get("hasAssignment") && selectedQuiz.get("assignment").get("hasTimeLimit")) ||
                 controller.get("isExam")) { //Only add this event listener when the quiz has timeLimit or is an exam
-                if (document.visibilityState == 'hidden') {
+                if (document.visibilityState === 'hidden') {
                     $('.sakurai-timer').css("visibility", "hidden");
                     controller.set("timerUpdating", true);
                     if (controller.get("isExam")) { //Save Current time in exam
@@ -21,11 +25,11 @@ SakuraiWebapp.QuizQuizzerView = Ember.Component.extend({
                 } else {
                     if (selectedQuiz){
                         if (controller.get("isExam")) {
-                            SakuraiWebapp.Exam.getTimeRemaining(selectedQuiz.get("id")).then(function (response) {
+                            Exam.getTimeRemaining(selectedQuiz.get("id")).then(function (response) {
                                 self.activeTimer(response);
                             });
                         } else {
-                            SakuraiWebapp.Quiz.getTimeRemaining(selectedQuiz.get("id")).then(function (response) {
+                            Quiz.getTimeRemaining(selectedQuiz.get("id")).then(function (response) {
                                 self.activeTimer(response);
                             });
                         }

@@ -1,0 +1,119 @@
+<section class="haid-container">
+    {{#if impersonatedHeaderEnabled}}
+        {{partial "student/haid_impersonated_header"}}
+    {{/if}}
+    <div class="container cf">
+        <div class="row">
+            <div class="col-md-8 clearfix">
+                {{#if framedHeaderEnabled}}
+                    {{partial "student/haid_framed_header"}}
+                {{/if}}
+                <div class="graph-container">{{overall-performance overallPerformance=overallPerformance store=controller.store isInstructor=false}}</div>
+                <a href="#" class="gray pull-left overall-whats-btn" data-target="#whatsthis-mdl" data-toggle="modal">{{t "whatIsThis"}}</a>
+                {{#link-to 'student.history' class.id (query-params categoryId='' subcategoryId='' chapterId='') class="pull-right view-quiz-history highlight-link"}}{{t "haid.viewQuiz"}}{{/link-to}}
+            </div>
+            <div class="col-md-4 clearfix haid-strengths-weaknesses">
+                {{#if usesChapter}}
+                    {{strengths-weaknesses
+                        data-stats=chapterStats
+                        data-is-impersonated=isImpersonated
+                        data-label-title=terminologyTermPlural
+                        data-label-btn=terminologyTermPlural
+                        data-is-metadata-allowed=isMetadataAllowed
+                        data-type="nursing_topics"}}
+                {{else}}
+                    {{strengths-weaknesses
+                        data-stats=chapterStats
+                        data-is-impersonated=isImpersonated
+                        data-label-title-i18n="nursing_topics.other"
+                        data-label-btn=terminologyTermPlural
+                        data-is-metadata-allowed=isMetadataAllowed
+                        data-type="nursing_topics"}}
+                {{/if}}
+
+                {{#if isMetadataAllowed}}
+                    {{#each termTaxonomiesAllowedForQuizzing as |termTaxonomy|}}
+                        {{strengths-weaknesses
+                            data-stats=termTaxonomyStats
+                            data-is-impersonated=isImpersonated
+                            data-label-title=termTaxonomy.label
+                            data-label-btn=termTaxonomy.label
+                            data-class=class
+                            data-is-metadata-allowed=isMetadataAllowed
+                            data-filter-type=true
+                            data-type=termTaxonomy.key}}
+                    {{/each}}
+                {{/if}}
+
+                <h4>{{t "haid.assigmentStats"}}</h4>
+                {{#if class.selfStudying}}
+                    <div class="self-student">
+                        {{t "haid.selfStudent"}}
+                        ({{t "haid.selfStudentIns1"}}
+                        {{#if ccmJoinClassEnabled}}
+                            {{ccm-link
+                            data-ccm-key="joinClass"
+                            data-class-names="join-class"
+                            data-i18n-label="haid.selfStudentClickHere"
+                            data-class=class data-product-isbn=isbn }}
+                        {{else}}
+                            {{#link-to 'student.enroll'}}{{t "haid.selfStudentClickHere"}}{{/link-to}}
+                        {{/if}}
+
+                        {{t "haid.selfStudentIns2"}})
+
+                    </div>
+                {{else}}
+                    <div class="assigment-stats clearfix">
+                        <div class="pull-left stat-container my-stats">
+                            <div>{{t "haid.you"}}</div>
+                            {{#if assignmentStats.possiblePoints}}
+                                <div class="number pull-left">{{numeral-format assignmentStats.averageScore '0.00'}}</div>
+                                <span class="porcentage pull-right">%</span>
+                            {{else}}
+                                <div class="number">&ndash;</div>
+                            {{/if}}
+                        </div>
+                        <div class="pull-left stat-container class-stats">
+                            <div>{{t "haid.classAverage"}}</div>
+                            {{#if assignmentStats.classPossiblePoints}}
+                                <div class="number pull-left">{{numeral-format assignmentStats.classAverageScore '0.00'}}</div>
+                                <span class="porcentage pull-right">%</span>
+                            {{else}}
+                                <div class="number">&ndash;</div>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{#link-to 'student.assignments' class.id class="open-assigments"}}
+                        {{t "haid.view"}}&nbsp;{{assignmentStats.assignmentsOpen}}&nbsp;{{t "haid.open"}} {{t "haid.assignments"}}
+                    {{/link-to}}
+                {{/if}}
+
+            </div>
+        </div>
+
+        {{haid-performance-bars
+                data-stats=chapterStats
+                data-label-title=terminologyTermPlural
+                data-self-studying=class.selfStudying
+                data-type="chapters"}}
+
+
+        {{#if isMetadataAllowed}}
+            {{#each termTaxonomiesAllowedForQuizzing as |termTaxonomy|}}
+                <div class="haid-{{termTaxonomy.key}}-bars">
+                    {{haid-performance-bars
+                        data-stats=termTaxonomyStats
+                        data-label-title = termTaxonomy.label
+                        data-self-studying=class.selfStudying
+                        data-filter-type=true
+                        data-type=termTaxonomy.key}}
+                </div>
+            {{/each}}
+        {{/if}}
+
+    </div>
+    {{simple-modal idElement='whatsthis-mdl' title="haid.titleMasteryModal" bodyHtml=bodyMasteryModal}}
+    {{simple-modal idElement='whatsthis-performance' titleHtml=whatIsThisPerformanceTitle body="haid.bodyPerformanceModal"}}
+    {{simple-modal idElement='whatsthis-chapter' title="haid.titleChapterModal" bodyHtml=bodyChapterModal}}
+</section>

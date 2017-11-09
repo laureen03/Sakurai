@@ -5,8 +5,11 @@
  *
  * @param customClasses {ARRAY} List of selected clases
  */
+import Ember from "ember"; 
+import DateUtil from "utils/date-util";
+import Assignment from "models/assignment";
 
-SakuraiWebapp.ManageDateClassesComponent = Ember.Component.extend({
+export default Ember.Component.extend({
 
 	/**
 	* List of classes selected
@@ -52,7 +55,7 @@ SakuraiWebapp.ManageDateClassesComponent = Ember.Component.extend({
     * Available list of hours
     **/
     timeList: Ember.computed(function(){
-        return SakuraiWebapp.Assignment.availableHoursList()
+        return Assignment.availableHoursList();
     }),
 
 
@@ -81,7 +84,7 @@ SakuraiWebapp.ManageDateClassesComponent = Ember.Component.extend({
                 return date.valueOf() <= checkin.getDate().valueOf() ? 'disabled' : '';
             }
         }).on('changeDate', function(ev) {
-            if (ev.date != null && (ev.date.valueOf() < checkin.getDate().valueOf())) {
+            if (ev.date !== null && (ev.date.valueOf() < checkin.getDate().valueOf())) {
                 var newDate = new Date(ev.date);
                 newDate.setDate(newDate.getDate() - 1);
                 checkin.setDate(newDate);
@@ -97,7 +100,7 @@ SakuraiWebapp.ManageDateClassesComponent = Ember.Component.extend({
             }
         }).on('changeDate', function(ev) {
 
-            if (ev.date != null && (ev.date.valueOf() > checkout.getDate().valueOf())) {
+            if (ev.date !== null && (ev.date.valueOf() > checkout.getDate().valueOf())) {
                 var newDate = new Date(ev.date);
                 newDate.setDate(newDate.getDate() + 1);
                 checkout.setDate(newDate);
@@ -111,7 +114,7 @@ SakuraiWebapp.ManageDateClassesComponent = Ember.Component.extend({
         $('#datesClass'+ classId +' .dueDate').datepicker('setDate', component.get("defaultDueDate"));
 
         //Set Timezones
-        $('#datesClass'+ classId +' .tZLabel').text(SakuraiWebapp.DateUtil.create({}).zoneAbbr(component.get("defaultTimeZone")));
+        $('#datesClass'+ classId +' .tZLabel').text(DateUtil.create({}).zoneAbbr(component.get("defaultTimeZone")));
         $('#datesClass'+ classId +' .tZLabel').data("timezone", component.get("defaultTimeZone"));
 
         //Set hours
@@ -122,8 +125,8 @@ SakuraiWebapp.ManageDateClassesComponent = Ember.Component.extend({
 
     actions:{
         setTimeZone: function(timeZone, classId){
-            $("#firstTimeZone"+classId).text(SakuraiWebapp.DateUtil.create({}).zoneAbbr(timeZone));
-            $("#secondTimeZone"+classId).text(SakuraiWebapp.DateUtil.create({}).zoneAbbr(timeZone));
+            $("#firstTimeZone"+classId).text(DateUtil.create({}).zoneAbbr(timeZone));
+            $("#secondTimeZone"+classId).text(DateUtil.create({}).zoneAbbr(timeZone));
             $("#secondTimeZone"+classId).data( "timezone", timeZone);
         }
     }

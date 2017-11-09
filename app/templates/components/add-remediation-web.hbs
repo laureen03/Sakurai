@@ -1,0 +1,13 @@
+<div class="clearfix">
+	<form id="addWebRemediationForm">
+		<div class="form-group">
+			<label class="col-sm-1 control-label">{{t "questionLibrary.createQuestions.linkName"}}</label>
+			<div class="col-sm-11">{{input id="remediationName" name="remediationName" type="text" value=remediationName}}</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-1 control-label">{{t "questionLibrary.createQuestions.linkUrl"}}</label>
+			<div class="col-sm-11">{{input id="remediationUrl" name="remediationUrl" type="text" value=remediationUrl}}</div>
+		</div>
+		<button type="button" class="btn btn-default pull-right" {{action 'addWebType'}}>{{t "add"}}</button>
+	</form>
+</div>

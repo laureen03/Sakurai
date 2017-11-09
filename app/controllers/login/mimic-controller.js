@@ -1,5 +1,4 @@
 import Controller from '@ember/controller';
-import Ember from 'ember';
 import ControllerMixin from 'mixins/controller';
 import LoginMixin from 'mixins/login';
 

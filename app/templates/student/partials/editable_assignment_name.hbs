@@ -1,0 +1,8 @@
+{{#if activePencil}}
+	<h2>{{assignment.name}}&nbsp;<a class="glyphicon glyphicon-pencil medium-icon text-muted gray" {{action "editQCAssignment"}}></a></h2>
+{{else}}
+	{{input id="nameEdited" name="nameEdited" value=assignment.name insert-newline='showPencil'}}
+	{{#if nameError}}
+		<label class="error">{{t 'assignQuiz.assignmentNameErrors.maxRequired'}}</label>
+	{{/if}}
+{{/if}}

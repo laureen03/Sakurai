@@ -5,7 +5,9 @@
  * @extends Ember.Component
  *
  */
-SakuraiWebapp.QuestionExplanationComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 
     classNames: ['question-explanation'],
     classNameBindings: ['component-class'],
@@ -28,7 +30,7 @@ SakuraiWebapp.QuestionExplanationComponent = Ember.Component.extend({
     hasFeedback: Ember.computed('data-feedback', function(){
         var feedbackItems = this.get('data-feedback');
 
-        if (feedbackItems == undefined || !feedbackItems.length) {
+        if (feedbackItems === undefined || !feedbackItems.length) {
             return false;
         }
 

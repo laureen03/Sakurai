@@ -1,0 +1,189 @@
+<div class="container assignment-summary">
+    <div class="assignment-info clearfix margin-top-55">
+
+        <div class="assignment-content one-target clearfix">
+            <div class="name">
+                {{t "assignmentSummary.examHeader"}}
+                <h2>{{assignment.name}}</h2>
+                <span class="total_questions">{{assignment.numberQuestion}} {{t "assignExam.questionsTitle"}}</span>
+            </div>
+            <div class="target">
+                <div class="targets">
+                    {{t "assignmentSummary.examClassAverage"}}
+                    <div class="ml">
+                    {{#if assignment.totalCompleted}}
+                        {{numeral-format assignment.classAverageMasteryLevel '0.0'}}
+                    {{else}} 1.0 {{/if}}</div>
+                </div>
+            </div>
+        </div>
+        {{partial "instructor/partial/assignment_summary_header"}}
+    </div>
+    {{#if assignment.isStarted}}
+        {{export-csv-link
+            assignment=assignment
+            type="exam"}}
+    {{else if assignment.isPastDue}}
+        {{export-csv-link
+            assignment=assignment
+            type="exam"}}
+    {{/if}}
+    <div class="margin-top-55 student-results exam-assignment">
+        <h2>{{t "assignmentSummary.examStudentResultsHeader"}}</h2>
+        {{#if studentResultsSortable.collection}}
+            <table class="table tablesorter studentResults-table">
+                <thead>
+                <tr>
+                    <th class="header sort_user_fullName">
+                        <a {{action 'onSortByCriteria' 'user.fullName'}}>
+                            <span class="fullName-action action">{{t "assignmentSummary.studentResultsTable.name"}}</span>
+                        </a>
+                    </th>
+                    <th class="header sort_masteryLevel">
+                        <a {{action 'onSortByCriteria' 'masteryLevel' }}>
+                            <span class="masteryLevel-action action">
+                                {{#if assignment.isPastDue }}
+                                    {{t "assignmentSummary.studentResultsTable.masteryLevelAtDueDate"}}
+                                {{else}}
+                                    {{t "assignmentSummary.studentResultsTable.currentMasteryLevel"}}
+                                {{/if}}
+                            </span>
+                        </a>
+                    </th>
+                    <th class="header sort_minToComplete">
+                        <a {{action 'onSortByCriteria' 'minToComplete' }}>
+                            <span class="minToComplete-action action">{{t "assignmentSummary.studentResultsTable.timeToComplete"}}</span>
+                        </a>
+                    </th>
+                    <th class="header sort_startDate">
+                        <a {{action 'onSortByCriteria' 'startDate' }}>
+                            <span class="startDate-action action">{{t "assignmentSummary.studentResultsTable.startDate"}}</span>
+                        </a>
+                    </th>
+                    <th class="header sort_lastExamAt">
+                        <a {{action 'onSortByCriteria' 'lastExamAt' }}>
+                            <span class="lastExamAt-action action">{{t "assignmentSummary.studentResultsTable.timeOfLastExam"}}</span>
+                        </a>
+                    </th>
+                    <th class="header sort_questionsCorrect">
+                        <a {{action 'onSortByCriteria' 'questionsCorrect' }}>
+                            <span class="questionsCorrect-action action">{{t "assignmentSummary.studentResultsTable.correctAnswersRatio"}}</span>
+                        </a>
+                    </th>
+
+                    <th class="hidden-xs header sort_remediationViews">
+                        <a {{action 'onSortByCriteria' 'remediationViews' }}>
+                            <span class="remediationViews-action action">{{t "assignmentSummary.studentResultsTable.remediationViews"}}</span>
+                        </a>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each studentResultsSortable.collection as |studentResult index|}}
+                    <tr data-pos="{{index}}">
+                        <td class="quiz-name">
+                            {{studentResult.user.fullName}}
+                        </td>
+                        <td>
+                            {{#if studentResult.status}}
+                                {{#if studentResult.masteryLevel }}
+                                    {{numeral-format studentResult.masteryLevel '0.00'}}
+                                {{else}}
+                                    &mdash;
+                                {{/if}}
+                            {{else}}
+                                &mdash;
+                            {{/if}}
+                        </td>
+                        <td>
+                            {{#if studentResult.status}}
+                                {{#if studentResult.isComplete}}
+                                    {{#if studentResult.timeToComplete}}
+                                        {{studentResult.timeToComplete}}
+                                    {{else}}
+                                        &mdash;
+                                    {{/if}}
+                                {{else if studentResult.isInCompleted}}
+                                    {{t "assignmentSummary.studentResultsTable.notCompleted"}}
+                                {{else if studentResult.isPastDue}}
+                                    {{t "assignmentSummary.studentResultsTable.notCompleted"}}
+                                {{else if studentResult.isAutoCompleted}}
+                                    &mdash;
+                                {{else}}
+                                    &mdash;
+                                {{/if}}
+                            {{else}}
+                                &mdash;
+                            {{/if}}
+                        </td>
+                        <td class="last-exam-at">
+                            <span class="date-format">
+                            {{#if studentResult.startDate}}
+                                {{format-date studentResult.startDate}}
+                            {{else}}
+                                &mdash;
+                            {{/if}}
+                            </span>
+                        </td>
+                        <td class="last-exam-at">
+                            <span class="date-format">
+                                {{#if studentResult.lastQuestionSubmittedTime}}
+                                    {{format-date studentResult.lastQuestionSubmittedTime}}
+                                {{else}}
+                                    &mdash;
+                                {{/if}}
+                            </span>
+                        </td>
+                        <td class="questions-answered">
+                            {{#if studentResult.questionsAnswered}}
+                                {{studentResult.questionsCorrect}} of {{studentResult.questionsAnswered}}
+                            {{else}}
+                                &mdash;
+                            {{/if}}
+
+                        </td>
+                        <td>
+                            {{#if studentResult.remediationViews}}
+                                {{studentResult.remediationViews}}
+                            {{else}}
+                                &mdash;
+                            {{/if}}
+                        </td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        {{else}}
+            <h5>{{t "assignmentSummary.noStudentsEnrolled"}}</h5>
+        {{/if}}
+    </div>
+    <div class="performances bar-graph-container">
+        <div class="performance-chapter">
+            <div class="header">
+                <h2>
+                    {{t "assignmentSummary.performanceByClientNeeds"}}
+                </h2>
+                <a href="#" data-target="#whatsthis-performance" data-toggle="modal">{{t "whatIsThis"}}</a>
+            </div>
+            <div class="content">
+                {{#each stats.termTaxonomyPerformances as |performance|}}
+                    {{#if performance.termTaxonomy.isClientNeeds}}
+                    <div class="unit">
+                        {{performance-graph
+                            data-performance=performance
+                            data-performance-name=performance.termTaxonomy.name
+                            data-value-property="classAverage"
+                            data-highlight-from=thresholdLowerLimit
+                            data-highlight-to=thresholdUpperLimit
+                            data-highlight-text="common.approximatePassingThreshold" }}
+                    </div>
+                    {{/if}}
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    <div class="btn-box">
+        {{#link-to 'instructor.examSummary' class.id class="btn btn-blue"}}{{t "assignmentSummary.examBtnText"}}{{/link-to}}
+    </div>
+    {{simple-modal idElement="whatsthis-performance" title="assignmentSummary.titlePerformanceModal" body="assignmentSummary.bodyPerformanceModal"}}
+</div>

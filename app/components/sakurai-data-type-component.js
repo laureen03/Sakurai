@@ -15,7 +15,9 @@
  *
  */
 
-SakuraiWebapp.SakuraiDataTypeComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 
     tagName: 'span',
 
@@ -38,14 +40,16 @@ SakuraiWebapp.SakuraiDataTypeComponent = Ember.Component.extend({
         // TODO: This would ideally be:
         // if (product.get('isDataTypeSections')) however, if product.settings.defaultDataType
         // is not defined then it's default value becomes 'nursing_topics' so checking for that as well
-        if (dataType == 'sections' || dataType == 'nursing_topics') {
+        if (dataType === 'sections' || dataType === 'nursing_topics') {
             chapterTerminology = settings && settings.terminology && settings.terminology.chapter || null;
             defaultTerminology = I18n.t('chapters', { count: count });
             
-            if (chapterTerminology)
+            if (chapterTerminology){
                 dataTypeName = count > 1 ? Ember.String.pluralize(chapterTerminology) : Ember.String.singularize(chapterTerminology);
-            else
+            }
+            else{
                 dataTypeName = defaultTerminology;
+            }
 
         } else {
             dataTypeName = I18n.t(dataType, { count: count });

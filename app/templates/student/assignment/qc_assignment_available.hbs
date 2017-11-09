@@ -1,0 +1,27 @@
+<div class="assignment-info question-collection clearfix">
+
+    {{partial "student/partials/qc_assignment_header"}}
+
+    <div class="details">
+        {{#if assignment.hasTimeLimit}}
+            {{t "assignment.detail.timedAssignment" minutes=assignment.timeLimit}}
+        {{else}}
+            {{t "assignment.detail.untimedAssignment"}}
+        {{/if}}
+        <br>
+        {{t "assignment.detail.completeBy"}}
+        <span class="highlight"><strong>{{format-date assignment.dueDate}}</strong></span>
+    </div>
+</div>
+<div class="footer">
+    <div class="btn-box">
+        {{#if assignment.quiz}}
+            <button class="btn btn-blue start-quiz" {{action "goToQuiz" assignment.quiz}}>{{t "assignment.finishQuiz"}}</button>
+        {{else}}
+            {{async-button data-button-class="btn btn-blue start-quiz"
+                       data-text="assignment.startQuiz"
+                       action="startQuiz" }}
+        {{/if}}
+
+    </div>
+</div>

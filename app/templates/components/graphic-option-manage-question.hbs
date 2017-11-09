@@ -1,0 +1,66 @@
+<div>
+    <h2 class="margin-top-55">{{t "questionLibrary.createQuestion"}}</h2>
+    <form role="form" class="question-form">
+
+        {{partial "components/manage_question/question_text"}}
+        {{partial "components/manage_question/question_media"}}
+
+        <div class="interaction clearfix">
+            <div class="clearfix">
+                <div class="text-section">
+                    <h4 class="bottom-position">{{t "questionLibrary.createQuestions.answerChoices"}}</h4>
+                    {{#if answerChoiceInvalid}}
+                        <label id="answer-error" class="error-label">{{t "questionLibrary.createQuestions.answerChoiceRequired"}}</label>
+                    {{/if}}
+                </div>
+                <div class="options-section">
+                    <h4 class="bottom-position">{{t "questionLibrary.createQuestions.correct"}}</h4>
+                </div>
+                <div class="options-section">
+                    <h4>{{t "questionLibrary.createQuestions.dontShuffle"}}</h4>
+                </div>
+            </div>
+
+            {{#each answerChoices as |answerChoice|}}
+                <div class="answer-choice">
+                <span class="text-section">
+                    {{file-upload
+                        btn-label="common.chooseFile"
+                        remove-label="common.remove"
+                        file-information=answerChoice.image}}
+                </span>
+                <span class="options-section">
+                    {{radio-button name="correct-response-radio" value=answerChoice.id checked=correctResponseVal}}
+                </span>
+                <span class="options-section">
+                    {{input type="checkbox" checked=answerChoice.fixed}}
+                </span>
+                </div>
+            {{/each}}
+
+            <button class="btn btn-default add-distractor hidden">{{t "questionLibrary.createQuestions.addDistractor"}}</button>
+        </div>
+
+
+        {{partial "components/manage_question/question_explanation"}}
+        {{partial "components/manage_question/question_references"}}
+        {{partial "components/manage_question/question_remediation_links"}}
+        {{partial "components/manage_question/question_taxonomies"}}
+        {{partial "components/manage_question/question_learning_objectives"}}
+        {{#if data-is-admin}}
+            {{partial "components/manage_question/question_product_association"}}
+        {{/if}}
+        {{partial "components/manage_question/question_actions"}}
+
+    </form>
+
+    <!--MODAL FOR PREVIEW-->
+    {{full-question
+        isPreview=true
+        isFullQuestion=true
+        componentName="question-choice"
+        model=data-question
+        isMultiple=false}}
+
+</div>
+

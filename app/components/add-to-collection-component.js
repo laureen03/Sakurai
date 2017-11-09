@@ -1,4 +1,6 @@
-SakuraiWebapp.AddToCollectionComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 	/**
      * @property {String} search Criteria for textfield 
      */
@@ -26,7 +28,7 @@ SakuraiWebapp.AddToCollectionComponent = Ember.Component.extend({
     	var component = this, 
     		searchQCTerm = component.get('searchQCTerm');
     		
-    	return component.get('data-questionSetsEnabled').filter(function(item, index, enumerable){
+    	return component.get('data-questionSetsEnabled').filter(function(item){
 			return (item.get('name').toLowerCase().indexOf(searchQCTerm.toLowerCase()) !== -1);
 		});
 

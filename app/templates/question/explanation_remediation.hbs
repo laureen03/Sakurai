@@ -1,0 +1,61 @@
+{{#if  answerKey.question.feedbacks}}
+<h5>
+    <a href="#" class="no-underline glyphicon glyphicon-play arrow-explanation-{{answerKey.question.id}}" {{action 'onSectionDisplay' answerKey.question.id 'explanation'}}></a>
+    &nbsp;{{t "quiz.explanation"}}</h5>
+    <div id="explanation-content-{{answerKey.question.id}}" class="hide content-remediation-explanation">
+        {{#each answerKey.question.feedbacks as |feedback|}}
+            <p>{{{feedback.text}}}</p>
+        {{/each}}
+    </div>
+{{/if}}
+{{#if answerKey.question.remediationLinks}}
+    {{#if isRemediationLinkAllowed}}
+        <div class="remediation-links">
+            <h5>
+                <a href="#" class="no-underline glyphicon glyphicon-play arrow-remediation-{{answerKey.question.id}}" {{action 'onSectionDisplay' answerKey.question.id 'remediation'}}></a>
+                &nbsp;{{t "quiz.remediation"}}</h5>
+            <div id="remediation-content-{{answerKey.question.id}}" class="hide content-remediation-explanation">
+            {{word-list data-item-list=answerKey.question.remediationLinks
+                data-filter-property="isLP"
+                data-filter-value=true
+                data-output-property="name"
+                data-icon=true
+                data-item-action="onRemediationLinkClick"
+                data-assignment=answerKey.result.exam.assignment.id
+                data-icon-class="icon-smartsenseIconStethoscope"}}
+            {{word-list data-item-list=answerKey.question.remediationLinks
+                data-filter-property="isLA"
+                data-filter-value=true
+                data-output-property="name"
+                data-icon=true
+                data-item-action="onRemediationLinkClick"
+                data-assignment=answerKey.result.exam.assignment.id
+                data-icon-class="icon-smartsenseIconStethoscope"}}
+            {{word-list data-item-list=answerKey.question.remediationLinks
+                data-filter-property="isWeb"
+                data-filter-value=true
+                data-output-property="name"
+                data-icon=true
+                data-item-action="onRemediationLinkClick"
+                data-assignment=answerKey.result.exam.assignment.id
+                data-icon-class="icon-smartsenseIconBook"}}
+            </div>
+        </div>
+    {{/if}}
+{{/if}}
+{{#if isReferenceLinksAllowed}}
+    {{#if answerKey.question.parsedReferences}}
+        {{question-reference
+        data-title-i18n="questionLibrary.reference"
+        data-reference-action="onReferenceLinkClick"
+        data-references=answerKey.question.parsedReferences
+        data-product-id=productId}}
+    {{/if}}
+{{else}}
+    {{#if answerKey.question.legacyReferences}}
+      {{question-legacy-reference
+        data-title-i18n="questionLibrary.reference"
+        data-references=answerKey.question.legacyReferences
+        data-product-id=productId}}
+    {{/if}}
+{{/if}}

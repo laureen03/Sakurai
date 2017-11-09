@@ -1,0 +1,18 @@
+<div class="assignment-info clearfix">
+
+    {{partial "student/partials/qc_assignment_header"}}
+
+    <div class="details">
+        {{t "assignment.youCompleted"}}
+    </div>
+    <div class="details">
+        <span class="label label-success">{{t "assignments.complete"}}</span>
+        <span class="points highlight">
+            {{assignment.score}}/{{assignment.points}}&nbsp;{{t "assignment.pointsText"}}
+        </span>
+    </div>
+</div>
+<div class="btn-box clearfix margin-btn">
+    {{#link-to 'student.assignments' class.id class="btn btn-blue btn-done"}}{{t "assignQuiz.done"}}{{/link-to}}
+    {{#link-to 'quiz.result' assignment.quiz class.id class="btn btn-blue btn-result space-btn"}}{{t "assignment.quizResult"}}{{/link-to}}
+</div>

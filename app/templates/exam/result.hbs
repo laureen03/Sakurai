@@ -1,0 +1,183 @@
+<section class="exam-area exam-results-container">
+    <div class="container cf">
+        <h2>{{t "exam.results"}}</h2>
+
+        {{#if examResult.notPassed}}
+	    	<div class="exam-status red">
+	            <span class="glyphicon glyphicon-flag"></span>{{{t "exam.yourPerformanceNotPass"}}}
+	        </div>
+	   	{{/if}}
+	   	{{#if examResult.passed}}
+	        <div class="exam-status green">
+	             <span class="glyphicon glyphicon-flag"></span>{{{t "exam.yourPerformancePass"}}}
+	        </div>
+        {{/if}}
+        {{#if examResult.barelyPassed}}
+	        <div class="exam-status yellow">
+	             <span class="glyphicon glyphicon-flag"></span>{{{t "exam.yourPerformancePassCloserNotPass"}}}
+	        </div>
+        {{/if}}
+        {{#if examResult.almostPassed}}
+	        <div class="exam-status yellow">
+	             <span class="glyphicon glyphicon-flag"></span>{{{t "exam.yourPerformanceNotPassCloserPass"}}}
+	        </div>
+        {{/if}}
+
+        <div class="result-overview clearfix">
+	    	<div class="results-header clearfix">
+		        <div class="result-time">
+	            	<span class="result-h">{{t "exam.completionTime"}}</span>
+	                <span class="result-t">
+	                    <span class="glyphicon glyphicon-time"></span>
+	                    <span class="text completed-in">
+	                        {{to-hours examResult.completedIn base="seconds" format="dhms"}}
+	                    </span>
+	                </span>
+	            </div>
+
+		        <div class="correct-answers">
+		            <span class="result-h">{{t "quiz.correctlyAnswered"}}</span>
+		            <span class="result-t">
+		                <span class="glyphicon glyphicon-ok-circle"></span>
+		                <span class="text">
+		                    {{examResult.correctlyAnswered}}
+		                    {{t "quiz.of"}}
+                            {{#if exam.inProgressAlert}}
+                                {{examResult.getTotalQuestionsInProgressAlert}} {{t "quiz.questions"}}
+                            {{else}}
+                                {{examResult.totalQuestions}} {{t "quiz.questions"}}
+                            {{/if}}
+		                </span>
+		            </span>
+		        </div>
+		        <div class="mastery-level-achieved">
+		            <span class="result-h">{{t "exam.masteryLevelAchieved"}}</span>
+		            <span class="result-t">
+		                <span class="glyphicon glyphicon-star circle"></span>
+		                <span class="text">
+		                    {{#with exam.masteryLevel as |masteryLevel|}}
+				                {{numeral-format masteryLevel '0.00'}}
+				            {{/with}}
+		                </span>
+		            </span>
+		        </div>
+                {{#if exam.isAutoShutoff}}
+                <div class="result-type highlight">
+                    <div>{{t "assignmentSummary.type"}}: {{t "assignmentSummary.shutoff"}}</div>
+                </div>
+                {{/if}}
+		    </div>
+
+            {{#unless isImpersonated}}
+		    <div class="links-content clearfix">
+                <ul>
+                    <li class="take-exam">{{#link-to "exam.create" class.id}}{{t "exam.takeAnotherNCLEXexam"}}{{/link-to}}</li>
+                    <li class="exam-reports">{{#link-to "student.examReports" class.id}}{{t "exam.seeNCLEXOverallPerformance"}}{{/link-to}}</li>
+                    <li class="quiz-history">{{#link-to "student.examHistory" class.id}}{{t "exam.seeQuizHistory"}}{{/link-to}}</li>
+                    <li class="practice-quiz">{{#link-to "student.section" class.id}}{{t "exam.takePracticeQuiz"}}{{/link-to}}</li>
+                </ul>
+		    </div>
+            {{/unless}}
+	    </div>
+        {{#if displayChart }}
+	    <div class="exam-performance">
+	    	<h2>{{t "exam.practiceExamPerformance"}}</h2>
+	    	{{#if class.product}}
+                        {{exam-performance-chart answerKeys=answerKeys
+                                             threshold=examMasteryThreshold
+                                             store=controller.store
+                                             total-answers=answerTotal
+                                             page-length=answerPageLength
+                                             current-page=answerCurrentPage
+                                             assignment=assignment}}
+
+                    {{sakurai-pagination page-tabs=5
+                                         total-results=answerTotal
+                                         page-length=answerPageLength
+                                         current-page=answerCurrentPage
+                                         updateGraph="updateGraph"}}
+	    	{{/if}}
+	    </div>
+        {{/if}}
+        <div class="performances bar-graph-container">
+            <div>
+                <div class="header">
+                    <h2>{{t "common.performanceBy"}} <b>{{t "common.clientNeed.other"}}</b></h2>
+                    <p class="hidden-xs">{{t "common.performanceMLCaption"}}</p>
+                    <a class="visible-xs" href="#">{{t "common.whatsThis"}}</a>
+                </div>
+                <div class="content">
+                    {{#each examResult.termTaxonomyPerformances as |performance|}}
+                        {{#if performance.termTaxonomy.isClientNeeds}}
+                            <div class="unit">
+                                {{performance-graph data-performance=performance
+                                                    data-performance-name=performance.termTaxonomy.name
+                                                    data-highlight-from=thresholdLowerLimit
+                                                    data-highlight-to=thresholdUpperLimit
+                                                    data-highlight-text="common.approximatePassingThreshold"
+                                                    data-hideThresholdLabel=assignment.hideThresholdLabels}}
+                            </div>
+                        {{/if}}
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+
+	    <div class="result-answer-key">
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - -
+            Answer Keys
+            - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            {{#if exam.assignment.isAutoShutoff}}
+                {{#if examResult.passed}}
+                <div class="exam-status green">
+                    <span class="glyphicon glyphicon-flag"></span>{{{t "exam.autoShutoffPass"}}}
+                </div>
+                {{else}}
+                <div class="exam-status red">
+                    <span class="glyphicon glyphicon-flag"></span>{{{t "exam.autoShutoffNotPass"}}}
+                </div>
+                {{/if}}
+
+            {{/if}}
+            <h2>{{t "quiz.answerKey"}}</h2>
+            <div class="filter-questions">
+            	<span>{{t "exam.view"}}:</span>
+            	{{#each filters as |filter|}}
+            		<label>
+                        {{radio-button name="filter-questions" value=filter.value checked=controller.radioFilterVal}}
+                        {{filter.label}}
+				    </label>
+            	{{/each}}
+            </div>
+            <div class="filter-questions-mob">
+            	<span>{{t "exam.view"}}:</span>
+                {{my-select
+                    content=filters
+                    optionValuePath="value"
+                    optionLabelPath="label"
+                    selectedValue=radioFilterVal}}
+            </div>
+            {{#if answerKeys}}
+                <div class="answerKey-content">
+                    {{#each answerKeys as |answerKey index|}}
+                        {{#if answerKey.result}}
+                            {{#if answerKey.question}}
+                                {{x-render  displayLayout=answerKey.question.interactions.0.type
+                                            answerKey=answerKey
+                                            isRemediationLinkAllowed=controller.isRemediationLinkAllowed
+                                            isReferenceLinksAllowed=controller.isReferenceLinksAllowed
+                                            incReferenceViewsAllowed=controller.incReferenceViewsAllowed
+                                            productId=controller.class.product.id
+                                            data-store=controller.store
+                                            index=index}}
+                            {{/if}}
+                        {{/if}}
+                    {{/each}}
+                </div>
+            {{/if}}
+        </div>
+
+        {{full-question isFullQuestion=true componentName=componentName model=currentQuestion isMultiple=isMultiple }}
+    </div>
+</section>
+

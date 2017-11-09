@@ -1,0 +1,21 @@
+<span class="chapter">
+    {{#if isMetadataAllowed}}
+        <ul class="metadata-title">
+            {{#if isTermTaxonomyNursingTopic}}
+                {{#if usesNursingTopics}}
+                    <li class="category capitalize">{{t "category"}}: {{terminologyTermPlural}}</li>
+                    {{!--<li class="sub-category">{{t "unit"}}: {{assignment.chapter.parentName}}</li>--}}
+                    <li class="sub-category">{{t "subcategory"}}: {{assignment.chapter.name}}</li>
+                {{else}}
+                    {{assignment.chapter.name}}
+                {{/if}}
+            {{else}}
+                <li class="category">{{t "type"}}: {{termTaxonomyLabel}}</li>
+                {{!--<li class="sub-category">{{t "unit"}}: {{assignment.termTaxonomy.type}}</li>--}}
+                <li class="sub-category">{{t "category"}}: {{assignment.termTaxonomy.name}}</li>
+            {{/if}}
+        </ul>
+    {{else}}
+        {{assignment.chapter.name}}
+    {{/if}}
+</span>

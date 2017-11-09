@@ -1,12 +1,18 @@
-SakuraiWebapp.XRenderComponent = Ember.Component.extend({
+import Ember from "ember"; 
+import context from "utils/context-utils";
+import RemediationLinkView from "models/remediation-link-view";
+import ReferenceView from "models/reference-view";
+
+export default Ember.Component.extend({ 
     tagName: "",
     'see-full-question-action': "showFullQuestion",
     "on-section-display": "onSectionDisplay",
     'data-store': null,
 
     layoutName: Ember.computed('displayLayout', function(){
-    	if (this.get('displayLayout') == undefined)
+    	if (this.get('displayLayout') === undefined){
     		return;
+        }
       return "question/answer_key_" + this.get('displayLayout'); 
     }),
 
@@ -19,13 +25,13 @@ SakuraiWebapp.XRenderComponent = Ember.Component.extend({
             the class using this mixin should have a property 'canIncRemediationLinkView'
             indicating if it can inc the remediation link view
          */
-        if (!this.get("isRemediationLinkAllowed")) return;
+        if (!this.get("isRemediationLinkAllowed")){ return; }
 
         var store = this.get("data-store");
-        var authenticationManager = SakuraiWebapp.context.get("authenticationManager");
+        var authenticationManager = context.get("authenticationManager");
         var userId = authenticationManager.getCurrentUserId();
         
-        SakuraiWebapp.RemediationLinkView.incRemediationLinkViews(store, remediationLink.get("id"), userId, assignmentId);
+        RemediationLinkView.incRemediationLinkViews(store, remediationLink.get("id"), userId, assignmentId);
     },
 
     /**
@@ -37,15 +43,15 @@ SakuraiWebapp.XRenderComponent = Ember.Component.extend({
             the class using this mixin should have a property 'canIncRemediationLinkView'
             indicating if it can inc the remediation link view
          */
-        if (!this.get("isReferenceLinksAllowed") || !this.get("incReferenceViewsAllowed")) return;
+        if (!this.get("isReferenceLinksAllowed") || !this.get("incReferenceViewsAllowed")){ return; }
 
 
 
         var store = this.get("data-store");
-        var authenticationManager = SakuraiWebapp.context.get("authenticationManager");
+        var authenticationManager = context.get("authenticationManager");
         var userId = authenticationManager.getCurrentUserId();
         
-        SakuraiWebapp.ReferenceView.incReferenceViews(store, reference.id, userId);
+        ReferenceView.incReferenceViews(store, reference.id, userId);
     },
 
 

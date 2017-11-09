@@ -1,0 +1,25 @@
+<div id="classPerformance">
+	<h2>{{t "hmcd.classPerformance"}}</h2>
+	<div class="clearfix">
+		<div class="graph-average">
+			<h4 class="title">{{{t "hmcd.averageMasteryLevel"}}}</h4>
+            {{#with classAverageMasteryLevel as |classAverageMasteryLevel|}}
+                <div class="ml">{{numeral-format classAverageMasteryLevel '0.0'}}</div>
+            {{/with}}
+        </div>
+		<div class="graph-mastery-level">
+			{{mastery-level-distribution-chart
+                data-i18n-title='hmcd.masteryLevelDistribution.title'
+                data-i18n-x-axis='hmcd.masteryLevelDistribution.masteryLevel'
+                data-i18n-y-axis='hmcd.masteryLevelDistribution.numberOfStudents'
+                data-studentUsage=studentUsage
+            }}
+		</div>
+	</div>
+	<div class="graph-mastery-level-quiz clearfix">
+        <div class="graph-container">
+            <h4 class="title">{{t "hmcd.mlByNumberQuizzes"}}</h4>
+            {{overall-performance overallPerformance=overallPerformance store=controller.store isInstructor=true}}
+        </div>
+	</div>
+</div>

@@ -16,7 +16,9 @@
  *
  */
 
-SakuraiWebapp.WordListComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({ 
 
     /*
      * === PROPERTIES
@@ -48,7 +50,7 @@ SakuraiWebapp.WordListComponent = Ember.Component.extend({
                     return {
                         label: item.get(outputProperty),
                         item: item
-                    }
+                    };
                 });
 
                 self.set('outputList', outputList);

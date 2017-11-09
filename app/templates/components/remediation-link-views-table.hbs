@@ -1,0 +1,79 @@
+<div class="header">
+    <button class="btn-close" type="button" {{action 'closeModal'}}>x</button>
+    <h4 class="modal-title">{{t "hmcd.studentUsage.remediationViews"}}</h4>
+</div>
+<div class="content">
+    {{#unless isFullQuestion}}
+        <table class="table tablesorter remediationLinkViews-table">
+        <thead>
+        <tr>
+            <th class="header sort_remediationLink_name">
+                <a {{action 'onSortByCriteria' 'remediationLinkViews' 'remediationLink.name' }}>
+                    <span class="name-remediationLinkName action">{{t "remediationLinkViews.reference"}}</span>
+                </a>
+            </th>
+
+            <th class="hidden-xs header sort_remediationLink_type">
+                <a {{action 'onSortByCriteria' 'remediationLinkViews' 'remediationLink.type' }}>
+                    <span class="name-remediationLinkType action">{{t "remediationLinkViews.type"}} </span>
+                </a>
+            </th>
+            <th class="hidden-xs header">
+                <span class="name-question">{{t "remediationLinkViews.question"}}</span>
+            </th>
+            <th class="hidden-xs header sort_lastViewAt">
+                <a {{action 'onSortByCriteria' 'remediationLinkViews' 'lastViewAt' }}>
+                    <span class="name-lastViewAt action headerSortUp">{{t "remediationLinkViews.date"}}</span>
+                </a>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each remediationLinkViewsSortable.collection as |remediationLinkView|}}
+            {{#if remediationLinkView.remediationLink}}
+                <tr>
+                    <td class="name" title={{remediationLinkView.remediationLink.name}}>
+                    <span class="dark-gray remediation-link-name"><a class="dark-gray"
+                        {{action 'onRemediationLinkClick' remediationLinkView.remediationLink }}>
+                        {{remediationLinkView.remediationLink.name}}</a></span>
+                    </td>
+                    <td class="hidden-xs remediation-link-type">
+                        <span>{{#with remediationLinkView.remediationLink.type as |type|}} {{t type}} {{/with}}</span>
+                    </td>
+                    <td class="hidden-xs reediation-link-question">
+                    <span class="dark-gray remediation-link-question"><a class="dark-gray"
+                        {{action 'showRemediationQuestion' remediationLinkView.remediationLink.question }}>
+                        {{t "remediationLinkViews.view"}}</a></span>
+                    </td>
+                    <td class="hidden-xs remediation-link-date">
+                        <span class="date">{{format-date remediationLinkView.lastViewAt}}</span>
+                    </td>
+                </tr>
+            {{/if}}
+            {{#if remediationLinkView.reference}}
+                <tr>
+                    <td class="name" title={{remediationLinkView.name}}>
+                    <span class="dark-gray remediation-link-name"><a class="dark-gray"
+                        {{action 'onReferenceClick' remediationLinkView }}>
+                        {{remediationLinkView.name}}</a></span>
+                    </td>
+                    <td class="hidden-xs remediation-link-type">
+                        <span>{{#with remediationLinkView.type as |type|}} {{t type}} {{/with}}</span>
+                    </td>
+                    <td class="hidden-xs reediation-link-question">
+                    <span class="dark-gray remediation-link-question"><a class="dark-gray"
+                        {{action 'showRemediationQuestion' remediationLinkView.reference.question }}>
+                        {{t "remediationLinkViews.view"}}</a></span>
+                    </td>
+                    <td class="hidden-xs remediation-link-date">
+                        <span class="date">{{format-date remediationLinkView.lastViewAt}}</span>
+                    </td>
+                </tr>
+            {{/if}}
+        {{/each}}
+        </tbody>
+    </table>
+    {{else}}
+        {{component componentName isFullQuestion=isFullQuestion model=model}}
+    {{/unless}}
+</div>

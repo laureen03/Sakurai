@@ -1,0 +1,49 @@
+<div class="container customize-exam manage-assignment">
+    <div class="customize-exam-container customizeContent">
+        {{#if assignmentCreated }}
+            {{partial "instructor/partial/assign_exam_created"}}
+        {{else}}
+            <h2>{{t "assignExam.overallExamSettingsLabel"}}</h2>
+            <div class="instructions">
+                {{t "assignExam.overallExamSettingsDescription"}}
+            </div>
+        {{/if}}
+
+        <ul>
+            <li class="clearfix">
+                <div class="radio-box">
+                    {{radio-button id="hideOverallExamThreshold" name="customize-radios" value=true checked=hideThresholdLabels}}
+                </div>
+                <div class="text-box"><label for="customizeOverall"><strong>{{{t "assignExam.hideOverallExamThresholdLabel"}}}</strong></label></div>
+            </li>
+            <li class="clearfix">
+                <div class="text-box"><label for="customizeOverall">{{{t "assignExam.hideOverallExamThresholdDescription"}}}</label></div>
+            </li>
+            <li class="clearfix">
+                <div class="radio-box">
+                    {{radio-button id="customizeOverallExamThreshold" name="customize-radios" value=false checked=hideThresholdLabels}}
+                </div>
+                <div class="text-box"><label for="customizeOverallExamThreshold"><strong>{{{t "assignExam.customizeOverallExamThresholdLabel"}}}</strong></label></div>
+                <div class="text-box">
+                    <label>
+                        {{t "assignExam.customizeOverallExamThresholdDescription1"}}
+                        {{my-select 
+                            disabled=isHideThresholdOn
+                            name=nclex_proficiency_threshold
+                            content=nclexProficiencyLevels
+                            selectedValue=customThreshold}}
+                    </label>
+                    <label>{{t "assignExam.customizeOverallExamThresholdDescription2"}}</label></div>
+            </li>
+        </ul>
+
+        <div class="btn-box">
+            {{async-button
+                data-button-class="btn btn-blue edit-exam-btn"
+                data-text="assignExam.btnContinue"
+                action="customizeOverallExamSettings" }}
+            <a class="go-back" {{action 'goBack' class.product.id class.id}}>{{t "cancel"}}</a>
+        </div>
+    </div>
+</div>
+

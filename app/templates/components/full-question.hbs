@@ -1,0 +1,15 @@
+<div id='fullQuestion' class="modal-full-question modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        &nbsp;<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+      </div>
+      <div class="modal-body cf quiz-container">
+        {{component componentName isFullQuestion=isFullQuestion model=model}}
+        {{#if isPreview}}
+          <h5>{{t "common.satisfiedWithQuestion"}}</h5>
+        {{/if}}
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

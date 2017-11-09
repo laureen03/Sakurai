@@ -2,9 +2,12 @@
  *
  * This component is used in the question library to show the chapters or
  *  taxonomies selected to filter questions
- * @type {SakuraiWebapp.FilterBreadcrumbComponent}
+ * @type {FilterBreadcrumbComponent}
  */
-SakuraiWebapp.FilterBreadcrumbComponent = Ember.Component.extend({
+import Ember from "ember"; 
+import TermTaxonomy from "models/term-taxonomy";
+
+export default Ember.Component.extend({
 
     /**
      * @property {{name: <string literal | i18n key>, type: "a type"}}
@@ -50,12 +53,12 @@ SakuraiWebapp.FilterBreadcrumbComponent = Ember.Component.extend({
 
     /**
      * Return strengths per type
-     * @property {SakuraiWebapp.TermTaxonomy[]|SakuraiWebapp.Chapter[]}
+     * @property {TermTaxonomy[]|Chapter[]}
      */
     filters: Ember.computed("data-filters.[]", "data-type", function(){ 
         var type = this.get("data-type");
         return (this.get("data-filter-type")) ? //filtering is only for taxonomies
-            SakuraiWebapp.TermTaxonomy.filterByType(this.get("data-filters"), type) :
+            TermTaxonomy.filterByType(this.get("data-filters"), type) :
             this.get("data-filters");
     }),
 

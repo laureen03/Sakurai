@@ -1,4 +1,6 @@
-SakuraiWebapp.QuizBarComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
     tagName: 'div',
     classNames: ["color-bar"],
     attributeBindings: ['style'],
@@ -10,13 +12,14 @@ SakuraiWebapp.QuizBarComponent = Ember.Component.extend({
     }),
 
     style: Ember.computed('total', 'value', function(){
-        if (this.get('value') != -1) {
+        if (this.get('value') !== -1) {
             var total = this.get('total');
             var value = this.get('value');
             var width = (value / total) * 100;
             return Ember.String.htmlSafe('width:'+width+'%');
-        }else
+        }else{
             return Ember.String.htmlSafe('width:0%');
+        }
         
     }),
 

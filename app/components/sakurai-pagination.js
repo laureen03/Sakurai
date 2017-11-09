@@ -17,8 +17,9 @@
  *        (i18n property -defaults to common.next)
  *
  */
+import Ember from "ember"; 
 
-SakuraiWebapp.SakuraiPaginationComponent = Ember.Component.extend({
+export default Ember.Component.extend({
 
     tagName: 'div',
 
@@ -61,7 +62,7 @@ SakuraiWebapp.SakuraiPaginationComponent = Ember.Component.extend({
      */
     pageIndex: Ember.computed('current-page', 'totalPages', function(){
         var totalPages = this.get('totalPages'),
-            currentPage;
+            currentPage, value;
 
         if (arguments.length > 1) {
             // setter
@@ -160,9 +161,6 @@ SakuraiWebapp.SakuraiPaginationComponent = Ember.Component.extend({
 
 
     willInsertElement: function() {
-        var totalPages = this.get('totalPages'),
-            pageTabs = this.get('page-tabs');
-
         this.get('pages').set('content', this.get('pageTabs'));
     },
 
@@ -171,9 +169,6 @@ SakuraiWebapp.SakuraiPaginationComponent = Ember.Component.extend({
     },
 
     updatePages: Ember.observer('totalPages', function() {
-        var totalPages = this.get('totalPages'),
-            pageTabs = this.get('page-tabs');
-
         this.get('pages').set('content', this.get('pageTabs'));
     }).on('change'),
 

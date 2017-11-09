@@ -1,0 +1,304 @@
+<div class="step3 stepsContent">
+    {{#if isEditMode}}
+    	{{#if isCopyMode}}
+    		<h2 class="title">{{t "assignQuiz.copyQuiz"}}</h2>
+    	{{else}}
+    		<h2 class="title">{{t "assignQuiz.editQuiz"}}</h2>
+    	{{/if}}
+
+    {{else}}
+    	<h2 class="title">{{t "assignQuiz.assignYourQuiz"}}</h2>
+    {{/if}}
+	<form role="form" id="assign-a-quiz-step3" class="qc-step3">
+	   <div class="assignment-info clearfix full-width">
+	        <div class="assignment-content one-target clearfix">
+	            <div class="name">
+	                {{#if assignment.isQuestionCollectionAssignment}}
+	                    {{t "assignQuiz.questionCollectionQuiz"}}
+	                    {{partial "student/partials/editable_assignment_name"}}
+	                    <span class="chapter">{{assignmentTotalQuestions}} {{t "assignQuiz.questionsTitle"}}</span>
+	                {{else}}
+	                    {{t "assignQuiz.masteryLevelQuiz"}}
+
+	                    {{partial "student/partials/editable_assignment_name"}}
+
+                        {{partial "student/partials/assignment_header_chapter"}}
+
+	                {{/if}}
+	            </div>
+	            <div class="target">
+	                <div class="targets">
+	                    {{#if assignment.isQuestionCollectionAssignment}}
+	                        <span>{{t "assignQuiz.pointValue"}}</span>
+
+	                        <div class="ml">{{assignment.points}}</div>
+	                    {{else}}
+	                        <span>{{t "assignQuiz.targetMastery"}}</span>
+	                        <div class="ml editable slider {{if isAssignmentStarted 'read-only' ''}}">
+                                <span class="wrapper-value">
+                                    <span class="value">{{assignment.targetMasteryLevel}}</span>
+                                    <a class="glyphicon glyphicon-pencil medium-icon text-muted gray"></a>
+                                </span>
+                                <div class="slider" data-value="{{assignment.targetMasteryLevel}}"></div>
+                            </div>
+	                    {{/if}}
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	    {{#if isEditMode}}
+	    	{{#if isCopyMode}}
+	    		{{partial 'instructor/assign/choose_class_list'}}
+	    	{{else}}
+		    	{{#if assignment.staggered}}
+		    		<div class="section classes">
+			    		<h4>{{t "assignQuiz.assignmentClass"}}</h4>
+			    		{{#each assignment.classes as |clazz|}}
+				    		<label class="labels"><span class="class-name">{{clazz.name}}</span>
+				    			{{#unless clazz.isUnknownTerm}}
+		                    		<span class="term-name">&nbsp;-&nbsp;{{clazz.term}}</span>
+		                    	{{/unless}}
+				    		</label>
+				    	{{/each}}
+			    	</div>
+			    {{else}}
+			    	{{partial 'instructor/assign/choose_class_list'}}
+			    {{/if}}
+			{{/if}}
+	    {{else}}
+		   	{{partial 'instructor/assign/choose_class_list'}}
+	    {{/if}}
+	    <div class="section points">
+	        <h4>{{t "assignQuiz.pointValue"}}</h4>
+	        {{input type="text" class=pointClassName name="points" id="points" value=assignment.points maxlength="6"}}
+            <label class="labels">{{t "assignQuiz.points"}}</label>
+            {{#if enablePoints}}
+                <div class="ungrade-box">{{input type="checkbox" name="ungraded" id="ungraded" checked=ungraded}}&nbsp;
+                    <label class="labels" for="ungraded">{{t "assignQuiz.ungradedAssignment"}}</label></div>
+                <label id="points-error" class="error" for="points"></label>
+            {{/if}}
+            {{#if assignment.isQuestionCollectionAssignment}}
+                <div>
+                    <label class="labels each-question-label">
+                        {{t "assignQuiz.worth1"}} "{{pointCalculation}}" {{t "assignQuiz.worth2"}}
+                    </label>
+                </div>
+            {{/if}}
+
+            {{#unless enablePoints}}
+                <label class="error">{{t "assignQuiz.pointsDisabled"}}</label>
+            {{/unless}}
+
+            {{#if assignment.isQuestionCollectionAssignment}}
+            	{{#unless changeDatesEnable}}
+	                <div class="autosubmit-box clearfix">
+	                    <label class="labels" for="autoSubmit">
+	                        <div class="pull-left">
+	                            {{input type="checkbox" name="autoSubmit" id="autoSubmit" checked=autoSubmit}}&nbsp;
+	                            {{t "assignQuiz.autoSubmit"}}
+	                        </div>
+	                        <a href="#" class="autosubmit-mdl gray pull-left whatisthis hidden-xs" data-target="#what-is-autosubmit" data-toggle="modal">{{t "whatIsThis"}}</a>
+	                    </label>
+	                </div>
+	            {{/unless}}
+            {{/if}}
+        </div>
+        {{#if isEditMode}}
+        	{{#if isCopyMode}}
+	        	{{#if showStaggeredOptions}}
+	        		{{#if hasManyClasses}}
+				        <div class="section clearfix">
+				            <div class="dates-radio">
+				                <div>
+				                    {{radio-button id="changeDatesRadio" name="keepDates" value="changeDates" checked=changeDatesRadio}}
+				                </div>
+				                <div>
+				                    <label class="labels" for="changeDatesRadio">
+				                        <span>{{{t "assignQuiz.changeDates"}}}</span>
+				                    </label>
+				                </div>
+				            </div>
+				            <div class="dates-radio">
+				                <div>
+				                	{{radio-button id="keepDatesRadio" name="keepDates" value="keepDates" checked=changeDatesRadio}}
+				                </div>
+				                <div>
+				                    <label class="labels" for="keepDatesRadio">
+				                        <span>{{{t "assignQuiz.keepDates"}}}</span>
+				                    </label>
+				                </div>
+				            </div>
+				        </div>
+				    {{/if}}
+			    {{/if}}
+			{{/if}}
+		{{else}}
+			{{#if showStaggeredOptions}}
+        		{{#if hasManyClasses}}
+			        <div class="section clearfix">
+			            <div class="dates-radio">
+			                <div>
+			                	{{radio-button id="changeDatesRadio" name="keepDates" value="changeDates" checked=changeDatesRadio}}
+			                </div>
+			                <div>
+			                    <label class="labels" for="changeDatesRadio">
+			                        <span>{{{t "assignQuiz.changeDates"}}}</span>
+			                    </label>
+			                </div>
+			            </div>
+			            <div class="dates-radio">
+			                <div>
+			                	{{radio-button id="keepDatesRadio" name="keepDates" value="keepDates" checked=changeDatesRadio}}
+			                </div>
+			                <div>
+			                    <label class="labels" for="keepDatesRadio">
+			                        <span>{{{t "assignQuiz.keepDates"}}}</span>
+			                    </label>
+			                </div>
+			            </div>
+			        </div>
+			    {{/if}}
+		    {{/if}}
+        {{/if}}
+        {{#if changeDatesEnable}}
+        	{{#each customClasses as |customClass|}}
+        		{{manage-date-classes customClass=customClass defaultTimeZone=assignment.timeZone timezones=timezones isQC=assignment.isQuestionCollectionAssignment defaultStartDate=startDate defaultDueDate=dueDate defaultStartHour=startHour defaultDueHour=dueHour}}
+        	{{else}}
+				<h4>{{t "assignQuiz.pleaseSelectClass"}}</h4>
+        	{{/each}}
+        {{else}}
+        	<div class="section dates clearfix">
+		        <div class="col-md-6">
+		            <h4>{{t "assignQuiz.availableOn"}}</h4>
+		            {{input id="startDate" name="startDate" class="date-input" type="text" value=startDate readonly="true"}}
+
+		            {{my-select
+		            	id="startHour"
+		            	class="hour-input custom-select"
+		        		content=timeList
+		        		optionValuePath="value"
+                        optionLabelPath="hour"
+		        		selectedValue=startHour}}
+
+		            <div class="dropdown dropup">
+		                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+		                    {{zone-abbr assignment.timeZone}}
+		                    <span class="caret"></span>
+		                </button>
+		                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+		                    {{#each timezones as |timezone|}}
+		                        <li role="presentation"><a role="menuitem" tabindex="-1" {{action "setTimeZone" timezone}}><strong>{{zone-abbr timezone}}</strong> ({{ timezone }})</a></li>
+		                    {{/each}}
+		                </ul>
+		            </div>
+		            <label id="startDate-error" class="error" for="startDate"></label>
+		        </div>
+		        <div class="col-md-6">
+		            <h4>{{t "assignQuiz.dueOn"}}</h4>
+		            {{input id="dueDate" name="dueDate" class="date-input" type="text" value=dueDate readonly="true"}}
+
+		            {{my-select
+		            	id="dueHour"
+		            	class="hour-input custom-select"
+		        		content=timeList
+		        		optionValuePath="value"
+                        optionLabelPath="hour"
+		        		selectedValue=dueHour}}
+
+		            <span class="label-timezone">{{zone-abbr assignment.timeZone}}</span>
+		            <label id="dueDate-error" class="error" for="dueDate"></label>
+		        </div>
+		        {{#if dueDateBeforeMessage}}
+		            <label class="error error-classes">{{t "assignQuiz.dueDateBeforeAvailableDate"}}</label>
+		        {{/if}}
+		    </div>
+        {{/if}}
+
+	    {{#if assignment.isQuestionCollectionAssignment}}
+	    <div class="section">
+	        <h4>{{t "assignQuiz.onceTheyStart"}}</h4>
+	        <ul class="activeClasses">
+	            <li>
+	                <label>
+	                    <input  disabled={{disableTimeLimit}}
+                               	checked={{hasNoTimeLimit}}
+                                id="noTimeLimitRadio" type="radio" name="startA" value="0"/>
+	                    {{t "assignQuiz.noLimit"}}
+	                </label>
+	            </li>
+	            <li>
+	                <label>
+	                    <input id="completeInMinutesRadio" type="radio" name="startA" value='starts-at'
+                            disabled={{disableTimeLimit}}
+                            checked={{assignment.hasTimeLimit}} />
+	                    {{t "assignQuiz.mustComplete"}}
+	                    {{input id="completeInMinutes" name="completeInMinutes" disabled="disabled"
+	                            maxlength="3" class="minutes-input" type="text" value=completeInMinutes}}
+	                    {{t "assignQuiz.minutes"}}
+	                </label>
+	            </li>
+	        </ul>
+            {{#if disableTimeLimit}}
+                <label class="error">{{t "assignQuiz.timeLimitDisabled"}}</label>
+            {{/if}}
+        </div>
+	    <div class="section">
+	    <h4 class="section-title">
+	        <div class="pull-left">
+	            {{t "assignQuiz.canSeeAnswerKey"}}
+	        </div>
+	        <a href="#" class="gray pull-left whatisthis hidden-xs" data-target="#what-is-answerKey" data-toggle="modal">{{t "whatIsThis"}}</a>
+	    </h4>
+	    <ul class="activeClasses">
+	        <li>
+	            <label>
+	                <input type="radio" name="answerKey" value="overdue"
+                           checked={{assignment.isAnswerKeyViewOverdue}} />
+	                {{t "assignQuiz.afterDue"}}
+	            </label>
+	        </li>
+	        <li>
+	            <label>
+	                <input type="radio" name="answerKey" value="completed"
+                           checked={{assignment.isAnswerKeyViewCompleted}} />
+	                {{t "assignQuiz.immediately"}}
+	            </label>
+	        </li>
+	        <li>
+	            <label>
+	                <input type="radio" name="answerKey" value="never"
+                           checked={{assignment.isAnswerKeyViewNever}} />
+	                {{t "assignQuiz.never"}}
+	            </label>
+	        </li>
+	    </ul>
+	    </div>
+	    {{/if}}
+	    <div class="btn-box">
+		    {{#if isEditMode}}
+		    	{{#if isCopyMode}}
+		    		{{async-button
+	                    data-button-class="btn btn-blue assign-button"
+	                    data-text="assignQuiz.assign"
+	                    action="saveAssignment" }}
+
+			   		{{#link-to 'instructor.assignments' class.product.id class.id class="go-back"}}{{t "cancel"}}{{/link-to}}
+		    	{{else}}
+		   			<button class="btn btn-blue" id="action-3" {{action "saveAssignment"}}>{{t "save"}}</button>
+		   			{{#link-to 'instructor.assignments' class.product.id class.id class="go-back"}}{{t "cancel"}}{{/link-to}}
+		   		{{/if}}
+		   	{{else}}
+
+                {{async-button
+                    data-button-class="btn btn-blue assign-button"
+                    data-text="assignQuiz.assign"
+                    action="saveAssignment" }}
+
+		   		<a href="#" class="go-back" {{action "goBackStepTwo"}}>{{t "assignQuiz.goBack"}}</a>
+		   	{{/if}}
+	    </div>
+	</form>
+	{{simple-modal idElement='what-is-answerKey' title="assignQuiz.answerKeyModal.title" body="assignQuiz.answerKeyModal.body"}}
+	{{simple-modal idElement='what-is-autosubmit' title="assignQuiz.autocompleteModal.title" body="assignQuiz.autocompleteModal.body"}}
+
+</div>

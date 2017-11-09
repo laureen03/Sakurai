@@ -1,0 +1,62 @@
+<section class="container assignment-container">
+    {{#if assignment.isExamAssignment}}
+        <div class="exam">
+            {{#if assignment.isPastDue }}
+                {{partial "student/assignment/examPastdue"}}
+            {{/if}}
+            {{#if assignment.isAvailable }}
+                {{partial "student/assignment/examAvailable"}}
+            {{/if}}
+            {{#if assignment.isCompleted}}
+                {{partial "student/assignment/examCompleted"}}
+            {{/if}}
+            {{#if assignment.isAutoCompleted }}
+                {{partial "student/assignment/examPastdue"}}
+            {{/if}}
+            {{#if assignment.isTimeOut }}
+                {{partial "student/assignment/examPastdue"}}
+            {{/if}}
+        </div>
+    {{else}}
+
+        {{#if assignment.isMasteryLevelAssignment}}
+
+            {{#if assignment.isCompleted }}
+                {{partial "student/assignment/assignmentCompleted"}}
+            {{/if}}
+            {{#if assignment.isAutoCompleted }}
+                {{partial "student/assignment/assignmentCompleted"}}
+            {{/if}}
+            {{#if assignment.isPastDue }}
+                {{partial "student/assignment/assignmentPastdue"}}
+            {{/if}}
+            {{#if assignment.isAvailable }}
+                {{partial "student/assignment/assignmentAvailable"}}
+            {{/if}}
+
+        {{else}}
+
+            {{#if assignment.isCompleted }}
+                {{partial "student/assignment/qcAssignmentCompleted"}}
+            {{/if}}
+            {{#if assignment.isAutoCompleted }}
+                {{partial "student/assignment/qcAssignmentPastdue"}}
+            {{/if}}
+            {{#if assignment.isPastDue }}
+                {{partial "student/assignment/qcAssignmentPastdue"}}
+            {{/if}}
+            {{#if assignment.isTimeOut }}
+                {{partial "student/assignment/qcAssignmentPastdue"}}
+            {{/if}}
+            {{#if assignment.isAutoSubmitted }}
+                {{partial "student/assignment/qcAssignmentPastdue"}}
+            {{/if}}
+            {{#if assignment.isAvailable }}
+                {{partial "student/assignment/qcAssignmentAvailable"}}
+            {{/if}}
+
+        {{/if}}
+    {{/if}}
+
+
+</section>

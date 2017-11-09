@@ -1,0 +1,25 @@
+{{#if outputList}}
+    {{#if data-header}}
+        <strong>{{t data-header}}</strong>
+    {{/if}}
+    <ul>
+        {{#each outputList as |listItem|}}
+            <li class="capitalize">
+                {{#if data-item-action}}
+                    {{#if data-icon}}
+                        <a class="item-action" {{action 'onItemClick' listItem.item}} href="#"><span aria-hidden="true" class="icon-remediation {{data-icon-class}}"></span></a>
+                        {{{listItem.label}}}
+                    {{else}}
+                        <a class="item-action" {{action 'onItemClick' listItem.item}} href="#">{{{listItem.label}}}</a>
+                    {{/if}}
+                {{else}}
+                    {{#if data-icon}}
+                        <span aria-hidden="true" class="icon-remediation {{data-icon-class}}"></span>
+                    {{/if}}
+                    {{{listItem.label}}}
+                {{/if}}
+            </li>
+        {{/each}}
+    </ul>
+{{/if}}
+

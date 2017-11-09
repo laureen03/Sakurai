@@ -1,59 +1,3 @@
-SakuraiWebapp.FilterMap = Ember.ArrayProxy.extend({
-
-    content: Ember.A(),
-
-    addFilter: function(filterData) {
-        var dataTypeId = filterData.dataType.get('id'),
-            filterObject = this.findBy('dataTypeId', dataTypeId);
-
-        Ember.Logger.debug(this.toString() + ': mark filter with id ' + dataTypeId + ' for addition');
-
-        if (!filterObject) {
-            filterObject = SakuraiWebapp.FilterObject.create(filterData);
-            this.pushObject(filterObject);
-        } else {
-            filterObject.add();
-        }
-    },
-
-    removeFilter: function(filterData) {
-        var dataTypeId = filterData.dataType.get('id'),
-            filterObject = this.findBy('dataTypeId', dataTypeId);
-
-        if (filterObject) {
-            Ember.Logger.debug(this.toString() + ': mark filter with id ' + dataTypeId + ' for removal');
-            filterObject.remove();
-        } else {
-            throw new Ember.Error('FilterMap: cannot remove non-existant filter object');
-        }
-    }
-});
-
-SakuraiWebapp.FilterObject = Ember.Object.extend({
-
-    dataTypeId: Ember.computed.alias('dataType.id'),
-
-    id: null,
-
-    type: null,
-
-    instructor: null,
-
-    dataType: null,
-
-    doesExist: Ember.computed.bool('id'),
-
-    willRemove: false,
-
-    add: function() {
-        this.set('willRemove', false);
-    },
-
-    remove: function() {
-        this.set('willRemove', true);
-    }
-});
-
 import Controller from '@ember/controller';
 import Ember from 'ember';
 import ControllerMixin from 'mixins/controller';
@@ -61,6 +5,8 @@ import FeatureMixin from 'mixins/feature';
 import Product from 'models/product';
 import Section from 'models/section';
 import TermTaxonomy from 'models/term-taxonomy';
+import ChapterFilter from "models/chapter-filter";
+import FilterMap from "objects/filter-map";
 
 export default Controller.extend(
     Ember.Evented,
@@ -104,20 +50,12 @@ export default Controller.extend(
      */
     defaultDataType: Ember.computed.alias("library.defaultDataType"),
 
-    filterMap: SakuraiWebapp.FilterMap.create({}),
+    filterMap: FilterMap.create({}),
 
     /**
     * @property {Boolean} To know if Term Taxonomie is active
     **/
     termTaxonomyActive: false,
-
-    /**
-     * @property termTaxonomyTypeOptions
-     * Object with the headers for drop down menu
-     * Used only if metadata is allowed
-     * Return Object
-     */
-    termTaxonomyTypeOptions: null,
 
     /**
      * @property {string} selectedTermTaxonomy
@@ -132,7 +70,7 @@ export default Controller.extend(
     Return question type, its depends of the user role
     **/
     typeFilter: Ember.computed(function(){
-        return (this.get("isAuthoringEnabled"))? SakuraiWebapp.ChapterFilter.HIDDEN_FILTER: SakuraiWebapp.ChapterFilter.QUIZ_FILTER;
+        return (this.get("isAuthoringEnabled"))? ChapterFilter.HIDDEN_FILTER: ChapterFilter.QUIZ_FILTER;
     }),
 
     /**
@@ -178,12 +116,15 @@ export default Controller.extend(
     }).on("init"),
 
     /**
-     * @property {{}} taxonomy options
+     * @property termTaxonomyTypeOptions
+     * Object with the headers for drop down menu
+     * Used only if metadata is allowed
+     * Return Object
      */
     termTaxonomyTypeOptions: Ember.computed("class.product", function(){
         var product = this.get("class").get("product");
         this.set("selectedTermTaxonomy", product.get("defaultDataType"));
-        return SakuraiWebapp.TermTaxonomy.findTermTaxonomyTypes(product);;
+        return TermTaxonomy.findTermTaxonomyTypes(product);
     }),
 
     /**
@@ -286,13 +227,13 @@ export default Controller.extend(
             filters.forEach( function(filterObject) {
                 var record;
                 var objectType = filterObject.get("dataType").get('constructor').toString();
-                var itemNameStore = (objectType == "SakuraiWebapp.Chapter")? 'chapterFilter' : 'termTaxonomyFilter';
+                var itemNameStore = (objectType === "Chapter")? 'chapterFilter' : 'termTaxonomyFilter';
 
                 if (filterObject.get('doesExist') && filterObject.get('willRemove')) {
                     record = store.getById(itemNameStore, filterObject.get('id'));
                     removeQueue.push(record);
                 } else if (!filterObject.get('doesExist') && !filterObject.get('willRemove')) {
-                    if (itemNameStore == 'termTaxonomyFilter') {
+                    if (itemNameStore === 'termTaxonomyFilter') {
                         record = store.createRecord(itemNameStore, {type: filterObject.get("type"), instructor: filterObject.get("instructor"), termTaxonomy: filterObject.get("dataType"), product:currentProduct});
                     } else {
                         var filterData = {type: filterObject.get("type"), instructor: filterObject.get("instructor"), chapter: filterObject.get("dataType")};

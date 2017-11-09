@@ -1,4 +1,6 @@
-SakuraiWebapp.EditQuestionCollectionComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 
     question_set_name: null,
     invalid_qc_name: false,

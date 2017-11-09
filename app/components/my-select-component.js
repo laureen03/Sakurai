@@ -1,9 +1,10 @@
-SakuraiWebapp.MySelectComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 
   tagName: 'select',
   content: null,
   selectedValue: null,
-  groupContent: null,
   optionValuePath : null,
   optionLabelPath : null,
   attributeBindings: ['selectedValue', 'disabled', 'multiple'],
@@ -15,10 +16,11 @@ SakuraiWebapp.MySelectComponent = Ember.Component.extend({
           groupName = "",
           group = null;
       $.each(self.get("content"), function( index, value ) {
-        if (groupName != value.group){
-          if (group!= null)
+        if (groupName !== value.group){
+          if (group!= null){
             newList.push(group);
-          group = new Object();
+          }
+          group = new Object({});
           group.name = value.group;
           group.children = [];
           self.addOption(group.children, value);
@@ -51,13 +53,17 @@ SakuraiWebapp.MySelectComponent = Ember.Component.extend({
 
   addOption: function(array, content, isJSON){
     var self=this;
-    if (self.get("optionValuePath") && self.get("optionLabelPath"))
-      if (isJSON)
+    if (self.get("optionValuePath") && self.get("optionLabelPath")){
+      if (isJSON){
         array.push({"id": content[self.get("optionValuePath")], "name": content[self.get("optionLabelPath")]});
-      else
+      }
+      else{
         array.push({"id": content.get(self.get("optionValuePath")), "name": content.get(self.get("optionLabelPath"))});
-    else
+      }
+    }
+    else{
       array.push({"id": content, "name": content}); 
+    }
   },
 
   change: function() {

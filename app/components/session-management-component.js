@@ -1,4 +1,6 @@
-SakuraiWebapp.SessionManagementComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 
     inactivityCountdown: 1800,   // default: 30 minutes before showing the logout warning modal
     logoutCountdown: 30,         // default: 30 seconds before the user is automatically redirected to the log in screen
@@ -100,7 +102,7 @@ SakuraiWebapp.SessionManagementComponent = Ember.Component.extend({
             context.$('.modal').modal('hide');
 
             Ember.run( function() {
-                if (self.get("isDestroyed")) return;
+                if (self.get("isDestroyed")){ return; }
                 // Ask controller to proceed with action
                 context.sendAction('action');
             });

@@ -1,0 +1,19 @@
+<div class="assignment-info clearfix">
+    {{partial "student/partials/exam_assignment_header_3_col"}}
+    <div class="details">
+        <span>{{t "assignment.youCompleted"}}</span>
+        <div>{{t "assignments.timePerQuestion"}}:&nbsp;{{to-hours assignment.exam.averageTimeOnQuestion base="seconds" format="hms"}}</div>
+    </div>
+    <div class="details">
+        <span class="label label-success">{{t "assignments.complete"}}</span>
+        <span class="points highlight">
+            {{assignment.score}}/{{assignment.points}}&nbsp;{{t "assignment.pointsText"}}
+        </span>
+    </div>
+</div>
+<div class="clearfix">
+    <div class="btn-box">
+        {{#link-to 'student.assignments' class.id class="btn btn-blue"}}{{t "assignExam.done"}}{{/link-to}}
+        {{#link-to 'exam.result' assignment.exam.id class.id class="btn btn-blue btn-result space-btn"}}{{t "assignment.examResult"}}{{/link-to}}
+    </div>
+</div>

@@ -8,7 +8,9 @@
  * @extends Ember.Component
  */
 
-SakuraiWebapp.AsyncButtonComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 
     /*
      * === PROPERTIES
@@ -42,8 +44,9 @@ SakuraiWebapp.AsyncButtonComponent = Ember.Component.extend({
      * Register the component as a property of a parent component using the property register-as
      */
     _register: function() {
-        if (this.get('parent'))
+        if (this.get('parent')){
             this.get('parent').registerButton(this);
+        }
         this.set('register-as', this);
     }.on('init'),
 
@@ -51,7 +54,7 @@ SakuraiWebapp.AsyncButtonComponent = Ember.Component.extend({
 
         var id = this.get('elementId');
 
-        if (id == componentId) {
+        if (id === componentId) {
             // Make sure we are restoring the right button
             Ember.Logger.debug(this.toString() + ': restore button in component #' + componentId);
             this.$('.glyphicon').addClass('invisible')

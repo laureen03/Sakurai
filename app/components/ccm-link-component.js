@@ -6,11 +6,14 @@
  * @param data-ccm-key {string} ccm key to create the link
  * @param data-i18n-label {string} i18n for link label
  * @param data-product-isbn {string} isbn
- * @param data-class {SakuraiWebapp.Class} the class (optional)
+ * @param data-class {Class} the class (optional)
  * @param data-class-names {string} the class names for the inner element (optional)
  */
 
-SakuraiWebapp.CcmLinkComponent = Ember.Component.extend({
+import Ember from "ember"; 
+import CCMHelper from "utils/ccm-helper";
+
+export default Ember.Component.extend({
 
     tagName: 'span',
 
@@ -35,12 +38,12 @@ SakuraiWebapp.CcmLinkComponent = Ember.Component.extend({
     'data-product-isbn': null,
 
     /**
-     * @property {SakuraiWebapp.Class} the class
+     * @property {Class} the class
      */
     'data-class': null,
 
     /**
-     * @property {SakuraiWebapp.CCMHelper}
+     * @property {CCMHelper}
      */
     ccmHelper: null,
 
@@ -57,7 +60,7 @@ SakuraiWebapp.CcmLinkComponent = Ember.Component.extend({
 //            throw new Ember.Error('data-product-isbn parameter is required');
 //        }
 
-        this.set("ccmHelper", SakuraiWebapp.CCMHelper.create({}));
+        this.set("ccmHelper", CCMHelper.create({}));
 
     }.on("init"),
 

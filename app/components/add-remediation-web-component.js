@@ -1,4 +1,6 @@
-SakuraiWebapp.AddRemediationWebComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 	/**
      * @property {string} save question action
      */

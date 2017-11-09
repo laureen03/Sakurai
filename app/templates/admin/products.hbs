@@ -1,0 +1,8 @@
+<div class="container welcome">
+    <div class="center">
+    	<h2 class="auto-center col-sm-4 section-header dark">{{t "header.myProducts"}}</h2>
+    	{{#each products as |product|}}
+            <h3>{{#link-to 'admin.products' product.internalClass.id}} {{{product.title}}} {{/link-to}}</h3>
+        {{/each}}
+    </div>
+</div>

@@ -1,0 +1,9 @@
+<input type="file" class="visuallyhidden" {{action 'fileChange' on='change'}} accept={{data-input-accepts}} />
+<button class="btn btn-default" {{action 'openUpload'}}>{{t btn-label}}</button>
+{{#if file-information}}
+    <span class="file-name">{{file-information.fileName}}</span>
+    <a class="remove-link" {{action 'removeFile'}}>
+        <i class="glyphicon glyphicon-remove-sign"></i>
+        <span>{{t remove-label}}</span>
+    </a>
+{{/if}}

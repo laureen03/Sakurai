@@ -2,10 +2,12 @@
  *
  * @type {*}
  */
-SakuraiWebapp.HaidPerformanceBarsComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 
     /**
-     * @property {SakuraiWebapp.TermTaxonomyStat}
+     * @property {TermTaxonomyStat}
      */
     'data-stats':null,
 
@@ -41,7 +43,7 @@ SakuraiWebapp.HaidPerformanceBarsComponent = Ember.Component.extend({
 
     /**
      * Return strengths per type
-     * @property {SakuraiWebapp.TermTaxonomyPerformance[]}
+     * @property {TermTaxonomyPerformance[]}
      */
     performances: Ember.computed("data-stats.performances.[]", "data-type", function(){
         return (this.get("data-filter-type")) ?

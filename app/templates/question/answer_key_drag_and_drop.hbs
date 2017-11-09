@@ -1,0 +1,8 @@
+<div id="answer-key-{{increment-int index}}" class="{{if answerKey.result.correct 'correct-answer' 'incorrect-answer'}}">
+	<div class="question-result answer-key-dragn-drop">
+		<h4>{{t "quiz.question"}} {{increment-int index}}&nbsp;&nbsp;<small><a class="gray see-full-question" {{action "showFullQuestion" answerKey "question-dragn-drop"}}>{{t "quiz.seeFullQuestion"}}</a></small></h4>
+		<p>{{safe-html answerKey.question.questionText}}</p>
+		{{answer-key-selections result=answerKey.result interaction=answerKey.question.interactions.[0]}}
+		{{partial "question/explanation_remediation"}}
+	</div>
+</div>

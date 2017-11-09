@@ -1,0 +1,36 @@
+<!-- H E A D E R -->
+<div class="login-header admin-products">
+    <div class="container">
+        <div class="navbar-header">
+            <h1 id="prepU"><a class="ir">prepU</a></h1>
+        </div>
+        <nav class="navbar-collapse" role="navigation">
+            <ul class="nav menu-dropdown menu-username" role="tablist">
+                <li class="dropdown">
+                    <a class="dropdown-toggle username" data-toggle="dropdown" href="#">
+                        <div class="name">{{user.firstName}}&nbsp;{{user.lastName}}</div><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>{{#link-to 'admin.profile'}}{{t "header.myProfile"}}{{/link-to}} </li>
+                        <li><a>{{t "header.help"}}</a></li>
+                        <li class="logout"><a href="#" {{action "logout"}}>{{t "header.signOut"}}</a> </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav menu-dropdown menu-center" role="tablist">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                      {{t "header.myProducts"}}&nbsp;<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        {{#each products as |product|}}
+                            <li>
+                                {{#link-to 'admin.products' product.internalClass.id}}{{{product.title}}}{{/link-to}}
+                            </li>
+                        {{/each}}
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

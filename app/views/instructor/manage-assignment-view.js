@@ -1,4 +1,8 @@
-SakuraiWebapp.InstructorManageAssignmentView = Ember.Component.extend(SakuraiWebapp.UserInterfaceFeaturesMixin, {
+import Ember from "ember";
+import UserInterfaceFeaturesMixin from "mixins/user-interface-features";
+
+export default Ember.Component.extend(
+    UserInterfaceFeaturesMixin, {
 	layoutName: 'layout/forInstructorComplete',
     _controller: null,
     'copyAssignment': 'copyAssignment',
@@ -17,7 +21,7 @@ SakuraiWebapp.InstructorManageAssignmentView = Ember.Component.extend(SakuraiWeb
         /*Disable the Enter in the form*/
         $('form').bind("keypress", function(e) {
           var KEYCODE = ( document.all ? window.event.keyCode : e.which) ;
-          if (KEYCODE == 13) {
+          if (KEYCODE === 13) {
             e.preventDefault();
             e.stopPropagation();
           }

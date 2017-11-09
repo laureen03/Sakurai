@@ -1,0 +1,5 @@
+{{#if assignment.isExamAssignment}}
+    {{partial "instructor/partial/assignment_summary_exam"}}
+{{else}}
+    {{partial "instructor/partial/assignment_summary_quiz"}}
+{{/if}}

@@ -1,4 +1,7 @@
-SakuraiWebapp.AddRemediationLinkComponent = Ember.Component.extend({
+import Ember from "ember"; 
+import RemediationLink from "models/remediation-link";
+
+export default Ember.Component.extend({
 
     /**
      * @property {Bool} Remediation Link Active or Not
@@ -80,24 +83,26 @@ SakuraiWebapp.AddRemediationLinkComponent = Ember.Component.extend({
      * Remediation links Type
      */
     typesRemediationLinks: Ember.computed(function(){
-        return SakuraiWebapp.RemediationLink.getRemediationLinksTypes();
+        return RemediationLink.getRemediationLinksTypes();
     }),
 
     /**
      * Observe for radio value
      **/
     isSearch: Ember.computed("remediationRadioVal", function(){
-        var isSearch = (this.get("remediationRadioVal") == "search") ? true : false;
+        var isSearch = (this.get("remediationRadioVal") === "search") ? true : false;
         this.set("remediationLinks", null);
         if (isSearch) {
             this.set("books", Ember.A());
             this.set("categories", Ember.A());
             this.set("subCategories", Ember.A());
         } else {
-            if (this.get("typeRemediationLinks") == SakuraiWebapp.RemediationLink.LA)
+            if (this.get("typeRemediationLinks") === RemediationLink.LA){
                 this.loadBooks();
-            else
+            }
+            else{
                 this.loadBrowseLP();
+            }
         }
         return isSearch;
     }), 
@@ -108,12 +113,12 @@ SakuraiWebapp.AddRemediationLinkComponent = Ember.Component.extend({
     isLA: Ember.computed("typeRemediationLinks", function(){
         var component = this;
         component.resetValues();
-        if (component.get("typeRemediationLinks") == SakuraiWebapp.RemediationLink.WEB) {
+        if (component.get("typeRemediationLinks") === RemediationLink.WEB) {
             component.set("isWeb", true);
             return false;
         } else {
             component.set("isWeb", false);
-            return (component.get("typeRemediationLinks") == SakuraiWebapp.RemediationLink.LA) ? true : false;
+            return (component.get("typeRemediationLinks") === RemediationLink.LA) ? true : false;
         }
 
     }),
@@ -134,7 +139,7 @@ SakuraiWebapp.AddRemediationLinkComponent = Ember.Component.extend({
             this.set("remediationLinks", null);
         } else {
             this.set("bookError", false);
-            if (result.length != 0) {
+            if (result.length !== 0) {
                 this.loadCategory(result[0]);
             }
         }
@@ -156,7 +161,7 @@ SakuraiWebapp.AddRemediationLinkComponent = Ember.Component.extend({
             this.set("subCategories", Ember.A());
         } else {
             this.set("categoryError", false);
-            if (result.length != 0) {
+            if (result.length !== 0) {
                 component.set("subCategoryId", []);
                 component.set("remediationLinks", component.get("categories").findBy("id", result[0]).get("remediationLinks"));
                 var subCategories = component.get("categories").findBy("id", result[0]).get("subCategories");
@@ -185,7 +190,7 @@ SakuraiWebapp.AddRemediationLinkComponent = Ember.Component.extend({
             this.set("remediationLinks", null);
         } else {
             this.set("subCategoryError", false);
-            if (result.length != 0) {
+            if (result.length !== 0) {
                 component.set("remediationLinks", component.get("subCategories").findBy("id", result[0]).get("remediationLinks"));
             }
         }
@@ -224,8 +229,9 @@ SakuraiWebapp.AddRemediationLinkComponent = Ember.Component.extend({
         store.query("remediationLinkCategory", {bookId: id}).then(function (categories) {
             var firstLevelCategories = Ember.A();
             categories.forEach(function(category) {
-                if (category.get('level') == 1)
+                if (category.get('level') === 1){
                     firstLevelCategories.push(category);
+                }
             });
             component.set("categories", firstLevelCategories);
             component.$('.category-spinner').addClass("hide");
@@ -268,8 +274,8 @@ SakuraiWebapp.AddRemediationLinkComponent = Ember.Component.extend({
         remediationLinkRecord.save().then(function (remediationLinkSaved) {
             //send to add this 
             component.set("activeRemediationLinks", false);
-            component.set("typeRemediationLinks", SakuraiWebapp.RemediationLink.LA);
-            $(".add-remediation-link-section .remediation-select").val(SakuraiWebapp.RemediationLink.LA).trigger("change");
+            component.set("typeRemediationLinks", RemediationLink.LA);
+            $(".add-remediation-link-section .remediation-select").val(RemediationLink.LA).trigger("change");
             component.sendAction(
                     "data-save-action",
                     remediationLinkSaved
@@ -298,7 +304,7 @@ SakuraiWebapp.AddRemediationLinkComponent = Ember.Component.extend({
 
             var remediationLinkRecord = this.get("store").createRecord("remediationLink", {
                 name: remediationName,
-                type: SakuraiWebapp.RemediationLink.WEB,
+                type: RemediationLink.WEB,
                 url: remediationUrl
             });
             component.saveRemediation(remediationLinkRecord);
@@ -313,7 +319,7 @@ SakuraiWebapp.AddRemediationLinkComponent = Ember.Component.extend({
                     store = component.get("store"),
                     searchTerm = component.get("searchTerm");
             component.$('.search-spinner').removeClass("hide");
-            if (searchTerm.trim() != "") {
+            if (searchTerm.trim() !== "") {
                 store.query("remediationLink", {term: searchTerm, type: component.get("typeRemediationLinks")}).then(function (remediationLinks) {
                     component.set("remediationLinks", remediationLinks);
                     component.$('.search-spinner').addClass("hide");

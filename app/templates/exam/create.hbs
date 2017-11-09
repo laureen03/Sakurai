@@ -1,0 +1,65 @@
+<div class="container exam-content">
+    <h1>{{t "exam.nclexPracticeExam"}}</h1>
+    <span>{{t "exam.useSettings"}}</span>
+    {{#if allowInProgressAlert}}
+    <div>
+        <div class="clearfix">
+            <div>
+                <div class="pull-left">
+                    <h4>{{t "exam.progressAlert"}}</h4>
+                </div>
+                <div class="pull-left">
+                    <a href="#" class="what-is-this-progress-alert gray pull-left whatisthis hidden-xs" data-target="#what-is-progressAlert" data-toggle="modal">{{t "whatIsThis"}}</a>
+                </div>
+            </div>
+        </div>
+        <label id="inProgressAlertOn">
+            <input id="progressAlertRadio" type="radio" name="inProgressAlert" value="1" />
+            <span>{{t "exam.onProgressAlert"}}</span>
+        </label>
+        <label>
+            <input id="progressAlertRadioOff" type="radio" name="inProgressAlert" value="0" checked="checked"/>
+            <span>{{t "exam.offProgressAlert"}}</span>
+        </label>
+    </div>
+    {{/if}}
+
+    <div class="questions-desc">
+        <h4>{{t "quiz.numberQuestion"}}:</h4>
+        {{my-select 
+            name=question_number
+            content=numQuestions
+            selectedValue=numQuestionsSelected}}
+        <p class="hide progress-alert-on-msg">{{t "exam.onProgressNoOfQuestions"}}</p>
+    </div>
+
+    <div>
+        <h4>{{t "exam.examTimeLimit"}}</h4>
+        <label>
+            <input id="noTimeLimitRadio" type="radio" name="timeLimit" value="0" checked="checked"/>
+            <span>{{t "exam.noTimeLimit"}}</span>
+        </label>
+        <label id="time-limit-lbl">
+            <input id="timeLimitRadio" type="radio" name="timeLimit" value="1"/>
+            <span id="time-limit-text" class="disabled">{{t "exam.limitTime"}}</span>
+        </label>
+        {{my-select 
+            class="disabled"
+            id="minutes_limit"
+            name=minutes_limit
+            content=minutesLimitList
+            optionValuePath="value"
+            optionLabelPath="label"
+            selectedValue=minLimitSelected}}
+        <p class="hide progress-alert-on-msg">{{t "exam.onProgressTimeLimit"}}</p>
+    </div>
+
+    <div class="btn-box margin-top-55">
+        {{async-button id="exam_start"
+        data-button-class="btn btn-blue"
+        data-text="exam.startExam"
+        action="createExam" }}
+    </div>
+{{simple-modal idElement='what-is-progressAlert' title="exam.progressAlert" bodyHtml=inProgressAlertDescription}}
+
+</div>

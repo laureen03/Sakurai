@@ -1,0 +1,47 @@
+<div id="chapter-filters" class="container">
+    {{#if showFilterOptions}}
+        <h1>{{t "chapterFilters.titleTermTaxonomies"}}</h1>
+        <div class="select-metadata">
+            {{my-select 
+                content=termTaxonomyTypeOptions
+                optionValuePath="id"
+                optionLabelPath="name"
+                selectedValue=selectedTermTaxonomy}}
+
+        </div>
+        {{#with textTaxonomies as |textTaxonomies|}}
+            <p>{{t "chapterFilters.introTermTaxonomies" taxonomyName=textTaxonomies}}</p>
+        {{/with}}
+    {{else}}
+        <h1>{{t "chapterFilters.title"}}</h1>
+        <p>{{t "chapterFilters.intro"}}</p>
+    {{/if}}
+
+    <ol class="chapter-list">
+        {{#each itemsForFilterlist as |item|}}
+            <li class="unit">
+                <strong>{{item.name}}</strong>
+                <ol>
+                {{#each item.children as |child|}}
+                    <li>
+                        {{hide-data-type-filter filterVarName=controller.filterVarName
+                                         dataType=child
+                                         instructor=user
+                                         type=controller.typeFilter
+                                         add="addFilter"
+                                         remove="removeFilter"
+                                         filterMap=controller.filterMap}}
+                    </li>
+                {{/each}}
+                </ol>
+            </li>
+        {{/each}}
+    </ol>
+
+    <div class="actions">
+        {{async-button data-button-class="btn btn-blue save"
+                       data-text="button.saveChanges"
+                       action="saveFilters" }}
+        <a href="#" class="cancel" {{action "exitWithoutSaving"}}>{{t "cancel"}}</a>
+    </div>
+</div>

@@ -1,0 +1,184 @@
+<div id="studentUsage">
+    <div class="ml-results">
+        <h2 class="student-usage-title">
+            {{t "hmcd.studentUsage.title"}}
+            {{#if showStudentUsageDownload}}
+                <small class="small-link">
+                    {{export-csv-link
+                        data=studentUsageSortable.collection
+                        data-class=class
+                        data-product=class.product
+                        isRemediationLinkAllowed=isRemediationLinkAllowed
+                        type="studentUsage"}}
+                </small>
+            {{/if}}
+            {{#if ccmStudentRosterEnabled }}
+                <small class="small-link student-roster">
+                    {{ccm-link data-ccm-key="studentRoster"
+                        data-i18n-label="hmcd.studentUsage.manageRoster"
+                        data-class=class data-product-isbn=isbn
+                        data-class-names="highlight-link"}}
+                </small>
+            {{/if}}
+        </h2>
+        <table class="table table-striped tablesorter studentUsage-table">
+            <thead>
+            <tr>
+                <th class="visible-xs visible-sm no-arrow">{{t "expand"}}</th>
+                <th class="header sort_user_lastName">
+                    <a {{action 'onSortByCriteria' 'studentUsage' 'user.lastName' }}>
+                        <span class="name-userLastName action headerSortUp">{{t "hmcd.studentUsage.name"}}</span>
+                    </a>
+                </th>
+
+                <th class="hidden-xs header sort_user_logins">
+                    <a {{action 'onSortByCriteria' 'studentUsage' 'user.logins' }}>
+                        <span class="name-userLogins action">{{t "hmcd.studentUsage.logins"}} </span>
+                    </a>
+                </th>
+                <th class="hidden-xs header sort_user_lastLogin">
+                    <a {{action 'onSortByCriteria' 'studentUsage' 'user.lastLogin' }}>
+                        <span class="name-userLastLogin action">{{t "hmcd.studentUsage.lastLogin"}}</span>
+                    </a>
+                </th>
+                <th class="hidden-xs header sort_quizzesCompleted">
+                    <a {{action 'onSortByCriteria' 'studentUsage' 'quizzesCompleted' }}>
+                        <span class="name-quizzesCompleted action">{{t "hmcd.studentUsage.quizzesCompleted"}}</span>
+                    </a>
+                </th>
+                <th class="hidden-xs header sort_questionsAnswered">
+                    <a {{action 'onSortByCriteria' 'studentUsage' 'questionsAnswered' }}>
+                        <span class="name-questionsAnswered action">{{t "hmcd.studentUsage.questionAnswered"}}</span>
+                    </a>
+                </th>
+                <th class="header sort_masteryLevel">
+                    <a {{action 'onSortByCriteria' 'studentUsage' 'masteryLevel' }}>
+                        <span class="name-masteryLevel action">{{t "hmcd.studentUsage.masteryLevel"}}</span>
+                    </a>
+                </th>
+                {{#if removeStudentEnabled}}
+                <th id="studentUsage-remove" class="hidden-xs student-usage-remove-th">
+                    <span class="name-totalCompleted">&nbsp;</span>
+                </th>
+                {{/if}}
+                {{#if isRemediationLinkAllowed}}
+                    <th class="header sort_totalRemediationLinkViews">
+                        <a {{action 'onSortByCriteria' 'studentUsage' 'totalRemediationLinkViews' }}>
+                            <span class="name-totalRemediationLinkViews action">{{t "examSummary.studentUsage.remediationViews"}}</span>
+                        </a>
+                    </th>
+                {{else if isReferenceLinksAllowed}}
+                    {{#if incReferenceViewsAllowed}}
+                        <th class="header sort_totalRemediationLinkViews">
+                            <a {{action 'onSortByCriteria' 'studentUsage' 'totalRemediationLinkViews' }}>
+                                <span class="name-totalRemediationLinkViews action">{{t "examSummary.studentUsage.remediationViews"}}</span>
+                            </a>
+                        </th>
+                    {{/if}}
+                {{/if}}
+            </tr>
+            </thead>
+            <tbody>
+            {{#each studentUsageSortable.collection as |studentUsage index|}}
+                <tr data-student="{{studentUsage.user.id}}" data-pos-su="{{index}}">
+                    <td class="visible-xs visible-sm">
+                        <a {{action 'showMoreStudentUsage' index studentUsage.quizzesCompleted studentUsage.masteryLevel }} class="icon">
+                            <span data-arrow="{{index}}" class="glyphicon glyphicon-chevron-down"></span>
+                        </a>
+                    </td>
+                    <td class="name tleft" title="{{studentUsage.user.fullName}}">
+                        <a class="underline" {{action "openStudentView" studentUsage.user.id}}>
+                            <div class="assignment-name">{{studentUsage.user.fullName}}</div>
+                            <div class="student-email">{{studentUsage.user.email}}</div>
+                        </a>
+                    </td>
+
+                    <td class="hidden-xs logins center">
+                        {{#if studentUsage.logins}}
+                            <a {{action 'getUserLogins' studentUsage.user}} class="underline">{{studentUsage.logins}}</a>
+                        {{else}}
+                            {{studentUsage.logins}}
+                        {{/if}}
+                    </td>
+                    <td class="hidden-xs lastLogin date">
+                        {{#if studentUsage.lastLogin}}
+                            <span class="date-format">{{format-date studentUsage.lastLogin}}</span>
+                        {{else}}
+                            &mdash;
+                        {{/if}}
+                    </td>
+                    <td class="hidden-xs quizzes-completed">
+                        {{studentUsage.quizzesCompleted}}
+                    </td>
+                    <td class="hidden-xs questions-answered">
+                        {{studentUsage.questionsAnswered}}
+                    </td>
+                    <td class="xs-last mastery-level">{{numeral-format studentUsage.masteryLevel '0.00'}}</td>
+                    {{#if removeStudentEnabled}}
+                        <td class="hidden-xs remove student-usage-remove-td">
+                            <a class="remove-student underline" {{action 'setDeleteModal' studentUsage.user.id studentUsage.user.fullName}}>
+                                {{t "hmcd.studentUsage.remove"}}
+                            </a>
+                        </td>
+                    {{/if}}
+                    {{#if isRemediationLinkAllowed}}
+                        <td class="remediation-views">
+                            <a {{action "showRemediationLinkViews" studentUsage.user.id}} class="underline">
+                            {{studentUsage.totalRemediationLinkViews}}
+                            </a>
+                        </td>
+                    {{else if isReferenceLinksAllowed}}
+                        {{#if incReferenceViewsAllowed}}
+                            <td class="remediation-views">
+                                <a {{action "showRemediationLinkViews" studentUsage.user.id}} class="underline">
+                                {{studentUsage.totalRemediationLinkViews}}
+                                </a>
+                            </td>
+                        {{/if}}
+                    {{/if}}
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id='deleteStudent-mdl' class="modal fade">
+    <div class="modal-dialog remove-student-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h4 class="modal-title">{{deleteHeader}}</h4>
+            </div>
+            <div class="modal-body cf">
+                {{t "hmcd.studentUsage.modalBody"}}
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-danger unenroll" {{action 'deleteStudent'}}>{{t "hmcd.studentUsage.remove"}}</button>
+                <button type="button" class="btn btn-default cancel-unenroll"
+                        data-dismiss="modal">{{t "cancel"}}</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id='remediation-link-views-mdl' class="modal fade">
+    <div class="modal-dialog remediation-link-views">
+        <div class="modal-content">
+            <div class="modal-body cf">
+                <div>
+                    {{remediation-link-views-table data-remediationLinkViews=remediationLinkViews data-store=controller.store isFullQuestion=controller.isFullQuestionRemediation}}
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+{{login-calendar-modal user=loginModalUser
+                       login-data=loginModalData
+                       data-range=loginModalDataRange }}

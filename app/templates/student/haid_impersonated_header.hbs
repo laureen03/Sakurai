@@ -1,0 +1,20 @@
+<div class="container haid-impersonated-header">
+    <h1>{{class.name}}</h1>
+    <div class="term-class">
+        <h4><span class="class-name">{{class.term}} &nbsp;&middot;&nbsp;</span>
+            {{t "header.viewingStudent"}}&nbsp;{{impersonatedUser.firstName}}&nbsp;{{impersonatedUser.lastName}}
+        </h4>
+    </div>
+    <div class="navigation">
+        {{#if ccmViewStudentRosterEnabled}}
+            {{ccm-link
+                data-ccm-key="studentRoster"
+                data-class-names="roster"
+                data-i18n-label="haid.viewStudentRoster"
+                data-class=class data-product-isbn=isbn }}
+        {{/if}}
+        {{#if ccmGoBackEnabled}}
+            <a {{action "goBackToHMCD"}} class="dark-gray go-back" href="#">{{t "haid.goBack"}}</a>
+        {{/if}}
+    </div>
+</div>

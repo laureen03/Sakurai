@@ -1,0 +1,79 @@
+<div class="container">
+    {{#unless isClassCreate}}
+	{{#if editMode}}
+        <h1 class="auto-center col-sm-6 section-header dark">{{t "classes.editClass"}}</h1>
+    {{else}}
+        <h1 class="auto-center col-sm-6 section-header dark">{{t "classes.createClass"}}</h1>
+    {{/if}}
+    <form role="form" id="add-edit-class">
+        <div class="form-group auto-center col-sm-6 class-create clearfix">
+            <div class="form-group">
+                <h4>{{t "classes.product"}}</h4>
+                {{#if editMode}}
+                    <span class="productName">{{currentClass.product.name}}</span>
+                {{else}}
+                    {{my-select 
+                        class="custom-select"
+                        id="select-product"
+                        content=products
+                        optionValuePath="id"
+                        optionLabelPath="name"
+                        prompt=""
+                        selectedValue=productId}}
+                {{/if}}
+            </div>
+            <div class="form-group">
+                <h4>{{t "classes.className"}}</h4>
+                {{input id="className" name="className" type="text" class="form-control" value=className}}
+            </div>
+            <div class="form-group">
+                <h4>{{t "classes.term"}}</h4>
+                {{input id="term" name="term" type="text" class="form-control" value=currentClass.term}}
+            </div>
+            <div class="form-group clearfix">
+                <div class="dates">
+                    <h4>{{t "classes.startDate"}}<small> - {{t "classes.optional"}}</small></h4>
+                    {{input id="dpd1" name="dpd1" type="text" class="form-control" readonly="readonly" value=startDate}}
+                </div>
+                <div class="dates end-date">
+                    <h4>{{t "classes.endDate"}}<small> - {{t "classes.optional"}}</small> </h4>
+                    {{input id="dpd2" name="dpd2" type="text" class="form-control" readonly="readonly" value=endDate }}
+                </div>
+            </div>
+            <div class="form-group">
+                <h4>{{t "classes.school"}}</h4>
+                {{view 'select' class="custom-select"
+                    id="select_school"
+                    content=schools
+                    optionValuePath="content.id"
+                    optionLabelPath="content.name"
+                    name="select_school"
+                    prompt=""
+                    value=schoolId}}
+            </div>
+            {{#if editMode}}
+                <div class="form-group">
+                    <div class="btn-group">
+                      <button type="button" class="btn {{if currentClass.active 'btn-default' 'btn-white'}}" {{action "setStatus" true}}>{{t "classes.active"}}</button>
+                      <button type="button" class="btn {{if currentClass.active 'btn-white' 'btn-default'}}" {{action "setStatus" false}}>{{t "classes.inactive"}}</button>
+                    </div>
+                </div>
+            {{/if}}
+            <div>
+                {{async-button
+                    data-button-class="btn btn-blue auto-center"
+                    data-text="submit"
+                    action="createClass" }}
+            </div>
+        </div>
+    </form>
+    {{else}}
+    <h1 class="auto-center col-sm-6 section-header dark">{{t "classes.classCreated"}}</h1>
+    <div class="center auto-center col-sm-7 create-success">
+        <p>{{currentClass.name}} {{t "classes.for"}} {{currentClass.term}} {{t "classes.wasCreated"}}</p>
+        <p>{{t "classes.classCodeIs"}}&nbsp;<strong><span class="class-code">{{currentClass.classCode}}</span></strong></p>
+        <p>{{{t "classes.toEnroll"}}}</p>
+        {{#link-to 'instructor.class' class="btn btn-blue"}}{{t "classes.returnClasses"}}{{/link-to}}
+    </div>
+    {{/unless}}
+</div>

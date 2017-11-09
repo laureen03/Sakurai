@@ -1,0 +1,119 @@
+<div class="container assignments-container assignment-container-instructor clearfix">
+    <h2 class="instructor-assignments">{{t "assignments.assignments"}}<span class="text-muted"> - {{product.title}}</span></h2>
+    <br/>
+    <div class="assignments">
+        {{#if assignmentsSortable.collection}}
+        <table class="table tablesorter assignments-table" >
+            <thead>
+                <tr>
+                    <th class="visible-xs no-arrow">{{t "expand"}}</th>
+                    {{#if showCopyOptions}}
+                    <th class="hidden-xs">
+                        {{{t "assignments.copyHeader"}}}
+                    </th>
+                    {{/if}}
+                    <th class="header sort_name tleft">
+                        <a {{action 'onSortByCriteria' 'name' }}>
+                            <span class="name-action action">{{t "assignments.name"}}</span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs sort_type">
+                        <a {{action 'onSortByCriteria' 'type' }}>
+                            <span class="name-type action">{{t "assignments.type"}} </span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs hidden-xs header sort_timestampAvailableDate">
+                        <a {{action 'onSortByCriteria' 'timestampAvailableDate' }}>
+                            <span class="name-type action">{{t "assignments.startDate"}} </span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs header sort_timestampDueDate">
+                        <a {{action 'onSortByCriteria' 'timestampDueDate' }}>
+                            <span class="name-timestampDueDate action">{{t "assignments.dueDate"}}</span>
+                         </a>
+                    </th>
+                    <th class="hidden-xs">{{t "edit"}}</th>
+                    <th class="hidden-xs">{{t "delete"}}</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            {{#each assignmentsSortable.collection as |assignment index|}}
+                <tr data-pos="{{index}}">
+                    <td class="visible-xs">
+                        <a {{action 'showMore' index assignment}} class="icon">
+                            <span data-arrow="{{index}}" class="glyphicon glyphicon-chevron-down"></span>
+                        </a>
+                    </td>
+                    {{#if showCopyOptions}}
+                    <td class="hidden-xs" title={{t "assignments.checkboxhover"}}>
+                        <input id="check{{assignment.id}}" type="checkbox" value={{assignment.id}} {{action "selectAssignment" assignment on="change"}}/>
+                    </td>
+                    {{/if}}
+                    <td class="name tleft" title={{assignment.name}}>
+                        {{#if assignment.isQuestionCollectionAssignment}}
+                            {{#link-to 'instructor.qcAssignmentSummary' controller.classId assignment.id class="assignment-name"}}{{assignment.name}}{{/link-to}}
+                        {{else}}
+                            {{#link-to 'instructor.assignmentSummary' controller.classId assignment.id class="assignment-name"}}{{assignment.name}}{{/link-to}}
+                        {{/if}}
+                    </td>
+                    <td class="status hidden-xs">
+                        {{#if assignment.isQuestionCollectionAssignment}}
+                            {{{t "assignments.questionCollection"}}}
+                        {{/if}}
+                        {{#if assignment.isMasteryLevelAssignment}}
+                            {{{t "assignments.masteryLevel"}}}
+                        {{/if}}
+                        {{#if assignment.isExamAssignment}}
+                            {{t "assignments.examType"}}
+                        {{/if}}
+                    </td>
+                    <td class="hidden-xs date"><span class="date-format">{{format-date assignment.availableDate timezone=assignment.timeZone}}</span></td>
+                    <td class="hidden-xs date"><span class="date-format">{{format-date assignment.dueDate timezone=assignment.timeZone}}</span></td>
+                    <td class="hidden-xs">
+                        <a class="edit-assignment" {{action 'editAssignment' assignment.id assignment.isExamAssignment}}>{{t "edit"}}</a>
+                    </td>
+                    <td class="hidden-xs">
+                        <a class="delete-assignment" {{action 'showDeleteModal' assignment.id assignment.name}}>{{t "delete"}}</a>
+                    </td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+        {{else}}
+            <h3 class="title-no-class">{{t "assignments.noCreated"}}</h3>
+        {{/if}}
+         <div class="btn-box">
+            {{#if showCopyOptions}}
+            <button class="btn btn-blue {{if hasCopyAssignments 'enabled' 'disabled'}}" {{action "copyAssignment"}}>{{t "classes.btnContinue"}}</button>
+            {{/if}}
+            {{#if isPrevHMCD}}
+                {{#link-to 'instructor.hmcd' classId class=goBackClass}}{{t "button.back"}}{{/link-to}}
+            {{else}}
+                {{#link-to 'instructor.manageAssignment' classId 0 class=goBackClass}}{{t "button.back"}}{{/link-to}}
+            {{/if}}
+        </div>
+    </div>
+</div>
+
+<div id='deleteAssignment-mdl' class="modal fade">
+    <div class="modal-dialog remove-assignment-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h4 class="modal-title">{{deleteAsHeader}}</h4>
+            </div>
+            <div class="modal-body cf">
+                {{t "assignments.removeModal.body"}}
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-danger remove" {{action 'removeAssignment'}}>{{t "delete"}}</button>
+            <button type="button" class="btn btn-default cancel-remove"
+                    data-dismiss="modal">{{t "cancel"}}</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -1,0 +1,28 @@
+<div class="student-exam-performance-graph">
+    {{#if selectedExam}}
+        <div class="student-exam-tooltip">
+            <h4>
+                {{selectedExamLabel}}  {{t "examReports.chart.summary"}}
+                <a {{action "hideTooltip"}}
+                    class="glyphicon glyphicon-remove pull-right dark-gray no-underline" aria-hidden="true"></a>
+            </h4>
+            <div> <span class="text">{{t "examReports.chart.masteryLevelAchieved"}}:</span> <span class="value">{{selectedExam.masteryLevel}} </span></div>
+            <div> <span class="text">{{t "examReports.chart.questionsAnswered"}}:</span> <span class="value">{{selectedExam.questionsCompleted}} </span></div>
+            <div> <span class="text">{{t "examReports.chart.dateCompleted"}}:</span> <span class="value">{{format-date selectedExam.endedOn format="MM/DD/YY"}} </span></div>
+            <div> <span class="text">{{t "examReports.chart.completionTime"}}:</span> <span class="value">{{to-hours selectedExam.completedIn base="seconds" format="HM"}} </span></div>
+        </div>
+    {{/if}}
+
+    <div id="student_exam_performance_chart"></div>
+    <div class="passing-threshold">
+        <div class="green-gradient"></div>
+        <div class="yellow-line"></div>
+        <div class="red-gradient"></div>
+    </div>
+    <div id="examStatMinimumNCLEXProficiencyMarker" class="marker-threshold">
+        <span class="glyphicon glyphicon-triangle-right"></span>
+    </div>
+    <div id="examStatMinimumNCLEXProficiency" class="label-threshold">
+        {{t "examReports.chart.minimumNCLEXProficiency"}}
+    </div>
+</div>

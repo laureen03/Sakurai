@@ -1,0 +1,172 @@
+<div class="container exam-reports">
+    <div class="col-md-3 options-menu">
+        <div class="divider"></div>
+        <ul>
+            <li class="exam-action-title">{{t "examReports.jumpDirectlyTo"}}:</li>
+            <li><a data-scroll-to="examSummary">{{t "examReports.title"}}</a></li>
+            <li><a data-scroll-to="practiceExamPerformance">{{t "examReports.practiceExamPerformance"}}</a></li>
+            <!--<li><a data-scroll-to="strengthsWeaknesses">{{t "examReports.strengthsNweaknesses"}}</a></li>-->
+            <li><a data-scroll-to="performanceClientNeeds">{{t "examReports.performance"}}: {{t "examReports.clientNeed"}}</a></li>
+            <li><a data-scroll-to="performanceNursingTopic">{{t "examReports.performance"}}: {{t "examReports.nursingTopic"}}</a></li>
+            <li><a data-scroll-to="performanceNursingConcept">{{t "examReports.performance"}}: {{t "examReports.nursingConcept"}}</a></li>
+        </ul>
+        <div class="divider"></div>
+    </div>
+    <div class="col-md-9 exam-reports-content">
+        {{#if impersonatedHeaderEnabled}}
+            {{partial "student/exam_reports_impersonated_header"}}
+        {{/if}}
+        <!-- content goes here -->
+        {{partial "student/partials/examSummary"}}
+
+
+        <div id="practiceExamPerformance">
+            <div class="examSummary clearfix">
+                <div class="explanation-box">
+                    <h2>{{t "examReports.practiceExamPerformance"}}</h2>
+                    <div class="graph-container">
+                        {{student-exam-performance-chart examStat=examStat
+                                                         passThreshold=examStat.customThresholdPassing
+                                                         current-page=examCurrentPage
+                                                         page-length=examPageLength }}
+
+                        {{sakurai-pagination page-tabs=6
+                                             total-results=examTotal
+                                             page-length=examPageLength
+                                             current-page=examCurrentPage
+                                             updateGraph="updateGraph"}}
+                    </div>
+                    {{#link-to 'student.examHistory' class.id class="pull-right exam-history-link highlight-link"}}{{t "examHistory.viewExamHistory"}}{{/link-to}}
+                </div>
+            </div>
+        </div>
+
+        <div class="performances bar-graph-container">
+            <div id="performanceClientNeeds">
+                <div class="header">
+                    <h2>{{t "common.performanceBy"}} <b>{{t "common.clientNeed.other"}}</b></h2>
+                    {{#if termTaxonomyStat.clientNeedsTaxonomyPerformances}}
+                        <p>{{t "common.performanceMLCaption"}}</p>
+                    {{/if}}
+                </div>
+                <div class="content">
+                    {{#each termTaxonomyStat.clientNeedsTaxonomyPerformances as |performance|}}
+                        <div class="unit">
+                            {{performance-graph data-performance=performance
+                                                data-performance-name=performance.termTaxonomy.name
+                                                data-highlight-from=thresholdLowerLimit
+                                                data-highlight-to=thresholdUpperLimit
+                                                data-highlight-text="common.approximatePassingThreshold"
+                                                data-hideThresholdLabel=examStat.hideThresholdLabel }}
+                        </div>
+                    {{else}}
+                        <div class="header">
+                            <p>{{t "examReports.atLeastTenQuestionsForClientNeed"}}</p>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+
+            <div id="performanceNursingTopic">
+                <div class="header">
+                    <h2>{{t "common.performanceBy"}} <b>{{t "common.nursingTopic.other"}}</b></h2>
+                    <p>{{t "common.performanceMLCaption"}}&period;</p>
+                </div>
+                <div class="content">
+
+                    <div class="category strengths">
+                        <h3>{{t "common.nursingTopic.other"}} {{t "common.strengths"}}</h3>
+                        {{#each chapterStat.strengths as |performance|}}
+                            <div class="unit">
+                                {{performance-graph data-performance=performance
+                                                    data-performance-name=performance.chapter.name
+                                                    data-highlight-from=thresholdLowerLimit
+                                                    data-highlight-to=thresholdUpperLimit
+                                                    data-hideThresholdLabel=examStat.hideThresholdLabel}}
+                            </div>
+                        {{else}}
+                            <div class="header">
+                                <p>{{t "common.graphsNoteForTopic"}}</p>
+                            </div>
+                        {{/each}}
+                        <div class="show-all hidden">
+                            <a>{{t "common.viewMore"}}</a>
+                        </div>
+                    </div>
+
+                    <div class="category weaknesses">
+                        <h3>{{t "common.nursingTopic.other"}} {{t "common.weaknesses"}}</h3>
+                        {{#each chapterStat.weaknesses as |performance|}}
+                            <div class="unit">
+                                {{performance-graph data-performance=performance
+                                                    data-performance-name=performance.chapter.name
+                                                    data-highlight-from=thresholdLowerLimit
+                                                    data-highlight-to=thresholdUpperLimit
+                                                    data-hideThresholdLabel=examStat.hideThresholdLabel}}
+                            </div>
+                        {{else}}
+                            <div class="header">
+                                <p>{{t "common.graphsNoteForTopic"}}</p>
+                            </div>
+                        {{/each}}
+                        <div class="show-all hidden">
+                            <a>{{t "common.viewMore"}}</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="performanceNursingConcept">
+                <div class="header">
+                    <h2>{{t "common.performanceBy"}} <b>{{t "common.nursingConcept.other"}}</b></h2>
+                    <p>{{t "common.performanceMLCaption"}}&period; </p>
+                </div>
+                <div class="content">
+
+                    <div class="category strengths">
+                        <h3>{{t "common.nursingConcept.other"}} {{t "common.strengths"}}</h3>
+                        {{#each termTaxonomyStat.nursingConceptsStrengths as |performance|}}
+                            <div class="unit">
+                                {{performance-graph data-performance=performance
+                                                    data-performance-name=performance.termTaxonomy.name
+                                                    data-highlight-from=thresholdLowerLimit
+                                                    data-highlight-to=thresholdUpperLimit
+                                                    data-hideThresholdLabel=examStat.hideThresholdLabel}}
+                            </div>
+                        {{else}}
+                            <div class="header">
+                                <p>{{t "common.graphsNote"}}</p>
+                            </div>
+                        {{/each}}
+                        <div class="show-all hidden">
+                            <a>{{t "common.viewMore"}}</a>
+                        </div>
+                    </div>
+
+                    <div class="category weaknesses">
+                        <h3>{{t "common.nursingConcept.other"}} {{t "common.weaknesses"}}</h3>
+                        {{#each termTaxonomyStat.nursingConceptsWeaknesses as |performance|}}
+                            <div class="unit">
+                                {{performance-graph data-performance=performance
+                                                    data-performance-name=performance.termTaxonomy.name
+                                                    data-highlight-from=thresholdLowerLimit
+                                                    data-highlight-to=thresholdUpperLimit
+                                                    data-hideThresholdLabel=examStat.hideThresholdLabel}}
+                            </div>
+                        {{else}}
+                            <div class="header">
+                                <p>{{t "common.graphsNote"}}</p>
+                            </div>
+                        {{/each}}
+                        <div class="show-all hidden">
+                            <a>{{t "common.viewMore"}}</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

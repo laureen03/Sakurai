@@ -1,0 +1,17 @@
+<div class="assignment-info clearfix">
+    {{partial "student/partials/exam_assignment_header_3_col"}}
+    <div class="details">
+        <span>{{t "assignment.youDidNotComplete"}}</span>
+    </div>
+    <div class="details">
+        <span class="label label-danger">{{t "assignments.pastDue"}}</span>
+        <span class="points highlight">
+            {{assignment.score}}/{{assignment.points}}&nbsp;{{t "assignment.pointsText"}}
+        </span>
+    </div>
+</div>
+<div class="clearfix">
+    <div class="btn-box">
+        {{#link-to 'student.assignments' class.id class="btn btn-blue"}}{{t "assignExam.done"}}{{/link-to}}
+    </div>
+</div>

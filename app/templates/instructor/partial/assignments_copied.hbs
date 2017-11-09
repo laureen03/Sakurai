@@ -1,0 +1,139 @@
+<div class="stepsContent success-assignment">
+    <h2 class="title">
+        {{t "copyAssignments.assignmentCreated"}}
+    </h2>
+    {{#each copyAssignments as |assignment|}}
+        <div class="assignment-info clearfix full-width {{if assignment.isExamAssignment 'assign-exam-created' ''}} {{if assignment.isMasteryLevelAssignment 'ml-assignment-created' ''}}">
+            <div class="assignment-content one-target clearfix">
+                <div class="name">
+                    {{#if assignment.isQuestionCollectionAssignment}}
+                        {{t "assignQuiz.questionCollectionQuiz"}}
+                        <h2>{{assignment.name}}</h2>
+                        <span class="total_questions">{{assignment.totalQuestions}} {{t "assignQuiz.questionsTitle"}}</span>
+                    {{else if assignment.isMasteryLevelAssignment}}
+                        {{t "assignQuiz.masteryLevelQuiz"}}
+                        <h2>{{assignment.name}}</h2>
+                        <span class="chapter">
+                            {{#if isMetadataAllowed}}
+                                <ul class="metadata-title">
+                                    {{#if assignment.hasChapter}}
+                                        {{#if usesNursingTopics}}
+                                            <li class="category capitalize">{{t "category"}}: {{terminologyTermPlural}}</li>
+                                            <li class="sub-category">{{t "subcategory"}}: {{assignment.chapter.name}}</li>
+                                        {{else}}
+                                            {{assignment.chapter.name}}
+                                        {{/if}}
+                                    {{else}}
+                                        <li class="category">{{t "type"}}: {{termTaxonomyLabel}}</li>
+                                        <li class="sub-category">{{t "category"}}: {{assignment.termTaxonomy.name}}</li>
+                                    {{/if}}
+                                </ul>
+                            {{else}}
+                                {{assignment.chapter.name}}
+                            {{/if}}
+                        </span>
+                    {{else if assignment.isExamAssignment}}
+                        {{t "assignExam.practiceExam"}}
+                        <h2>{{assignment.name}}</h2>
+                        <span class="total_questions">{{assignment.totalQuestions}} {{t "assignExam.questionsTitle"}}</span>
+                    {{/if}}
+                </div>
+                <div class="target">
+                    <div class="targets">
+                        {{#if assignment.isQuestionCollectionAssignment}}
+                            <span>{{t "assignQuiz.pointValue"}}</span>
+                            <div class="ml">
+                                {{assignment.points}}
+                            </div>
+                        {{else if assignment.isMasteryLevelAssignment}}
+                            <span>{{t "assignQuiz.targetMastery"}}</span>
+                            <div class="ml">
+                                {{assignment.targetMasteryLevel}}
+                            </div>
+                        {{else if assignment.isExamAssignment}}
+                            <span>{{t "assignExam.pointValue"}}</span>
+                            <div class="ml">
+                                {{assignment.points}}
+                            </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            <div class="details">
+                <div>{{t "assignQuiz.assignedTo"}}:</div>
+                <div class="classes-list">
+                    {{#each assignment.classes as |clazz|}}
+                        <div>
+                            <span class="highlight">{{clazz.name}}</span>
+                            {{#unless clazz.isUnknownTerm}}
+                                &nbsp;-&nbsp;{{clazz.term}}
+                            {{/unless}}
+                        </div>
+                    {{/each}}
+                </div>
+                {{#if assignment.autoShutoff}}
+                    <div class="highlight"><span>{{t "assignmentSummary.type"}}:</span></div> <div> {{t "assignmentSummary.shutoff"}}</div>
+                {{/if}}
+                {{#if assignment.isExamAssignment}}
+                    {{#if assignment.hasTimeLimit}}
+                        <div class="highlight time-limit">
+                            <span>{{t "assignExam.timeToComplete"}}:</span>
+                        </div>
+                        <div class="time-limit-hours">{{to-hours assignment.timeLimit base="minutes" format="HM"}}</div>
+                    {{/if}}
+                    <div class="highlight deadlines">{{t "assignExam.deadlines"}}:</div>
+                {{else}}
+                    <div class="highlight deadlines">{{t "assignQuiz.deadlines"}}:</div>
+                    {{#if assignment.hasTimeLimit}}
+                    <div class="highlight">
+                        <span>{{t "assignQuiz.timedAssignment" min=assignment.timeLimit}}</span>
+                    </div>
+                    {{/if}}
+                {{/if}}
+                <div class="highlight">
+                    <span>{{t "assignQuiz.availableOn"}}</span>&nbsp;
+                    {{format-date assignment.availableDate timezone=assignment.timeZone}}&nbsp;
+                    <span>{{t "assignQuiz.andDueOn"}}</span>&nbsp;
+                    {{format-date assignment.dueDate timezone=assignment.timeZone}}
+                </div>
+                <br>
+                {{#if assignment.isExamAssignment}}
+                    {{#if allowThresholdControl}}
+                        <div class="highlight">
+                            <span> {{t "assignExam.displaySettings"}}: </span>
+                        </div>
+                        <div>
+                            <span> {{t "assignExam.displayHidden1"}}
+                                {{#if assignment.hideThresholdLabels}}
+                                    <strong> {{t "assignExam.proficiencyAllStatusHidden"}} </strong>
+                                {{else}}
+                                    <strong> {{t "assignExam.proficiencyAllStatusNotHidden"}} </strong>
+                                {{/if}}
+                                {{t "assignExam.displayHidden2"}}
+                            </span>
+                        </div>
+                        <div>
+                            <span> {{t "assignExam.displayThreshold1"}}
+                            <strong>
+                                {{#if assignment.targetMasteryLevel}}
+                                    <strong>{{assignment.targetMasteryLevel}}</strong>
+                                {{else}}
+                                    <strong>{{minimumThreshold}}</strong>
+                                {{/if}}
+                            </strong>
+                            {{t "assignExam.displayHidden2"}}
+                            </span>
+                        </div>
+                    {{/if}}
+                {{/if}}
+            </div>
+        </div>
+    {{/each}}
+    <div class="btn-box margin-top-55 done-btn">
+        {{#if isCCMAllowed}}
+            {{#link-to 'instructor.hmcd' class.id class="btn btn-blue ccm-done" }}{{t "assignQuiz.done"}}{{/link-to}}
+        {{else}}
+            {{#link-to 'instructor.hmcd' class.id class="btn btn-blue" }}{{t "assignQuiz.done"}}{{/link-to}}
+        {{/if}}
+    </div>
+</div>

@@ -1,0 +1,22 @@
+{{#if model.questionMedia}}
+    <div>
+        <img src={{model.questionMedia}} />
+    </div>
+{{/if}}
+<h2>
+    {{#with model.questionText as |questionText|}}
+        {{safe-html questionText}}
+    {{/with}}
+</h2>
+<div  class="question-answer {{if isDisable 'disabled' 'enable'}}">
+    <div class="question-answer-input">
+        <form id="answer-form">
+            {{input type="text" id="answer" name="answer" maxlength="19" value=answer}}
+            <span>{{#each model.interactions as |interaction|}}{{interaction.unitMeasure}}{{/each}}</span>
+        </form>
+    </div>
+    <div class="question-answer-text"></div>
+    <div class="clearfix"></div>
+    <div class="calculator hidden"></div>
+</div>
+{{partial 'question/footer'}}

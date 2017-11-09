@@ -1,0 +1,14 @@
+<header role="banner">
+	{{#if isAuthoringEnabled}}
+		{{render "headerAdmin"}}
+		{{partial "admin/subHeader"}}
+	{{else}}
+		{{render "headerClasses"}}
+		{{partial "instructor/subHeader"}}
+	{{/if}}
+</header>
+<section class="clearfix content-wrapper">
+	{{yield}}
+</section>
+{{partial "authenticatedFooter"}}
+{{component 'exit-app' sso=sso isXSmall=isXSmall}}

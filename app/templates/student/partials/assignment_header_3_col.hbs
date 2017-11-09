@@ -1,0 +1,19 @@
+<div class="assignment-content clearfix">
+    <div class="name">
+        {{t "assignment.masteryLevelQuiz"}}
+        <h2>{{assignment.name}}</h2>
+
+        {{partial "student/partials/assignment_header_chapter"}}
+
+    </div>
+    <div class="target">
+        <div class="targets">
+            {{t "assignment.currentMastery"}}
+            <div class="ml">{{assignment.studentStatus.masteryLevel}}</div>
+        </div>
+        <div class="targets right">
+            {{t "assignment.targetMastery"}}
+            <div class="ml">{{assignment.targetMasteryLevel}}</div>
+        </div>
+    </div>
+</div>

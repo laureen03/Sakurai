@@ -1,0 +1,73 @@
+
+<div class="update-profile container">
+    <h1 class="auto-center col-sm-6 section-header dark">{{t "profile.header"}}</h1>
+
+    <div class="auto-center col-sm-6">
+        <form role="form" id="update-name">
+            <fieldset>
+                <div class="form-group">
+                    <div class="label">{{t "profile.email"}}</div>
+                    <div>{{user.email}}</div>
+                </div>
+                <div class="form-group">
+                    <label for="firstName">{{t "profile.firstName"}}</label>
+                    {{input id="firstName"
+                            name="firstName"
+                            class="form-control"
+                            type="text"
+                            maxlength="30"
+                            value=firstName}}
+                </div>
+                <div class="form-group">
+                    <label for="lastName">{{t "profile.lastName"}}</label>
+                    {{input id="lastName"
+                            name="lastName"
+                            class="form-control"
+                            type="text"
+                            maxlength="30"
+                            value=lastName}}
+                </div>
+            </fieldset>
+        </form>
+        <a href="#" class="update-pwd {{if actionHidden 'hidden' ''}}" {{action 'showPasswordFields'}}>{{t "profile.showPasswordFields"}}</a>
+
+        <form role="form" id="update-password" class="{{if fieldsHidden 'hidden' ''}}">
+            <fieldset>
+                <div class="form-group">
+                    <label for="password">{{t "profile.password"}}</label>
+                    {{input id="password"
+                            name="password"
+                            type="password"
+                            class="form-control"
+                            maxlength="30"
+                            value=user.password}}
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">{{t "profile.newPassword"}}</label>
+                    {{input id="newPassword"
+                            name="newPassword"
+                            type="password"
+                            class="form-control"
+                            maxlength="30"
+                            value=user.newPassword}}
+                </div>
+                <div class="form-group">
+                    <label for="retypePassword">{{t "profile.retypePassword"}}</label>
+                    {{input id="retypePassword"
+                            name="retypePassword"
+                            type="password"
+                            class="form-control"
+                            maxlength="30"
+                            value=user.retypePassword}}
+                </div>
+            </fieldset>
+        </form>
+
+        <div class="actions">
+            <button id="profile-submit" class="btn btn-blue" {{action 'validate'}}>{{t "profile.saveChanges"}}</button>
+            <a href="#" {{action 'cancelProfileUpdate'}}>Cancel</a>
+        </div>
+
+    </div>
+</div>
+

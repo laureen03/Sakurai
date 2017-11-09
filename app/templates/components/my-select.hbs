@@ -1,0 +1,23 @@
+
+{{#if optionGroupPath}}
+	{{#if prompt}}
+		<option selected="selected" value="-1">{{prompt}}</option>
+	{{/if}}
+	
+	{{#each groupContent as |item|}}
+		<optgroup label={{item.name}} >
+			{{#each item.children as |child|}}
+				<option value="{{child.id}}" selected={{is-equal child.id selectedValue}}>{{child.name}}</option>
+			{{/each}}
+		</optgroup> 
+	{{/each}}
+
+{{else}}
+	{{#if prompt}}
+		<option selected="selected" value="-1">{{prompt}}</option>
+	{{/if}}
+
+	{{#each plainContent as |item|}}
+		<option value="{{item.id}}" selected={{is-equal item.id selectedValue}}>{{item.name}}</option>
+	{{/each}}
+{{/if}}

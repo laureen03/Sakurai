@@ -1,0 +1,33 @@
+<h5>{{t "quiz.youSelected"}}</h5>
+<ul class="my-response-list answer-choices">
+	{{#each selections as |selection|}}
+    <li>
+    	{{#if selection.correct}}
+    		<span class="circle-ok glyphicon glyphicon-ok"></span>
+    	{{else}}
+    		<span class="circle-wrong glyphicon glyphicon-remove"></span>
+    	{{/if}}
+
+    	{{#if selection.answerChoice.media}}
+			<img src={{selection.answerChoice.media}} />
+		{{else}}
+            <span class="text {{if selection.correct 'text-correct' 'text-incorrect'}}">{{safe-html selection.answerChoice.text}}</span>
+		{{/if}}
+	</li>
+    {{/each}}
+</ul>
+<h5>{{t "quiz.correctResponse"}}</h5>
+<ul class="correct-response-list answer-choices">
+	{{#each correctResponses as |correctResponse|}}
+    <li>
+    	<span class="circle-ok glyphicon glyphicon-ok"></span>
+    	{{#if correctResponse.answerChoice.media}}
+			<img src={{correctResponse.answerChoice.media}} />
+		{{else}}
+            <span class="text-correct">{{safe-html correctResponse.answerChoice.text}}</span>
+		{{/if}}
+	</li>
+    {{/each}}
+</ul>
+
+

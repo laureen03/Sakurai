@@ -4,14 +4,16 @@
  * - if false, go to: student.section
  * based on a default condition
  *
- * @extends SakuraiWebapp.ForkLinkComponent
+ * @extends ForkLinkComponent
  *
  * @param data-component-class {string} special class to add to the component's tag (optional)
  * @param data-class {Class} class in context
  * @param label {string} link text (for i18n helper)
  */
 
-SakuraiWebapp.MetadataForkLinkComponent = SakuraiWebapp.ForkLinkComponent.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 
     /*
      * === PROPERTIES

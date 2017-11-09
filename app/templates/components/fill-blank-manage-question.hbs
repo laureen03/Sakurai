@@ -1,0 +1,50 @@
+<div class="fill-in-the-blank">
+    <h2 class="margin-top-55">{{t "questionLibrary.createQuestion"}}</h2>
+    <form role="form" class="question-form">
+
+        {{partial "components/manage_question/question_text"}}
+        {{partial "components/manage_question/question_media"}}
+
+        <div class="interaction">
+            <div class="response">
+                {{input
+                    placeholder=correctResponseTextPlaceholder
+                    class="correct-response-text"
+                    value=correctResponseText
+                    maxLength=19
+                }}
+                {{input
+                    placeholder=unitMeasurePlaceholder
+                    class="unit-measure"
+                    value=unitMeasure
+                    maxLength=40
+                }}
+                {{#if correctResponseTextError}}
+                    <label class="correct-response-text-error error-label">{{t "questionLibrary.createQuestions.fillInTheBlank.correctAnswerErrorMessage"}}</label>
+                {{/if}}
+            </div>
+            <label class="enable-tool calculator">
+                {{input type="checkbox" checked=hasCalculator}}{{t "common.showCalculator"}}
+            </label>
+        </div>
+
+        {{partial "components/manage_question/question_explanation"}}
+        {{partial "components/manage_question/question_references"}}
+        {{partial "components/manage_question/question_remediation_links"}}
+        {{partial "components/manage_question/question_taxonomies"}}
+        {{partial "components/manage_question/question_learning_objectives"}}
+        {{#if data-is-admin}}
+            {{partial "components/manage_question/question_product_association"}}
+        {{/if}}
+        {{partial "components/manage_question/question_actions"}}
+
+    </form>
+
+    <!--MODAL FOR PREVIEW-->
+    {{full-question
+        isPreview=true
+        isFullQuestion=true
+        componentName="question-fill-in-the-blank"
+        model=data-question}}
+</div>
+

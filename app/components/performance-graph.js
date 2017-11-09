@@ -1,7 +1,7 @@
 /**
  * Component for displaying information about performance on a term taxonomy
  *
- * @extends SakuraiWebapp.BarGraphComponent
+ * @extends BarGraphComponent
  *
  * @param data-component-class {string} special class to add to the component's tag (optional)
  * @param data-performance {TermTaxonomyPerformance | ChapterPerformance} performance instance
@@ -20,7 +20,10 @@
  * @param caption {string} graph caption (optional -property to use with i18n helper)
  */
 
-SakuraiWebapp.PerformanceGraphComponent = SakuraiWebapp.BarGraphComponent.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
+
     tagName: 'div',
 
     classNames: ['performance-graph'],
@@ -48,7 +51,7 @@ SakuraiWebapp.PerformanceGraphComponent = SakuraiWebapp.BarGraphComponent.extend
 
         this.set('currentValue', performance.get(property));
 
-        // Call SakuraiWebapp.BarGraphComponent init method
+        // Call BarGraphComponent init method
         this._super();
     },
 

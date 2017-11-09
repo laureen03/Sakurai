@@ -10,7 +10,9 @@
  * @param caption {string} graph caption (property to use with i18n helper)
  */
 
-SakuraiWebapp.BarGraphComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
     tagName: 'figure',
 
     classNames: ['bar-graph'],
@@ -83,7 +85,7 @@ SakuraiWebapp.BarGraphComponent = Ember.Component.extend({
     },
 
     validateRange: function(value) {
-        if (typeof value == 'number') {
+        if (typeof value === 'number') {
 
             if (value >= 0 && value <= 8) {
                 return value;
@@ -104,7 +106,7 @@ SakuraiWebapp.BarGraphComponent = Ember.Component.extend({
         if (decimalVal > 0 || +decimalStr > 0) {
             // If there are decimal numbers, we want to narrow it down to 2.
             // If out of the two, the right-most number is a zero then only show one decimal number.
-            if (decimalStr.charAt(3) == '0') {
+            if (decimalStr.charAt(3) === '0') {
                 decimalVal = +(decimalStr.substring(0, 3));
                 numFixed = 1;
             } else {

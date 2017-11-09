@@ -18,7 +18,9 @@
  * @param data-stop {boolean} should the timer be stopped (optional)
  */
 
-SakuraiWebapp.SakuraiTimerComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 
     tagName: 'div',
 
@@ -43,7 +45,7 @@ SakuraiWebapp.SakuraiTimerComponent = Ember.Component.extend({
     _timerId: null,
 
     _initTimer: function() {
-        if ( (this.get('isDestroyed') || this.get('isDestroying')) ) return;
+        if ( (this.get('isDestroyed') || this.get('isDestroying')) ){ return; }
 
         if (!moment) {
             throw new Ember.Error("Global variable \'moment\' is missing. Moment.js library may be missing.");
@@ -57,12 +59,11 @@ SakuraiWebapp.SakuraiTimerComponent = Ember.Component.extend({
     },
 
     _start: function() {
-        if ( (this.get('isDestroyed') || this.get('isDestroying')) ) return;
+        if ( (this.get('isDestroyed') || this.get('isDestroying')) ){ return; }
         // Preserve the state of the timer within the closure
         var self = this,
             time = this.get('data-start-time'),
             timeLimit = this.get('data-end-time'),
-            format = this.get('data-format'),
             timeout = this.get('time-refresh-interval'),
             inc;
 
@@ -89,13 +90,13 @@ SakuraiWebapp.SakuraiTimerComponent = Ember.Component.extend({
 
         Ember.run( function() {
             // Finally set initial time after validations
-            if ( (self.get('isDestroyed') || self.get('isDestroying')) ) return;
+            if ( (self.get('isDestroyed') || self.get('isDestroying')) ){ return; }
             self.set('time', time);
         });
 
         return function timeUpdate () {
 
-            if ( (self.get('isDestroyed') || self.get('isDestroying')) ) return;
+            if ( (self.get('isDestroyed') || self.get('isDestroying')) ){ return; }
 
             var startTime = self.get('data-start-time') || 0,
                 timerId;
@@ -139,22 +140,22 @@ SakuraiWebapp.SakuraiTimerComponent = Ember.Component.extend({
                     }
                 });
             }
-        }
+        };
     },
 
     stop: function() {
-        if ( (this.get('isDestroyed') || this.get('isDestroying')) ) return;
+        if ( (this.get('isDestroyed') || this.get('isDestroying')) ){ return; }
         clearTimeout(this.get('_timerId'));
     },
 
     start: function () {
-        if ( (this.get('isDestroyed') || this.get('isDestroying')) ) return;
+        if ( (this.get('isDestroyed') || this.get('isDestroying')) ){ return; }
         var updateTimeFunc = this._start(),
             timerId;
         var self = this;
         // Start running the timer after the page has been rendered
-        Em.run.schedule('afterRender', this, function() {
-            if ( (self.get('isDestroyed') || self.get('isDestroying')) ) return;
+        Ember.run.schedule('afterRender', this, function() {
+            if ( (self.get('isDestroyed') || self.get('isDestroying')) ){ return; }
             timerId = setTimeout(updateTimeFunc, this.get('time-refresh-interval'));
             this.set('_timerId', timerId);
         });
@@ -162,7 +163,7 @@ SakuraiWebapp.SakuraiTimerComponent = Ember.Component.extend({
 
     toggle: Ember.observer('data-stop', function () {
 
-        if ( (this.get('isDestroyed') || this.get('isDestroying')) ) return;
+        if ( (this.get('isDestroyed') || this.get('isDestroying')) ){ return; }
 
         var stopTimer = this.get('data-stop');
 
@@ -195,7 +196,7 @@ SakuraiWebapp.SakuraiTimerComponent = Ember.Component.extend({
     },
 
     willDestroyElement: function() {
-        if ( (this.get('isDestroyed') || this.get('isDestroying')) ) return;
+        if ( (this.get('isDestroyed') || this.get('isDestroying')) ){ return; }
         clearTimeout(this.get('_timerId'));
     },
 

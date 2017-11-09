@@ -1,0 +1,25 @@
+{{#if hasFilters}}
+    <div class="filter-breadcrumb-item filter-box {{data-type}}-filter">
+        <div class="filter-title">
+            {{t "questionLibrary.filter.filteringBy"}} {{title}}
+            <a class="gray glyphicon glyphicon-remove" {{action 'removeFilter' data-type}}></a>
+        </div>
+        <div class="comma-split">
+            {{#if data-i18n-names}}
+                {{#each filters as |filter|}}
+                    {{#with filter as |filter|}}
+                        <span>{{t filter.name}}</span>
+                    {{/with}}
+                {{/each}}
+            {{else}}
+                {{#each filters as |filter|}}
+                    {{#if data-is-user}}
+                        <span>{{filter.firstName}}&nbsp;{{filter.lastName}}</span>
+                    {{else}}
+                        <span>{{filter.name}}</span>
+                    {{/if}}
+                {{/each}}
+            {{/if}}
+        </div>
+    </div>
+{{/if}}

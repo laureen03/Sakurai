@@ -1,0 +1,11 @@
+{{#each data-tagging-term-taxonomies as |termTaxonomy|}}
+    <div class="add-term-taxonomy {{termTaxonomy.key}}">
+        {{taxonomy-dropdown
+        data-items=data-term-taxonomies
+        data-type=termTaxonomy.key
+        data-selected-items=selectedTermTaxonomies
+        data-remove-action=removeTaxonomy
+        data-title=termTaxonomy.label
+        data-prompt=termTaxonomy.label}}
+    </div>
+{{/each}}

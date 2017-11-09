@@ -1,10 +1,14 @@
-SakuraiWebapp.LibraryAnswerChoicesComponent = Ember.Component.extend({
+import Ember from "ember"; 
+import QuestionHelper from "utils/question-helper";
+import Question from "models/question";
+
+export default Ember.Component.extend({
     /**
      * Return answer choices
      * @return Array
      */
     answerChoices: Ember.computed(function(){    
-        var helper = SakuraiWebapp.QuestionHelper.create({});
+        var helper = QuestionHelper.create({});
         var component = this,
             interaction = this.get('interaction'),
             answerChoicesPercentages = interaction.answerChoicesPercentages,
@@ -17,12 +21,13 @@ SakuraiWebapp.LibraryAnswerChoicesComponent = Ember.Component.extend({
             othersAnswers = [],
             hasClassPercentages = this.get('has-class-percentages'),
             mergedAnswerChoices;
-        if (interaction.type == SakuraiWebapp.Question.CHOICE) {
+        if (interaction.type === Question.CHOICE) {
             mergedAnswerChoices = [];
             $.each(interaction.answerChoices, function(index, answerChoice){
                 
-                if (answerChoice.answerPercentage == undefined)
+                if (answerChoice.answerPercentage === undefined){
                     answerChoice.answerPercentage = helper.getAnswerChoicePercentage(answerChoice.id, answerChoicesPercentages);
+                }
 
                 var answerChoicesObj = {};
                 answerChoicesObj.correct = helper.isAnswerChoiceCorrect(answerChoice, interaction);
@@ -40,7 +45,7 @@ SakuraiWebapp.LibraryAnswerChoicesComponent = Ember.Component.extend({
 
                 answerChoices.push(answerChoicesObj);
             });
-            if (interaction.subType == SakuraiWebapp.Question.CHOICE_MULTIPLE) {
+            if (interaction.subType === Question.CHOICE_MULTIPLE) {
 
                 if (hasClassPercentages) {
                     // If this a 'choice_multiple' question, the first answer choice will be the correct aggregate choice
@@ -56,7 +61,7 @@ SakuraiWebapp.LibraryAnswerChoicesComponent = Ember.Component.extend({
                 }
             }
         }
-        else if(interaction.type == SakuraiWebapp.Question.DRAG_AND_DROP){
+        else if(interaction.type === Question.DRAG_AND_DROP){
             var answerChoicesArr = [];
             $.each(interaction.answerChoicesPercentages, function(index, answerChoice){
 
@@ -67,14 +72,15 @@ SakuraiWebapp.LibraryAnswerChoicesComponent = Ember.Component.extend({
                 $.each(answerChoice.answerChoiceIds, function(idx, id){
 
                     $.each(intAnswerChoices,function(index,ansChoices){
-                        if(id ==  ansChoices.id){
+                        if(id ===  ansChoices.id){
                             correctArr.push (index);
                         }
                     });
                 });
 
-                if (answerChoice.text == undefined)
+                if (answerChoice.text === undefined){
                     answerChoice.text = component.parseToString(correctArr);
+                }
                 
                 answerChoicesArr.push(answerChoice.text);
                 
@@ -104,16 +110,17 @@ SakuraiWebapp.LibraryAnswerChoicesComponent = Ember.Component.extend({
                     $.each(answerChoice.answerChoiceIds, function(idx, id){
 
                         $.each(intAnswerChoices,function(index,ansChoices){
-                            if(id ==  ansChoices.id){
+                            if(id ===  ansChoices.id){
                                 correctArr.push (index);
                             }
                         });
                     });
 
-                    if (answerChoice.text == undefined)
+                    if (answerChoice.text === undefined){
                         answerChoice.text = component.parseToString(correctArr);
+                    }
 
-                    if(answerChoicesArr.indexOf(answerChoice.text) == -1) {
+                    if(answerChoicesArr.indexOf(answerChoice.text) === -1) {
                         answerChoicesObj.classPercentage = answerChoice.answerPercentage;
                         answerChoice.answerPercentage = 0;
                         var correctAnswerChoices = helper.getCorrectAnswerChoices(interaction);
@@ -128,19 +135,20 @@ SakuraiWebapp.LibraryAnswerChoicesComponent = Ember.Component.extend({
                 });
             }
         }
-        else if(interaction.type == SakuraiWebapp.Question.HOT_SPOT){
+        else if(interaction.type === Question.HOT_SPOT){
 
             $.each(interaction.answerChoices, function(index, answerChoice){
-                if (answerChoice.answerPercentage == undefined)
+                if (answerChoice.answerPercentage === undefined){
                     answerChoice.answerPercentage = 0;
+                }
                 answerChoices.push({
                     "correct": helper.isAnswerChoiceCorrect(answerChoice, interaction),
                     "answerChoice": answerChoice
-                })
+                });
             });
 
         }
-        else if (interaction.type == SakuraiWebapp.Question.FILL_IN_THE_BLANK) {
+        else if (interaction.type === Question.FILL_IN_THE_BLANK) {
 
             // Merge the information into one single array for easier manipulation
             mergedAnswerChoices = component.mergeAnswerChoices('textEntryValue', answerChoicesPercentages, classAnswerChoicesPercentages);
@@ -165,7 +173,7 @@ SakuraiWebapp.LibraryAnswerChoicesComponent = Ember.Component.extend({
 
                         // override the value only if we haven't found it
                         isCorrectAnswerFound = isCorrectAnswerFound || isCorrectAnswerLoaded;
-                    } else if (index == 3) {
+                    } else if (index === 3) {
                         if (isCorrectAnswerFound) {
                             // If the correct answers is within the first 3 answers, then
                             // load another answer in answerChoices
@@ -203,12 +211,13 @@ SakuraiWebapp.LibraryAnswerChoicesComponent = Ember.Component.extend({
         } else{
 
             $.each(interaction.answerChoices, function(index, answerChoice){
-                if (answerChoice.answerPercentage == undefined)
+                if (answerChoice.answerPercentage === undefined){
                     answerChoice.answerPercentage = helper.getAnswerChoicePercentage(answerChoice.id, answerChoicesPercentages);
+                }
                 answerChoices.push({
                     "correct": helper.isAnswerChoiceCorrectOrder(index, answerChoice.id, interaction),
                     "answerChoice": answerChoice
-                })
+                });
             });
         }
         return answerChoices;
@@ -220,7 +229,7 @@ SakuraiWebapp.LibraryAnswerChoicesComponent = Ember.Component.extend({
      */
     dragNdop: Ember.computed(function(){  
         var interaction = this.get('interaction');
-        return interaction.type == SakuraiWebapp.Question.DRAG_AND_DROP;
+        return interaction.type === Question.DRAG_AND_DROP;
     }),
 
     /**

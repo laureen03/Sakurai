@@ -8,7 +8,9 @@
     "I18n",
     "numeral",
     "CKEDITOR",
-    "toastr"
+    "toastr",
+    "google",
+    "Papa"
   ],
   "browser": true,
   "boss": true,

@@ -5,11 +5,13 @@
  * @extends Ember.Component
  *
  * @param data-store {store} ember store
- * @param data-question {SakuraiWebapp.Question} question to apply the filter to
- * @param data-products {SakuraiWebapp.Product[]} products
+ * @param data-question {Question} question to apply the filter to
+ * @param data-products {Product[]} products
  */
+import Ember from "ember"; 
+import QuestionFilter from "models/question-filter";
 
-SakuraiWebapp.QuestionProductFiltersComponent = Ember.Component.extend(
+export default Ember.Component.extend(
     Ember.Evented,
     {
 
@@ -19,12 +21,12 @@ SakuraiWebapp.QuestionProductFiltersComponent = Ember.Component.extend(
     'data-store': null,
 
     /**
-     * @property {SakuraiWebapp.Question}
+     * @property {Question}
      */
     'data-question': null,
 
     /**
-     * @property {SakuraiWebapp.Product[]}
+     * @property {Product[]}
      */
     'data-products': null,
 
@@ -72,7 +74,7 @@ SakuraiWebapp.QuestionProductFiltersComponent = Ember.Component.extend(
                     });
                     component.set("data-product-filters", filters);
                     component.loadProductFiltersFromData();
-                })
+                });
             });
         }
     }.on("init"),
@@ -93,7 +95,7 @@ SakuraiWebapp.QuestionProductFiltersComponent = Ember.Component.extend(
         var products = this.get("data-products"),
             filters = this.get('data-product-filters');
         var items = Ember.A();
-        products.forEach(function(product, index){
+        products.forEach(function(product){
             var found = filters.filterBy("product.id", product.get("id")),
                 hasFilter = found.get("length") > 0,
                 filter = (hasFilter) ? found.get("firstObject") : null;
@@ -127,13 +129,13 @@ SakuraiWebapp.QuestionProductFiltersComponent = Ember.Component.extend(
      */
     updateFilter: function(filterItem){
         var filter = filterItem.get("filter");
-        if (filter.get("type") != filterItem.get("type")){
+        if (filter.get("type") !== filterItem.get("type")){
             filter.set("type", filterItem.get("type"));
             filter.set("question", this.get("data-question"));
             var promises = [filter.get("question"), filter.get("product")];
             return Ember.RSVP.all(promises).then(function(){ //resolve lazy relations before saving
                 return filter.save();
-            })
+            });
         }
         return false;
     },
@@ -146,7 +148,7 @@ SakuraiWebapp.QuestionProductFiltersComponent = Ember.Component.extend(
         var store = this.get("data-store"),
             component = this,
             productFilters = component.get("data-product-filters");
-        var record = SakuraiWebapp.QuestionFilter.createQuestionFilterRecord(store, {
+        var record = QuestionFilter.createQuestionFilterRecord(store, {
             type: filterItem.get("type"),
             questionId: component.get("data-question.id"),
             productId: filterItem.get("product.id")
@@ -165,8 +167,8 @@ SakuraiWebapp.QuestionProductFiltersComponent = Ember.Component.extend(
         var component = this,
             productFilterItems = this.get("productFilterItems");
         var promises = [];
-        productFilterItems.forEach(function(item, index){
-            var everyone = item.get("type") == "everyone",
+        productFilterItems.forEach(function(item){
+            var everyone = item.get("type") === "everyone",
                 hasFilter = item.get("filter");
             if (everyone && hasFilter){ //when filter was removed
                 promises.push(component.removeFilter(item));
@@ -182,7 +184,7 @@ SakuraiWebapp.QuestionProductFiltersComponent = Ember.Component.extend(
         Ember.RSVP.all(promises).then(function(){
             component.trigger('asyncButton.restore', data.component);
             component.closeModal();
-        })
+        });
     },
 
     /**

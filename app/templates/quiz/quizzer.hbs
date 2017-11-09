@@ -1,0 +1,144 @@
+{{#if startedTemplate}}
+    {{render "quiz.start" this}}
+{{/if}}
+{{#if questionTemplate}}
+
+    <div class="main clearfix" id="main" role="main">
+        <section class="main-layout clearfix content-wrapper quiz-content">
+
+            <div class="status-bar-quiz">
+                {{quiz-bar total=selectedQuiz.totalQuestions value=questionIndex}}
+            </div>
+            <div class="container cf quiz-container">
+                {{#if timerUpdating}}
+                    <div class="lazy-load-spin pull-right"><span class="glyphicon glyphicon-refresh animate-spin"></span></div>
+                {{/if}}
+                <div class="sakurai-timer">
+                    {{#if selectedQuiz.isQuestionCollectionQuiz}}
+                        {{#if showTimer}}
+                            {{sakurai-timer data-start-time=selectedQuiz.timeLeft
+                                            data-countdown=true
+                                            data-label="quiz.examTimeRemaining"
+                                            data-show-label="common.showTimeRemaining"
+                                            action="quizTimeOut"
+                                            data-stop=clearTimers}}
+
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if isExam}}
+                        <div class="exam-timers">
+                        {{#if questionLoaded}}
+                            {{#if selectedQuiz.timeLimit}}
+                                {{sakurai-timer data-start-time=selectedQuiz.timeLeft
+                                                data-countdown=true
+                                                data-label="quiz.examTimeRemaining"
+                                                data-show-label="common.showTimeRemaining"
+                                                data-hide-link=true
+                                                action="examTimeOut"
+                                                data-stop=clearTimers }}
+                            {{else}}
+                                {{sakurai-timer data-component-class="exam"
+                                                data-start-time=selectedQuiz.timeOnExam
+                                                data-label="quiz.timeOnExam"
+                                                data-show-label="common.showTimeExam"
+                                                data-hide-link=true
+                                                data-stop=clearTimers }}
+                            {{/if}}
+
+
+                            {{sakurai-timer data-start-time=selectedQuiz.timeOnCurrentQuestion
+                                        data-label="quiz.timeOnQuestion"
+                                        data-show-label="common.showTimeQuestion"
+                                        data-hide-link=true
+                                        data-stop=clearTimers }}
+                        {{/if}}
+                        </div>
+                    {{/if}}
+                </div>
+
+                <div class='question-status-report'>
+                    {{t "quiz.question"}} {{index}} {{t "quiz.of"}} {{selectedQuiz.totalQuestions}}
+                </div>
+                <div class="{{if timerUpdating 'disabled'}}">
+                    {{#if questionComponentName}}
+                        {{component questionComponentName
+                            model=currentQuestion
+                            questionIndex=index
+                            selectedQuiz=selectedQuiz
+                            isFullQuestion=isFullQuestion
+                            isExam=isExam
+                            progressAlertDisplayed=progressAlertDisplayed
+                            data-shuffle-action="shuffle"
+                            data-save-action="saveResult"
+                            data-display-answer-key-action="displayAnswerKey"}}
+                    {{/if}}
+                </div>
+            </div>
+            <div class="modal fade" id="auto-shutoff">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                          <h4 class="modal-title">
+                              {{{t "quiz.autoShutoffAlertTitle"}}}
+                          </h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>{{t "quiz.autoShutoffAlert"}}</p>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+        </section>
+    </div>
+    {{partial "authenticatedFooter"}}
+
+{{/if}}
+{{#if analyzingTemplate}}
+    {{render "quiz.analyzing" this}}
+{{/if}}
+
+{{#if isExam}}
+    {{#if selectedQuiz.hasTimeLimit}}
+    <div id='time-expired' class="modal fade" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header"></div>
+                <div class="modal-body">
+                    {{t "exam.didNotComplete"}} {{minutes-as-time selectedQuiz.timeLimit h="common.hour.one" m="common.minute.one"}} {{t "exam.timeLimit"}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-blue" {{action "takeAnotherExam"}}>{{t "exam.takeAnotherExam"}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+    {{#if selectedQuiz.inProgressAlert}}
+        <div id='progress-alert' class="modal fade" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        {{#if selectedQuiz.minimumPerformanceReached}}
+                            <div class="exam-status green">
+                                <span class="glyphicon glyphicon-flag"></span>{{{t "exam.yourPerformancePass"}}}
+                            </div>
+                        {{else}}
+                            <div class="exam-status red">
+                                <span class="glyphicon glyphicon-flag"></span>{{{t "exam.yourPerformanceNotPass"}}}
+                            </div>
+                        {{/if}}
+                    </div>
+                    <div class="modal-body">
+                        {{{t "exam.progressAlertMessage"}}}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-blue" data-dismiss="modal">{{t "exam.resumeExam"}}</button>
+                        <button type="button" class="btn btn-blue" {{action 'displayAnswerKey'}} data-dismiss="modal">{{t "exam.displayAnswerKeys"}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/if}}
+{{/if}}

@@ -1,4 +1,8 @@
-SakuraiWebapp.InstructorAddEditClassView = Ember.Component.extend(SakuraiWebapp.UserInterfaceFeaturesMixin, {
+import Ember from "ember";
+import UserInterfaceFeaturesMixin from "mixins/user-interface-features";
+
+export default Ember.Component.extend(
+    UserInterfaceFeaturesMixin, {
 	layoutName: 'layout/forInstructor',
     _controller: null,
 
@@ -63,9 +67,9 @@ SakuraiWebapp.InstructorAddEditClassView = Ember.Component.extend(SakuraiWebapp.
                 });
             });
 
-        $select.on("change", function (e) { $('#select_school-error').empty(); });
+        $select.on("change", function () { $('#select_school-error').empty(); });
 
-        $select.on("select2:open", function (e) { self.hideCalendars(); });
+        $select.on("select2:open", function () { self.hideCalendars(); });
 
         /*****************************************
 		*  Set validation to Form and messages
@@ -114,7 +118,7 @@ SakuraiWebapp.InstructorAddEditClassView = Ember.Component.extend(SakuraiWebapp.
 
         formContainer.bind("keypress", function(e) {
           var KEYCODE = ( document.all ? window.event.keyCode : e.which) ;
-          if (KEYCODE == 13) {
+          if (KEYCODE === 13) {
             e.preventDefault();
             e.stopPropagation();
           }

@@ -1,0 +1,170 @@
+<section class="quiz-area">
+    {{#if isNotTypeQC}}
+        {{simple-modal idElement='whatsthis-mdl' titleHtml=statsText.whatsthisTitle body="haid.bodyPerformanceModal"}}
+    {{/if}}
+    <div class="container cf">
+        <h1>{{t "quiz.results"}}</h1>
+
+        {{#unless quizHistory}}
+            {{#if isNotTypeQC}}
+                {{!Assignment reached notifications}}
+                {{#each quizResult.assignments as |assignment|}}
+                    <div class="assignment-complete">
+                        {{t "quiz.youCompleted"}}{{assignment.name}}&nbsp;{{t "quiz.byReachingML"}}&nbsp;{{assignment.targetMasteryLevel}}&nbsp;{{t "quiz.on"}}&nbsp;
+                        {{#if isMetadataAllowed}}
+                            {{#if isTermTaxonomyNursingTopic}}
+                                {{#if usesNursingTopics}}
+                                    {{terminologyTermPlural}} : {{assignment.chapter.name}}!
+                                {{else}}
+                                    {{assignment.chapter.name}}!
+                                {{/if}}
+                            {{else}}
+                                {{assignment.termTaxonomy.type}} :   {{assignment.termTaxonomy.name}}!
+                            {{/if}}
+                        {{else}}
+                            {{assignment.chapter.name}}!
+                        {{/if}}
+                    </div>
+                {{/each}}
+                {{!Mastery level improvement notifications}}
+                {{#each improvedStatsPerformance as |statsPerformance|}}
+                  <div class="improved-stats-performance">
+                    {{t "quiz.masteryLevelImproved"}} <b>{{statsPerformance.currentMasteryLevel}}</b> {{t "common.for"}} <em>"{{statsPerformance.owner.name}}"</em> !
+                  </div>
+                {{/each}}
+
+            {{/if}}
+        {{/unless}}
+
+        <div class="result-overview clearfix">
+            <div class="results-header clearfix">
+                {{#if assignment.isQuestionCollectionAssignment}}
+                    <h3>{{assignment.name}}</h3>
+                {{/if}}
+                {{#unless isAutoSubmitted}}
+                    <div class="result-time">
+                        <span class="result-h">{{t "quiz.completedIn"}}</span>
+                    <span class="result-t">
+                        <span class="glyphicon glyphicon-time"></span>
+                        <span class="text completed-in">
+                            {{#if hasTimeLimit }}
+                                {{quizResult.completedInFormat}} {{t "quiz.outOf"}} {{ assignment.timeLimit}} {{t "assignment.minutes"}}
+                            {{else}}
+                                {{to-hours quizResult.completedIn base="seconds" format="dhms"}}
+                            {{/if}}
+                        </span>
+                    </span>
+                    </div>
+                {{/unless}}
+                <div class="correct-answers">
+                    <span class="result-h">{{t "quiz.correctlyAnswered"}}</span>
+                    <span class="result-t">
+                        <span class="glyphicon glyphicon-ok-circle"></span>
+                        <span class="text">
+                            {{ quizResult.correctlyAnswered }}
+                            {{t "quiz.of"}} {{quizResult.totalQuestions}} {{t "quiz.questions"}}
+                        </span>
+                    </span>
+                </div>
+            </div>
+            {{#unless isImpersonated}}
+            <div class="links-content clearfix">
+                <ul>
+                    {{metadata-fork-link data-class=class data-style="take-quiz" label='quiz.takeAnotherQuiz'}}
+                    <li class="overall-performance">{{#link-to "student.haid" class.id}}{{t "quiz.seeYourOverallPerformance"}}{{/link-to}}</li>
+                    <li class="quiz-history"><a {{action "goToQuizHistory" class.id}} href="#">{{t "quiz.seeYourQuizHistory"}}</a></li>
+                </ul>
+            </div>
+            {{/unless}}
+        </div>
+
+        {{#if isNotTypeQC}}
+        <div class="bar-graph-container">
+            <div class="header">
+                <h2>{{statsText.title}}</h2>
+                <a href="#" class="button-gray" data-toggle="modal" data-target="#whatsthis-mdl" id="wit">
+                    {{t "whatIsThis"}}</a>
+            </div>
+            {{#each statsPerformance as |stat|}}
+                <div class="content">
+                    <div class="unit">
+                        <h4>{{stat.owner.name}}</h4>
+                        <small> {{stat.quizzesTaken}} {{t "quiz.quizTaken"}}</small>
+                        {{bar-graph baselineValue=null
+                                    currentValue=stat.currentMasteryLevel
+                                    caption="quiz.yourMastery"}}
+                        {{#unless class.selfStudying}}
+                            {{#if stat.hasClassAverage}}
+                                {{bar-graph currentValue=stat.classAverage
+                                        caption="quiz.classAverage" }}
+                            {{/if}}
+                        {{/unless}}
+                    </div>
+                </div>
+            {{/each}}
+
+            {{#link-to 'student.haid' class.id class="all-chapters"}}
+                {{statsText.link}}
+            {{/link-to}}
+
+        </div>
+        {{/if}}
+
+        <div class="result-answer-key">
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - -
+            Answer Keys
+            - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            <h2>{{t "quiz.answerKey"}}</h2>
+
+            {{#if quizResult.answerKeys}}
+                <div class="answerKey-content">
+                    {{#each quizResult.answerKeys as |answerKey index|}}
+                        {{#if answerKey.result}}
+                            {{#if answerKey.question}}
+                                {{x-render  displayLayout=answerKey.question.interactions.0.type
+                                            answerKey=answerKey
+                                            isRemediationLinkAllowed=controller.isRemediationLinkAllowed
+                                            isReferenceLinksAllowed=controller.isReferenceLinksAllowed
+                                            incReferenceViewsAllowed=controller.incReferenceViewsAllowed
+                                            productId=controller.class.product.id
+                                            data-store=controller.store
+                                            index=index}}
+                            {{/if}}
+                        {{/if}}
+                    {{/each}}
+                </div>
+            {{else}}
+                {{#if assignment.isAnswerKeyViewNever}}
+                    <span class="message">{{t "quiz.answerKeyDisabled"}}</span>
+                {{else}}
+                    <span class="message">{{t "quiz.answerKeyOnDueDate"}}{{format-date assignment.dueDate}}&#46;</span>
+                {{/if}}
+            {{/if}}
+        </div>
+
+        {{full-question isFullQuestion=true componentName=componentName model=currentQuestion isMultiple=isMultiple }}
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - -
+        Footer
+        - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <div class="result-footer">
+            {{#unless controller.isImpersonated}}
+                {{metadata-fork-link tagName="span" data-class=class label='quiz.takeAnotherQuiz' data-style="anotherQuiz btn btn-blue" id='takeAnotherQuiz'}}
+                {{#if view.isNotTypeQC}}
+                    {{#if showMLQuizzesList}}
+                        {{#if quizResult.assignments}}
+                            <a {{action 'toggleQuizzesList'}} class="viewQuizzes btn btn-blue" href="#">{{t "assignQuiz.viewQuizzes"}}</a>
+                        {{/if}}
+                    {{/if}}
+                {{/if}}
+                {{#link-to 'student.haid' class.id class='overallPerformance btn btn-blue' id='overallPerformance'}}{{t "quiz.viewOverallPerformance"}}{{/link-to}}
+            {{else}}
+                {{#link-to 'student.assignments' class.id class='btn btn-blue' id='goToAssignment'}}{{t "quiz.goBackToAssignments"}}{{/link-to}}
+            {{/unless}}
+        </div>
+        {{#if showQuizzes}}
+            <div>
+                {{partial "student/history"}}
+            </div>
+        {{/if}}
+    </div>
+</section>

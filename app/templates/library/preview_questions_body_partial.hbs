@@ -1,0 +1,21 @@
+<div class="modal-body cf question-container">
+    <div class="qc-header">
+        <div class="question-numbers">
+            <h4>{{questions.length}} {{t "questionLibrary.questions"}}</h4>
+        </div>
+    </div>
+    <div id="print-result-body" class="qc-body">
+        {{#each questionSet.questions as |question index|}}
+            {{partial 'library/question_partial'}}
+        {{/each}}
+        <div class="answer-key">
+            <div class="title">{{t "questionLibrary.modal.answerKey"}}</div>
+            {{#each questions as |question index|}}
+                <div>
+                    <span class="number">{{increment-int index}}</span>
+                    <span class="answers">{{question.answerString}}</span>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+</div>

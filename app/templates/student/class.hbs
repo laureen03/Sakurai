@@ -1,0 +1,67 @@
+<div class="container class-container">
+    <h2 id="class-container-section-header" class="auto-center col-sm-4 section-header dark">{{t "classes.myClasses"}}</h2>
+    <div class="classes-list clearfix">
+        {{#each classes as |clazz|}}
+            <h3>{{#link-to 'student.haid' clazz.id}} {{{clazz.name}}} {{/link-to}}</h3>
+            {{#if clazz.selfStudying}}
+                <div class="self-study-options">
+                    <label class="gray">
+                        {{t "classes.selfStudy"}}&nbsp;&nbsp;•&nbsp;&nbsp;
+                    </label>
+
+                    {{#if ccmJoinClassEnabled }}
+                        {{ccm-link  data-ccm-key="joinClass"
+                            data-class-names="gray join-class"
+                            data-i18n-label="classes.joinClass"
+                            data-class=class
+                            data-product-isbn=isbn }}
+                    {{else}}
+                        {{#link-to "student.enroll" class="gray"}}{{t "classes.joinClass"}}{{/link-to}}
+                    {{/if}}
+                </div>
+            {{else}}
+                <label class="gray">{{clazz.term}}</label>
+            {{/if}}
+        {{else}}
+            {{#each products as |product|}}
+                <h2>{{product.name}}</h2>
+                <div class="auto-center no-classes clearfix">
+                    <div class="left-content">
+                        <h3>
+                            {{#if ccmJoinClassEnabled }}
+                                {{ccm-link  data-ccm-key="joinClass"
+                                            data-class-names="join-class"
+                                            data-i18n-label="classes.joinClass"
+                                            data-class=class
+                                            data-product-isbn=isbn }}
+                            {{else}}
+                                {{#link-to "student.enroll" class="join-class"}}{{t "classes.joinClass"}}{{/link-to}}
+                            {{/if}}
+                        </h3>
+                        <span>{{t "classes.joinClassText"}}</span>
+                    </div>
+                    <div class="right-content">
+                        <h3><a {{action "enrollSelfStudy" product}} class="self-study-enroll">{{t "classes.selfStudy"}}</a></h3>
+                        <span>{{t "classes.selfStudyText"}}</span>
+                    </div>
+                    <div class="or-circle">
+                        {{t "classes.or"}}
+                    </div>
+                </div>
+            {{/each}}
+
+        {{/each}}
+
+    </div>
+    {{#if hasClasses}}
+        {{#if ccmJoinClassEnabled }}
+            {{ccm-link  data-ccm-key="joinClass"
+                data-class-names="btn btn-blue add-class"
+                data-i18n-label="classes.joinClass"
+                data-class=class
+                data-product-isbn=isbn }}
+        {{else}}
+            {{#link-to "student.enroll" class="btn btn-blue add-class"}}{{t "classes.joinClass"}}{{/link-to}}
+        {{/if}}
+    {{/if}}
+</div>

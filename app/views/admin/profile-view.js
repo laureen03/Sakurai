@@ -1,6 +1,10 @@
-SakuraiWebapp.AdminProfileView = Ember.Component.extend(
-    SakuraiWebapp.ProfileMixin,
-    SakuraiWebapp.UserInterfaceFeaturesMixin, {
+import Ember from "ember";
+import UserInterfaceFeaturesMixin from "mixins/user-interface-features";
+import ProfileMixin from "profile-mixin";
+
+export default Ember.Component.extend(
+    ProfileMixin,
+    UserInterfaceFeaturesMixin, {
 
     layoutName: 'layout/forAdmin',
 

@@ -1,0 +1,9 @@
+<div class="btn-box">
+    {{async-button id="btn-save" data-button-class="btn btn-blue"
+                   data-text="save"
+                   action="saveQuestion"
+                   register-as=saveButtonComponent
+                   parent=this}}
+    <button id="btn-preview" type="submit" class="btn btn-default space-btn" {{action "openPreview"}}>{{t "preview"}}</button>
+    <a class="go-back" {{action 'cancelChanges'}}>{{t "cancel"}}</a>
+</div>

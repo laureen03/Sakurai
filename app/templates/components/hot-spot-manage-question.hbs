@@ -1,0 +1,40 @@
+<div>
+    <h2 class="margin-top-55">{{t "questionLibrary.createQuestion"}}</h2>
+    <form role="form" class="question-form">
+
+        {{partial "components/manage_question/question_text"}}
+        {{partial "components/manage_question/question_media"}}
+
+        <div class="select_point_answer clearfix">
+            <div class="select-point-result-square">
+                <div class="select-point-result">
+                    <img class="bg" src={{imageUrl}}>
+                    <div class="ui-widget-content result-ok-ql {{if imageUrl 'show' 'hide'}}"></div>
+                </div>
+            </div>
+            <div>{{t "questionLibrary.createQuestions.hotSpotInstructions"}}</div>
+            {{#if answerChoiceInvalid}}
+                <label id="answer-error" class="error-label">{{t "questionLibrary.createQuestions.answerHotSpotRequired"}}</label>
+            {{/if}}
+        </div>
+
+        {{partial "components/manage_question/question_explanation"}}
+        {{partial "components/manage_question/question_references"}}
+        {{partial "components/manage_question/question_remediation_links"}}
+        {{partial "components/manage_question/question_taxonomies"}}
+        {{partial "components/manage_question/question_learning_objectives"}}
+        {{#if data-is-admin}}
+            {{partial "components/manage_question/question_product_association"}}
+        {{/if}}
+        {{partial "components/manage_question/question_actions"}}
+
+    </form>
+
+    <!--MODAL FOR PREVIEW-->
+    {{full-question
+        isPreview=true
+        isFullQuestion=true
+        componentName="question-hot-spot"
+        model=data-question}}
+</div>
+

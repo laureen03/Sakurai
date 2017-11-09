@@ -1,0 +1,385 @@
+<div class="container question-library">
+    <div class="menu">
+        {{partial "library/left_menu"}}
+    </div>
+    <div class="results-content col-md-9 content-ql {{if showResults 'block' 'hidden'}}">
+            {{#if questionSet}}
+                <div class="ql-title">
+                    <div class="name">
+                        {{#if questionSetEditMode}}
+                            {{edit-question-collection question_set_name = questionSetName invalid_qc_name = invalidQCName}}
+                        {{else}}
+                            <h3>{{questionSet.name}}&nbsp;
+                                <a class="glyphicon glyphicon-pencil medium-icon text-muted gray" {{action "activeQCEdit"}} href="#"></a>
+                            </h3>
+                        {{/if}}
+                    </div>
+                    <span class="pull-right">
+                        <div class="menu-manage dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-cog"></span> {{t "questionLibrary.manage"}} <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" {{action "activeQCEdit"}} href="#">{{t "questionLibrary.rename"}}</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" {{action 'enterPreview'}} href="#">{{t "questionLibrary.print"}}</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" {{action "copyQC"}} href="#">{{t "questionLibrary.copy"}}</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" data-toggle="modal" data-target="#delete-modal" href="#">{{t "delete"}}</a></li>
+                                {{#if hasQuestionSetsToImport}}
+                                    {{! Per comment in PUSAK-932, 'Import' link will be visible on desktop, frame & tablet }}
+                                    <li class="hidden-xs" role="presentation"><a role="menuitem" tabindex="-1" {{action 'showImportModal'}} href="#">{{t "questionLibrary.importQuestionSets"}}</a></li>
+                                {{/if}}
+                                <li role="presentation"><a role="menuitem" tabindex="-1" {{action "openExportWindow"}} href="#">{{t "questionLibrary.export"}}</a></li>
+                                {{#if showShareQuestionCollection}}
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" {{action "openShareQCModal"}} href="#">{{t "questionLibrary.shareQC"}}</a></li>
+                                {{/if}}
+                            </ul>
+                        </div>
+                        {{#if assignQuestionSetAssignmentEnabled}}
+                            {{#if hasQuestions}}
+                                <button class="assign-btn btn btn-blue btn-small" {{action 'gotoQCAssignment'}}>{{t "assignQuiz.assign"}}</button>
+                            {{else}}
+                                <button class="assign-btn btn btn-blue btn-small disabled">{{t "assignQuiz.assign"}}</button>
+                            {{/if}}
+                        {{/if}}
+                    </span>
+                </div>
+            {{else}}
+                {{partial "library/search_filters"}}
+                <div class="filters">
+                    {{#if criteria.term}}
+                        <div class="filter-breadcrumb-item filter-box term-filter">
+                            <div class="filter-title">
+                                {{t "questionLibrary.filter.filteringBy"}} {{t "questionLibrary.filter.keyword"}}
+                                <a class="gray glyphicon glyphicon-remove" {{action 'removeTermFilter'}} href="#"></a>
+                            </div>
+                            <div>
+                                {{criteria.term}}
+                            </div>
+                        </div>
+                    {{/if}}
+                    {{#if criteria.questions}}
+                        <div class="filter-breadcrumb-item filter-box question-id-filter">
+                            <div class="filter-title">
+                                {{t "questionLibrary.filter.filteringBy"}} {{t "questionLibrary.filter.questionId"}}
+                                <a class="gray glyphicon glyphicon-remove" {{action 'removeQuestionIdFilter'}} href="#"></a>
+                            </div>
+                            <div>
+                                {{questionId}}
+                            </div>
+                        </div>
+                    {{/if}}
+                    {{#if filterSections}}
+                        {{#if isMetadataAllowed }}
+                            {{filter-breadcrumb
+                                data-remove-action="removeChapterFilter"
+                                data-filters=filterSections
+                                data-title=terminologyTermPlural
+                                data-type="nursing-topics"}}
+                        {{else}}
+                            {{filter-breadcrumb
+                                data-remove-action="removeChapterFilter"
+                                data-filters=filterSections
+                                data-title-i18n="common.chapterSingular.other"
+                                data-type="chapters"}}
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if filterTaxonomies}}
+                        {{#each termTaxonomiesAllowedForTagging as |termTaxonomy|}}
+                            {{filter-breadcrumb
+                                data-remove-action="removeTaxonomyFilter"
+                                data-filters=filterTaxonomies
+                                data-title=termTaxonomy.label
+                                data-filter-type=true
+                                data-type=termTaxonomy.key}}
+                        {{/each}}
+                    {{/if}}
+
+                    {{#if filterQuestionTypes}}
+                        {{filter-breadcrumb data-remove-action="removeQuestionTypeFilter"
+                                            data-filters=filterQuestionTypes
+                                            data-i18n-names=true
+                                            data-title-i18n="common.questionType.one"
+                                            data-type="question-type"}}
+                    {{/if}}
+
+                    {{#if filterClassIds}}
+                        {{filter-breadcrumb
+                                data-remove-action="removeClassIdsFilter"
+                                data-filters=filterClassIds
+                                data-title-i18n="questionLibrary.filter.classData"
+                                data-type="class"}}
+                    {{/if}}
+
+                    {{#if filterAuthorIds}}
+                        {{filter-breadcrumb
+                                data-remove-action="removeAuthorsFilter"
+                                data-filters=filterAuthorIds
+                                data-title-i18n="questionLibrary.author"
+                                data-type="author"
+                                data-is-user="true"}}
+                    {{/if}}
+
+                    {{#if showQuestionStatusFilters}}
+                        {{filter-breadcrumb
+                                data-remove-action="removeQuestionStatusFilter"
+                                data-filters=filterQuestionStatus
+                                data-title-i18n="questionLibrary.questionStatus"
+                                data-type="questionStatus"
+                                data-i18n-names=true}}
+                    {{/if}}
+
+                    {{#if filterInstructorId}}
+                        {{filter-breadcrumb
+                                data-remove-action="removeInstructorFilter"
+                                data-filters=filterInstructorId
+                                data-title-i18n="questionLibrary.author"
+                                data-type="instructor"
+                                data-is-user="true"}}
+                    {{/if}}
+
+                    {{#if filterOtherProductIds}}
+                        {{filter-breadcrumb
+                                data-remove-action="removeOtherProductsFilter"
+                                data-filters=filterOtherProductIds
+                                data-title-i18n="questionLibrary.otherProduct"
+                                data-type="otherProduct"}}
+                    {{/if}}
+
+                    {{#if filterDifficulty}}
+                        {{filter-breadcrumb
+                                data-remove-action="removeDifficultyFilter"
+                                data-filters=filterDifficulty
+                                data-title-i18n="questionLibrary.difficulty"
+                                data-type="difficulty"}}
+                    {{/if}}
+                </div>
+            {{/if}}
+
+            {{#unless preview}}
+            <div class="question-container">
+                <div class="qc-header">
+                    <div class="question-numbers">
+                        {{#if questionId}}
+                          <h4> {{totalResults}} {{t "questionLibrary.question"}} </h4>
+                        {{else}}
+                          <h4> {{totalResults}} {{t "questionLibrary.questions"}} </h4>
+                        {{/if}}
+                    </div>
+                    {{#unless questionSet}}
+                    <div class="question-sort">
+                        <h4>
+                            <span class="hidden-xs pull-left">&nbsp;{{t "questionLibrary.sort"}}:</span>
+
+                            {{my-select
+                                content=sortOptions
+                                optionValuePath="id"
+                                optionLabelPath="label"
+                                selectedValue=sortId}}
+                        </h4>
+                    </div>
+                    {{/unless}}
+
+                </div>
+                <div id="qc-result-body" class="qc-body">
+                    {{#each questions as |question index|}}
+                        {{partial 'library/question_partial'}}
+                    {{/each}}
+                </div>
+                <div class="qc-footer">
+                    {{#if questionSet}}
+                        <div class="qc-pagination"></div>
+                    {{else}}
+                        {{#if showPaging}}
+                            {{async-link data-component-class="paging"
+                                                data-text="questionLibrary.showMore"
+                                                action="showMore"}}
+                        {{/if}}
+                    {{/if}}
+                </div>
+            </div>
+            {{/unless}}
+    </div>
+</div>
+
+{{import-question-sets-modal
+    is-visible=isImportModalVisible
+    question-collections=importModalQuestionSets
+    exclude-product=product.id
+    on-name-click="redirectToImport" }}
+
+{{modal-question-history
+    is-visible=questionHistoryModal.isVisible
+    audit-events=questionHistoryModal.data }}
+
+{{#if isAuthoringEnabled}}
+    <!-- ADD TO FAMILY MODAL-->
+    <div id='add_to_family_modal' class="modal fade" data-backdrop="static">
+        <div class="modal-dialog small-modal">
+            <div class="modal-content add-to-family-note">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">x</button>
+                    <h4 class="modal-title">{{t "questionLibrary.addToFamily.title"}}</h4>
+                </div>
+                {{#if addFamilyNoteMessage}}
+                    <div class="modal-body message-box">
+                        {{addFamilyNoteMessage}}
+                    </div>
+                {{else}}
+                    <div class="modal-body">
+                        <div>
+                            {{t "questionLibrary.addToFamily.addToFamilyWithId"}}
+                            {{input id="question-id-family" type="text" value=questionIdFamily}}
+                            <label class="error">Please enter the id question</label>
+                        </div>
+                        {{{t "questionLibrary.addToFamily.note"}}}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-blue btn-small" {{action "onAddQuestionToFamily"}}>{{t "submit"}}</button>
+                    </div>
+                {{/if}}
+
+            </div>
+        </div>
+    </div>
+    <!-- ADD NOTE-->
+    <div id='add_note_modal' class="modal fade" data-backdrop="static">
+        <div class="modal-dialog small-modal">
+            <div class="modal-content add-to-family-note">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">x</button>
+                    <h4 class="modal-title">{{t "questionLibrary.addNote.addNote"}}</h4>
+                </div>
+                {{#if addFamilyNoteMessage}}
+                    <div class="modal-body message-box">
+                        {{addFamilyNoteMessage}}
+                    </div>
+                {{else}}
+                    <div class="modal-body">
+                        <div>
+                            {{t "questionLibrary.addNote.enterNoteBellow"}}<br/>
+                            {{textarea id="txt-question-note" type="text" value=questionNoteDetail}}
+                            <label class="error">Please enter the note</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-blue btn-small" {{action "onAddQuestionNote"}}>{{t "submit"}}</button>
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+{{/if}}
+{{#if questionSet}}
+    <!-- Print Modal fo question collection-->
+   <div id='preview-modal' class="modal fade print question-library" data-backdrop="static">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <button type="button" class="close" {{action 'exitPreview'}}>x</button>
+                   <h4 class="modal-title">{{t "questionLibrary.modal.title"}} {{questionSet.name}}</h4>
+               </div>
+               {{#if preview}}
+                   {{partial 'library/preview_questions_body_partial'}}
+               {{/if}}
+               <div class="modal-footer">
+                   <a href="javascript:window.print()" class="btn btn-blue btn-small">{{t "button.print"}}</a>
+                   <button type="button" class="btn btn-default" {{action 'exitPreview'}}>{{t "cancel"}}</button>
+               </div>
+           </div>
+       </div>
+   </div>
+
+   <!-- confirm Modal for delete collection-->
+   <div class="modal" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+       <div class="modal-dialog small-modal">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                   <h4 class="modal-title" id="myModalLabel">{{deleteColModalTitle}}</h4>
+               </div>
+               <div class="modal-body">
+                   {{deleteColModalContent}}
+               </div>
+               <div class="modal-footer">
+                   <button type="button" class="btn btn-blue" {{action 'onDelete'}}>{{t "questionLibrary.delete"}}</button>&nbsp;&nbsp;
+                   <a class="cancel" data-dismiss="modal" href="#">{{t "cancel"}}</a>
+               </div>
+           </div>
+       </div>
+   </div>
+   <!-- QUESTION COLLECTION   M o d a l -->
+   <div id='shareqc-mdl' class="modal fade filter-modal">
+       <div class="modal-dialog small-modal">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <button type="button" class="close" data-dismiss="modal">x</button>
+                   <h4 class="modal-title">{{{t "questionLibrary.shareQCDescription" className=class.name}}}</h4>
+               </div>
+               <div class="modal-body cf">
+                    <div>
+                        <label class="custom-error">{{t "questionLibrary.shareQCSelectRequired"}}</label>
+                    </div>
+                    <ul>
+                        {{#each coInstructors as |instructor|}}
+                              <li>
+                                    {{#in-array item=instructor.id  array=sharedWithCoInstructors}}
+                                        <span class="glyphicon glyphicon-check"></span>
+                                        <label for="share_qc_instructor_{{instructor.id}}" title="{{t "questionLibrary.shareQCShared"}}">{{instructor.fullNameInformal}}</label>
+                                    {{/in-array}}
+                                    {{#not-in-array item=instructor.id  array=sharedWithCoInstructors}}
+                                        <input type="checkbox" value={{instructor.id}} id="share_qc_instructor_{{instructor.id}}" {{action "selectCoInstructor" instructor on="change"}}/>
+                                        <label for="share_qc_instructor_{{instructor.id}}">{{instructor.fullNameInformal}}</label>
+                                    {{/not-in-array}}
+                              </li>
+                        {{/each}}
+                    </ul>
+               </div>
+               <div class="modal-footer">
+                   {{async-button
+                   data-button-class=shareQCBtnClass
+                   data-text="send"
+                   action="shareQC" }}&nbsp;&nbsp;
+                   <a class="cancel" data-dismiss="modal" href="#">{{t "cancel"}}</a>
+               </div>
+           </div>
+       </div>
+   </div>
+
+   <!-- QUESTION COLLECTION  No Co-Instructors M o d a l -->
+   <div id='shareqc-mdl-no-instructors' class="modal fade filter-modal">
+       <div class="modal-dialog small-modal">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <button type="button" class="close" data-dismiss="modal">x</button>
+                   <h4 class="modal-title">{{t "questionLibrary.shareQCNoInstructors"}}</h4>
+               </div>
+           </div>
+       </div>
+   </div>
+
+   <!-- QUESTION COLLECTION Shared Confirmation M o d a l -->
+   <div id='shareqc-mdl-success' class="modal fade filter-modal">
+       <div class="modal-dialog small-modal">
+           <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">x</button>
+                    <h4 class="modal-title">{{t "questionLibrary.shareQCSuccess"}}</h4>
+                </div>
+                <div class="modal-body cf">
+                    <ul>
+                        {{#each submittedCoInstructors as |instructor|}}
+                            <li>
+                                <label>{{instructor}}</label>
+                            </li>
+                         {{/each}}
+                    </ul>
+               </div>
+           </div>
+       </div>
+   </div>
+{{/if}}
+
+<!-- text-entry questions: modal to show other answers -->
+{{partial "library/question/other_answers_modal"}}
+{{render "library.create_question_collection"}}

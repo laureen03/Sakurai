@@ -1,0 +1,35 @@
+<!-- H E A D E R -->
+<div class="sub-header navbar-default admin-submenu" role="banner">
+    <div class="container">
+        <h1>{{class.product.title}}</h1>
+
+        <ul class="menu-mob nav menu-dropdown menu-center" role="tablist">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    {{#if (is-equal applicationModule 'admin-library.home')}}
+                        {{t "header.questionLibrary"}}
+                    {{/if}}
+                    {{#if (is-equal applicationModule 'admin-library.results')}}
+                        {{t "header.questionLibrary"}}
+                    {{/if}}
+                    {{#if (is-equal applicationModule 'admin-library.createQuestion')}}
+                        {{t "questionLibrary.createQuestion"}}
+                    {{/if}}
+
+                    &nbsp;<span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li>{{#link-to 'library.home' class.id}} {{t "header.questionLibrary"}} {{/link-to}}</li>
+                    <li>{{#link-to 'library.selectQuestion' class.id }} {{t "questionLibrary.createQuestion"}} {{/link-to}}</li>
+                </ul>
+            </li>
+        </ul>
+
+        <nav class="collapse navbar-collapse" role="navigation">
+            <ul id="menu-primary-navigation" class="nav navbar-nav nav-student">
+                <li class="menu-questionLibrary">{{#link-to 'library.home' class.id}} {{t "header.questionLibrary"}} {{/link-to}}</li>
+                <li class="menu-createQuestion">{{#link-to 'library.selectQuestion' class.id}} {{t "questionLibrary.createQuestion"}} {{/link-to}}</li>
+            </ul>
+        </nav>
+    </div>
+</div>

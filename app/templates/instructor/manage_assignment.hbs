@@ -1,0 +1,27 @@
+<div class="container assign-quiz manage-assignment">
+    {{#if assignmentCreated}}
+        {{partial 'instructor/assign/assignment_created'}}
+    {{else}}
+        {{#unless isEditMode}}
+            {{#unless activeSettings}}
+                <div class="steps">
+                    <span class="label-step1 selected">{{t "assignQuiz.step1"}}</span>&nbsp;&#8594;&nbsp;
+                    <span class="label-step2">{{t "assignQuiz.step2"}}</span>&nbsp;&#8594;&nbsp;
+                    <span class="label-step3">{{t "assignQuiz.step3"}}</span>
+                </div>
+            {{/unless}}
+                <!-- S T E P   1 -->
+                {{#unless isChapterPreSelected}}
+                    {{partial "instructor/assign/step1"}}
+                {{/unless}}
+                <!-- S T E P   2 -->
+                {{render "instructor.assign.step2"}}
+        {{/unless}}
+        <!-- S T E P   3 -->
+        {{render "instructor.assign.step3"}}
+    {{/if}}
+</div>
+<!-- text-entry questions: modal to show other answers -->
+{{partial "library/question/other_answers_modal"}}
+
+

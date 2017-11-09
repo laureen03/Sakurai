@@ -1,0 +1,48 @@
+<div class="modal fade" id="text-entry-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog question-library">
+        <div class="modal-content question-information">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">All Other Answers</h4>
+            </div>
+            <div class="modal-body">
+                <div class="header">
+                    <div>{{t "common.allStudents"}}</div>
+                    <div>{{t "common.thisClass"}}</div>
+                </div>
+                <ul class="answer-choices">
+                    {{#each otherAnswersForTextEntry as |answer|}}
+                        <li>
+                            <div class="stats-container">
+                                <div class="stats">
+                                    <span class="percentage">{{answer.answerChoice.answerPercentage}}%</span>
+
+                                    <div class="progress">
+                                        {{progress-bar percentage=answer.answerChoice.answerPercentage}}
+                                    </div>
+                                    <span class="circle-wrong glyphicon glyphicon-remove"></span>
+                                </div>
+                                {{#if answer.classPercentage}}
+                                    <div class="stats">
+                                        <span class="percentage">{{answer.classPercentage}}%</span>
+
+                                        <div class="progress">
+                                            {{progress-bar percentage=answer.classPercentage}}
+                                        </div>
+                                        <span class="circle-wrong glyphicon glyphicon-remove"></span>
+                                    </div>
+                                {{/if}}
+                            </div>
+                            <div class="answer text">
+                                {{safe-html answer.answerChoice.text}}
+                            </div>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-blue" data-dismiss="modal">{{t "close"}}</button>
+            </div>
+        </div>
+    </div>
+</div>

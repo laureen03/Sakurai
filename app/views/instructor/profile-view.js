@@ -1,6 +1,10 @@
-SakuraiWebapp.InstructorProfileView = Ember.Component.extend(
-    SakuraiWebapp.ProfileMixin,
-    SakuraiWebapp.UserInterfaceFeaturesMixin, {
+import Ember from "ember";
+import UserInterfaceFeaturesMixin from "mixins/user-interface-features";
+import ProfileMixin from "profile";
+
+export default Ember.Component.extend(
+    UserInterfaceFeaturesMixin,
+    ProfileMixin, {
 
     layoutName: 'layout/forInstructor',
 

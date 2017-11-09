@@ -1,4 +1,8 @@
-SakuraiWebapp.ReviewRefreshStudentComponent = Ember.Component.extend({
+import Ember from "ember"; 
+import ReviewRefreshClassSetting from "models/review-refresh-class-setting";
+import context from "utils/context-utils";
+
+export default Ember.Component.extend({
     "data-class": null,
 
     "data-product": null,
@@ -41,34 +45,38 @@ SakuraiWebapp.ReviewRefreshStudentComponent = Ember.Component.extend({
         if (this.isDestroyed || this.isDestroying) {
             return;
         }
-        if (this.get("quizType") == 'adaptive') //All sections are available, Clear inactive list
+        if (this.get("quizType") === 'adaptive'){ //All sections are available, Clear inactive list
             component.sendAction('data-set-inactive', [], false, component.get('autoQuizType'));
-        else { //Review and Refresh quiz
-            var authenticationManager = SakuraiWebapp.context.get('authenticationManager'),
+        } else { //Review and Refresh quiz
+            var authenticationManager = context.get('authenticationManager'),
                     user = authenticationManager.getCurrentUser(),
                     inactive_topics = [];
             var targetML = component.get("data-class.selfStudying") ? component.get("data-product.reviewAndRefreshML") : component.get("reviewRefreshClassSettings.targetMasteryLevel");
 
             if (component.get("retrieveTaxonomies")){ //when is taxonomy list
-                if (component.get("data-parent-name"))
-                    inactive_topics = SakuraiWebapp.ReviewRefreshClassSetting.disabledReviewRefreshTaxonomies(component.get("data-class.id"), user.get("id"), targetML, component.get("data-parent-name"));
-                else
+                if (component.get("data-parent-name")){
+                    inactive_topics = ReviewRefreshClassSetting.disabledReviewRefreshTaxonomies(component.get("data-class.id"), user.get("id"), targetML, component.get("data-parent-name"));
+                }
+                else{
                     return;
+                }
             }
-            else //When are sections
-                inactive_topics = SakuraiWebapp.ReviewRefreshClassSetting.disabledReviewRefreshSections(component.get("data-class.id"), user.get("id"), targetML);
+            else {//When are sections
+                inactive_topics = ReviewRefreshClassSetting.disabledReviewRefreshSections(component.get("data-class.id"), user.get("id"), targetML);
+            }
 
             inactive_topics.then(function (result) {
                 if (component.get("quizType") === 'reviewRefresh') {
                     var ids = (component.get("retrieveTaxonomies")) ? result.taxonomiesIds : result.sectionsIds;
-                    var flag = JSON.parse(component.get("activeRR"))
+                    var flag = JSON.parse(component.get("activeRR"));
                     if (!flag || component.get('isNotFromPracticeQuiz')) {
                         $('#warningTopicsAreasReviewRefresh').modal('show');
                     }
-                    if (ids && ids.length > 0) //show message with warning about disable topics
+                    if (ids && ids.length > 0){ //show message with warning about disable topics
                         component.sendAction('data-set-inactive', ids, true, component.get('autoQuizType'));
-                    else
+                    } else {
                         component.sendAction('data-set-inactive', [], true, component.get('autoQuizType'));
+                    }
                 }
             });
         }
@@ -77,7 +85,7 @@ SakuraiWebapp.ReviewRefreshStudentComponent = Ember.Component.extend({
 
     retrieveTaxonomies: Ember.computed('quizType', function(){
         var component = this;
-        return component.get("data-parent-name") != "" && component.get("data-parent-name") != 'nursing_topics';
+        return component.get("data-parent-name") !== "" && component.get("data-parent-name") !== 'nursing_topics';
     }),
 
     /**
@@ -87,10 +95,11 @@ SakuraiWebapp.ReviewRefreshStudentComponent = Ember.Component.extend({
         var history = this.get('history'), lastPageVisited = "";
         if (history.length > 1){ //If the user visited more than one page
             lastPageVisited = history[history.length-2];
-            if ((lastPageVisited == 'student.section') || (lastPageVisited == 'student.metadata')) //Verify the last page is practice quiz
+            if ((lastPageVisited === 'student.section') || (lastPageVisited === 'student.metadata')){ //Verify the last page is practice quiz
                 return false; //The user change the dropdown
-            else
+            } else {
                 return true; //The user
+            }
         }
         else{
             return false; //The user is into Practice quiz
@@ -98,9 +107,9 @@ SakuraiWebapp.ReviewRefreshStudentComponent = Ember.Component.extend({
     }),
 
     getAllSectionsAvailable: Ember.observer('data-parent-name', function () {
-        var self = this;
-        if (this.get('data-parent-name') != 'nursing_topics')
+        if (this.get('data-parent-name') !== 'nursing_topics'){
             this.getDisableTopics();
+        }
     }),
 
     /**
@@ -108,7 +117,6 @@ SakuraiWebapp.ReviewRefreshStudentComponent = Ember.Component.extend({
      **/
     isActive: Ember.computed('reviewRefreshClassSettings', function(){
         //Compare dates
-        var dateUtil = new SakuraiWebapp.DateUtil();
         var reviewRefreshClassSettings = this.get("reviewRefreshClassSettings");
         var validDate = true;
 

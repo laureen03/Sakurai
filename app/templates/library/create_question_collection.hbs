@@ -1,0 +1,35 @@
+<!-- QUESTION COLLECTION   M o d a l -->
+<div id='createql-mdl' class="modal fade">
+    <div class="modal-dialog small-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">
+                    {{#if isCopyQc}}
+                        {{t "questionLibrary.copyQuestionCollection"}}
+                    {{else}}
+                        {{t "questionLibrary.createQuestionCollection"}}
+                    {{/if}}
+                </h4>
+            </div>
+            <div class="modal-body cf">
+               <h5>{{t "common.name"}}</h5>
+               <form id="add-qc" name="add-qc">
+                    {{input id="name_qc" name="name_qc" type="text" value=qcName}}
+                   {{#if invalidQCName }}
+                       <label class="error">{{t "questionLibrary.duplicateNameError"}}</label>
+                   {{/if}}
+               </form>
+            </div>
+            <div class="modal-footer">
+                {{async-button
+                data-button-class="btn btn-blue create-qc-button"
+                data-text="create"
+                action="create_qc" }}&nbsp;&nbsp;
+                <a class="cancel" data-dismiss="modal" {{action 'cancel'}} href="#">{{t "cancel"}}</a>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->

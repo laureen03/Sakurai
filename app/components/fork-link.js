@@ -13,7 +13,9 @@
  * @param param2 {string} second param to supply to the redirect route (optional)
  */
 
-SakuraiWebapp.ForkLinkComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({
 
     /*
      * === PROPERTIES

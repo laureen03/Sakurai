@@ -4,12 +4,14 @@
  * @extends Ember.Component
  *
  * @param data-component-class {string} special class to add to the component's tag (optional)
- * @param data-stats {SakuraiWebapp.StudentUsage[]} an array of StudentUsage models used to perform
+ * @param data-stats {StudentUsage[]} an array of StudentUsage models used to perform
  *      all the calculations for the component.
  *
  */
 
-SakuraiWebapp.UsageStatComponent = Ember.Component.extend({
+import Ember from "ember"; 
+
+export default Ember.Component.extend({ 
 
     /*
      * === PROPERTIES

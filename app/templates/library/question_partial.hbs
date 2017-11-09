@@ -1,0 +1,351 @@
+<div class="{{if importingQuestionSet 'importing-qc' 'simple-qc'}} {{if questionSet 'question-collection-content' ''}}">
+    <div class="question-partial qc-wrapper question-box {{if question.unassociated 'unassociated' ''}} {{if question.isInactive 'inactive' ''}} {{if question.parentId 'is-variant' ''}}">
+
+        {{#if importingQuestionSet}}
+            {{#if question.isUnassociated}}
+                <div class="metadata">{{t "questionLibrary.questionNotAssociated"}}</div>
+            {{/if}}
+            {{#if question.isInactive}}
+                <div class="metadata">{{t "questionLibrary.questionNotActive"}}</div>
+            {{/if}}
+        {{/if}}
+
+        {{#unless questionSet}}
+            {{#if question.parentId}}
+                <div class="metadata">{{t "common.questionVariant"}}</div>
+            {{/if}}
+        {{/unless}}
+
+        <div class="content">
+            <div class="clearfix">
+                <div class="right-col-wrapper">
+
+                    {{level-scale component-class="question"
+                    data-level-value=question.difficulty
+                    data-is-calibrating=question.showCalibrating
+                    data-legend-text='common.difficulty' }}
+
+                    {{#if classView}}
+                        {{#if question.isClassMisconception}}
+                            <div class="misconception hidden-xs">
+                                <div class="legend">{{t "questionLibrary.misconception"}}</div>
+                            </div>
+                        {{/if}}
+                    {{else}}
+                        {{#if question.isMisconception}}
+                            <div class="misconception hidden-xs">
+                                <div class="legend">{{t "questionLibrary.misconception"}}</div>
+                            </div>
+                        {{/if}}
+                    {{/if}}
+                    {{#if question.isPrivateReserve}}
+                        <div class="private-reserve hidden-xs">
+                        </div>
+                    {{/if}}
+                </div>
+                {{#if questionSet}}
+                    {{#unless importingQuestionSet}}
+                        <div class="order-box">
+                            {{select-order
+                            content = orderList
+                            selectedValue = question.order
+                            questionSet = question}}
+                        </div>
+                    {{/unless}}
+                {{/if}}
+                <div class="question-information">
+                    {{#unless question.isHotSpot}}
+                        {{partial "library/question/common_structure"}}
+                    {{else}}
+                        {{partial "library/question/hot_spot_structure"}}
+                    {{/unless}}
+                </div>
+            </div>
+
+            {{#if explanationEnabled}}
+                <div class="qc-wrapper-explanation">
+
+                    {{question-explanation component-class="collapsed"
+                    data-title="questionLibrary.explanation"
+                    data-feedback=question.feedbacks }}
+                </div>
+            {{/if}}
+
+            {{#if remediationLinksEnabled}}
+                <div class="qc-wrapper-remediation remediation-links">
+                    <h4>
+                        {{t "questionLibrary.remediation"}}:
+                    </h4>
+                    {{word-list data-item-list=question.remediationLinks
+                    data-filter-property="isLP"
+                    data-filter-value=true
+                    data-output-property="name"
+                    data-item-action="onRemediationLinkClick"
+                    data-icon=true
+                    data-icon-class="icon-smartsenseIconStethoscope"}}
+                    {{word-list data-item-list=question.remediationLinks
+                    data-filter-property="isLA"
+                    data-filter-value=true
+                    data-output-property="name"
+                    data-item-action="onRemediationLinkClick"
+                    data-icon=true
+                    data-icon-class="icon-smartsenseIconStethoscope"}}
+                    {{word-list data-item-list=question.remediationLinks
+                    data-filter-property="isWeb"
+                    data-filter-value=true
+                    data-output-property="name"
+                    data-item-action="onRemediationLinkClick"
+                    data-icon=true
+                    data-icon-class="icon-smartsenseIconBook"}}
+
+                </div>
+            {{/if}}
+
+            {{#if referencesEnabled}}
+                <div class="qc-wrapper-reference">
+                  {{question-reference
+                    data-title-i18n="questionLibrary.reference"
+                    data-reference-action="onReferenceLinkClick"
+                    data-references=question.parsedReferences
+                    data-product-id=class.product.id}}
+                </div>
+            {{else}}
+                <div class="qc-wrapper-reference">
+                  {{question-legacy-reference
+                    data-title-i18n="questionLibrary.reference"
+                    data-references=question.legacyReferences
+                    data-product-id=class.product.id}}
+                </div>
+            {{/if}}
+
+            {{#if linksEnabled}}
+                <div class="qc-wrapper-links">
+
+                    {{#if importingQuestionSet}}
+
+                        {{#if question.isUnassociated}}
+                            <a class="remove-question" {{action 'removeQuestion' question.id}} href="#">{{t "questionLibrary.removeQC"}}</a>
+                        {{/if}}
+
+                    {{else}}
+
+                        {{#unless isAuthoringEnabled}}
+                            {{question-filter question=question
+                            product=product
+                            user=user
+                            type=instructor_filter
+                            label="questionLibrary.hideFromPracticeQuizzes"
+                            data-store=controller.store}}
+                            <!--Check if need to show retired btn-->
+                            {{#if question.instructor.isFulfilled}}
+                                {{#is-owner-or-admin instructorId=question.instructor.id isAuthoringEnabled=isAuthoringEnabled}}
+                                    <div class="pull-left retire-actions">
+                                        {{#if question.retired}}
+                                            {{async-button data-button-class="btn btn-default max-width make-available"
+                                                           data-text="questionLibrary.unRetire"
+                                                           action="setQuestionStatusActive"
+                                                           data-param=question}}
+
+                                            {{async-button data-button-class="btn btn-default max-width place-on-hold"
+                                                           data-text="questionLibrary.placeOnHold"
+                                                           action="setQuestionStatusOnHold"
+                                                           data-param=question}}
+                                        {{else}}
+                                            {{async-button data-button-class="btn btn-default max-width retire button-left"
+                                                           data-text="questionLibrary.retire"
+                                                           action="setQuestionStatusRetire"
+                                                           data-param=question}}
+                                        {{/if}}
+                                    </div>
+                                {{/is-owner-or-admin}}
+                            {{/if}}
+                        {{else}} {{! only for administrators }}
+                            <div class="pull-left admin-actions">
+                                {{#if question.available}}
+                                    {{async-button data-button-class="btn btn-default max-width place-on-hold"
+                                                   data-text="questionLibrary.placeOnHold"
+                                                   action="setQuestionStatusOnHold"
+                                                   data-param=question}}
+                                {{/if}}
+                                {{#if question.onHold}}
+                                    {{async-button data-button-class="btn btn-default max-width make-available"
+                                                   data-text="questionLibrary.makeAvailable"
+                                                   action="setQuestionStatusActive"
+                                                   data-param=question}}
+                                {{/if}}
+                                {{#if question.retired}}
+                                    {{async-button data-button-class="btn btn-default max-width make-available"
+                                                   data-text="questionLibrary.unRetire"
+                                                   action="setQuestionStatusOnHold"
+                                                   data-param=question}}
+                                {{else}}
+                                    {{async-button data-button-class="btn btn-default max-width retire button-left"
+                                                   data-text="questionLibrary.retire"
+                                                   action="setQuestionStatusRetire"
+                                                   data-param=question}}
+                                {{/if}}
+                            </div>
+                        {{/unless}}
+
+                        <div class="dropdown pull-left button-left max-width">
+
+                            {{add-to-collection
+                            data-questionSetsEnabled=questionSetsEnabled
+                            data-question=question}}
+                        </div>
+                        {{#if questionSet}}
+                                <div class="link-box">
+                                    <a class="remove-btn" id="remove-link-{{question.id}}" {{action 'onRemoveQuestion' question}} href="#">{{t "questionLibrary.removeQC"}} </a>
+                                </div>
+
+                        {{/if}}
+                        {{#if question.instructor.isFulfilled}}
+                            {{#is-owner-or-admin instructorId=question.instructor.id isAuthoringEnabled=isAuthoringEnabled}}
+                                <div class="link-box">
+                                    <a class="remove-btn edit" {{action 'onEditQuestion' question}} href="#">{{t "common.editQuestion"}}</a>
+                                </div>
+                            {{/is-owner-or-admin}}
+                        {{else}}
+                            {{#if isAuthoringEnabled}}
+                                <div class="link-box">
+                                    <a class="remove-btn edit" {{action 'onEditQuestion' question}} href="#">{{t "common.editQuestion"}}</a>
+                                </div>
+                            {{/if}}
+                        {{/if}}
+                        {{#if isAuthoringEnabled}}
+                            <div class="link-box">
+                                <a class="remove-btn add_to_family_link" {{action 'onAddToFamily' question}} href="#">{{t "common.addFamily"}}</a>
+                            </div>
+                        {{/if}}
+
+                    {{/if}} {{! closes if importingQuestionSet}}
+                </div>
+            {{/if}}
+
+            {{#if termTaxonomiesEnabled}}
+                <div class="term-taxonomies">
+                    {{!-- data-filter-property and data-filter-values are set to undefined so all items in the list
+                          are included in the final list --}}
+                    {{word-list data-item-list=question.sections
+                    data-filter-property="undefined"
+                    data-filter-value=undefined
+                    data-output-property="name"
+                    data-header=""}}
+
+                    {{word-list data-item-list=question.termTaxonomies
+                    data-filter-property="isBlooms"
+                    data-filter-value=true
+                    data-output-property="bloomName"
+                    data-header="metadata.bloomTaxonomy" }}
+
+                    {{word-list data-item-list=question.termTaxonomies
+                    data-filter-property="isClientNeeds"
+                    data-filter-value=true
+                    data-output-property="typeAndName"
+                    data-header="metadata.clientNeeds" }}
+
+                    {{word-list data-item-list=question.termTaxonomies
+                    data-filter-property="isNursingConcepts"
+                    data-filter-value=true
+                    data-output-property="typeAndName"
+                    data-header="metadata.nursingConcepts" }}
+
+                    {{word-list data-item-list=question.termTaxonomies
+                    data-filter-property="isACSMTextbookChapters"
+                    data-filter-value=true
+                    data-output-property="name"
+                    data-header="metadata.acsmTextbookChapters" }}
+
+                    {{word-list data-item-list=question.termTaxonomies
+                    data-filter-property="isACSMPTTextbookChapters"
+                    data-filter-value=true
+                    data-output-property="name"
+                    data-header="metadata.acsmPTTextbookChapters" }}
+
+                    {{word-list data-item-list=question.termTaxonomies
+                    data-filter-property="isActivityStatements"
+                    data-filter-value=true
+                    data-output-property="name"
+                    data-header="metadata.activityStatements" }}
+
+                </div>
+            {{/if}}
+
+            {{#if extraInfoEnabled}}
+                <div class="qc-wrapper-extra-info">
+                    <ul>
+                        {{#if isAuthoringEnabled}}
+                            <li class="status">
+                                <strong>{{t "questionLibrary.status"}}:</strong>{{#with question.status as |status|}} {{t status}}{{/with}}
+                            </li>
+                            <li class="author">
+                                <strong>{{t "questionLibrary.author"}}
+                                    :</strong>{{#with question.author as |author|}} {{author.firstName}} {{author.lastName}} {{/with}}
+                            </li>
+                            <li class="answer-count">
+                                <strong>{{t "questionLibrary.answered"}}:</strong> {{question.answerCount}} {{t "questionLibrary.times"}}
+                            </li>
+                            <li class="questionId">
+                                <strong>{{t "questionLibrary.questionId"}}:</strong>&nbsp;#{{question.id}}
+                            </li>
+                            <li class="variant">
+                                <a {{action 'createVariantQuestion' question}}
+                                        class="create-variant" href="#">{{t "questionLibrary.createVariant"}}</a>
+                            </li>
+                            <li class="history">
+                                <strong>{{t "common.history"}}:</strong>&nbsp;<a {{action 'onAddNote' question}}
+                                    class="add-note-link" href="#">{{t "questionLibrary.addNote.addNote"}}</a>|&nbsp;<a {{action 'showQuestionHistoryModal' question.id}} href="#">{{t "common.viewHistory"}}</a>
+                            </li>
+                            <li class="question-filters">
+                                {{question-product-filters
+                                data-store=store
+                                data-question=question
+                                data-products=subjectProducts}}
+                            </li>
+                        {{else}}
+                            {{#if classView}}
+                                <li class="answer-count">
+                                    <strong>{{t "questionLibrary.answered"}}:</strong> {{question.answerCount}} {{t "questionLibrary.timesByClass"}}
+                                </li>
+                            {{/if}}
+                        {{/if}}
+                    </ul>
+                </div>
+            {{/if}}
+
+            {{#if isAuthoringEnabled}}
+                {{#if question.showProducts}}
+                    <div class="questions-other-products">
+                        <h5>The Product This Question Appears in:</h5>
+                        <ul>
+                        {{#each question.groupedProducts as |group_item|}}
+                            <li>
+                                <h5>{{group_item.subject.name}}</h5>
+                                <ul>
+                                {{#each group_item.contents as |product_item|}}
+                                    <li><a {{action 'filterByOtherProduct' product_item.id class.product.id}} href="#">{{product_item.name}}</a></li>
+                                {{/each}}
+                                </ul>
+                            </li>
+                        {{/each}}
+                        </ul>
+                    </div>
+                {{/if}}
+            {{/if}}
+        </div>
+        {{#unless questionSet}}
+            {{#if question.hasVariant}}
+                <div id="variantQ{{question.id}}" class="variants">
+                    <a class="extend" {{action 'showVariants' question question.id}} href="#">
+                        <span>{{t "common.showVariants"}}</span>
+                        <i class="caret"></i>
+                    </a>
+                    <a class="min" {{action 'hideVariants' question.id}} href="#">
+                        <span>{{t "common.hideVariants"}}</span>
+                        <i class="caret"></i>
+                    </a>
+                </div>
+            {{/if}}
+        {{/unless}}
+    </div>
+</div>

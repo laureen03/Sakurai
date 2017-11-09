@@ -1,4 +1,6 @@
-SakuraiWebapp.InstructorAssignSliderView = Ember.Component.extend({
+import Ember from "ember";
+
+export default Ember.Component.extend({
 
 	layoutName: "instructor/assign/slider",
     attributeBindings: ['data-value'],

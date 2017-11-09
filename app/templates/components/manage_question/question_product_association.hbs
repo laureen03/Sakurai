@@ -1,0 +1,65 @@
+<div class="add-product-association">
+    <div class="show-product-association">
+        <div class = "po-select-group">
+            <h2>{{t "metadata.productAssociation"}}</h2>
+            {{{t "questionLibrary.createQuestions.productAssociationList"}}}
+            <div class="selected-learning-objectives">
+                {{#each selectedLearningObjectives as |selected|}}
+                    <div class="selected-item">
+                        <span class="selected-item-text">{{selected.name}}</span>
+                            <span class="selected-item-remove" data-type="blooms">
+                                 <a href="#" {{action 'removeFromList' 'selectedLearningObjectives' selected}}>X</a>
+                            </span>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+
+    <div class = "pa-select">
+        {{{t "questionLibrary.createQuestions.productAssociationInstructions"}}}
+        <div class="pa-select-box">
+            <label> {{t "metadata.subjects"}}:  </label>
+            {{my-select 
+                class="custom-select"
+                content=data-subjects
+                optionValuePath="id"
+                optionLabelPath="name"
+                prompt="Select a Subject"
+                selectedValue=data-selected-subject}}
+        </div>
+        <div class="pa-select-box">
+            <label> {{t "metadata.products"}}:  </label>
+            {{my-select 
+                class="custom-select"
+                content=filteredProducts
+                optionValuePath="id"
+                optionLabelPath="name"
+                prompt="Select a Product"
+                selectedValue=data-selected-product}}
+        </div>
+        <div class="pa-select-box">
+            <label> {{t "metadata.sections"}}:  </label>
+            {{my-select 
+                class="custom-select"
+                content=filteredSections
+                optionValuePath="id"
+                optionLabelPath="name"
+                prompt="Select a Section"
+                selectedValue=data-selected-section}}
+        </div>
+        <div class="pa-select-box">
+            <label> {{t "metadata.learningObjectives"}}:  </label>
+            {{my-select 
+                class="custom-select"
+                content=filteredLO
+                optionValuePath="id"
+                optionLabelPath="name"
+                prompt="Select a Comprehensive Topic"
+                selectedValue=data-selected-LO}}
+        </div>
+        <div class="btn-box">
+            <button id="btn-add-association" class="btn btn-blue" {{action "addAssociation"}}> Add </button>
+        </div>
+    </div>
+</div>

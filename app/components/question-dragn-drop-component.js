@@ -1,5 +1,9 @@
-SakuraiWebapp.QuestionDragnDropComponent = Ember.Component.extend(
-SakuraiWebapp.QuestionMixin, {
+import Ember from "ember"; 
+import QuestionMixin from "mixins/question-mixin";
+
+
+export default Ember.Component.extend(
+    QuestionMixin,{
     /**
      * @property {string} shuffle action
      */

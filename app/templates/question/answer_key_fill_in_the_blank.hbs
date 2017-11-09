@@ -1,0 +1,27 @@
+<div id="answer-key-{{increment-int index}}" class="{{if answerKey.result.correct 'correct-answer' 'incorrect-answer'}}">
+    <div class="question-result text-entry">
+        <h4>{{t "quiz.question"}} {{increment-int index}}&nbsp;&nbsp;<small><a class="gray see-full-question" {{action "showFullQuestion" answerKey "question-fill-in-the-blank"}}>{{t "quiz.seeFullQuestion"}}</a></small></h4>
+        <p>{{safe-html answerKey.question.questionText}}</p>
+        <h5>{{t "quiz.yourResponse"}}</h5>
+        <ul class="my-response-list answer-choices">
+        	<li>
+    	    	{{#if answerKey.result.correct}}
+    		    	<span class="circle-ok glyphicon glyphicon-ok"></span>
+    		    {{else}}
+    		    	<span class="circle-wrong glyphicon glyphicon-remove"></span>
+    		    {{/if}}
+                <span class="text {{if answerKey.result.correct 'text-correct' 'text-incorrect'}}">{{{answerKey.result.answer}}}</span>
+    	    </li>
+        </ul>
+
+        <h5>{{t "quiz.correctResponse"}}</h5>
+        <ul class="correct-response-list answer-choices">
+        	<li>
+    	    	<span class="circle-ok glyphicon glyphicon-ok"></span>
+    	    	<span class="text-correct">{{answerKey.question.interactions.[0].correctResponse.value}}</span>
+    	    </li>
+        </ul>
+
+        {{partial "question/explanation_remediation"}}
+    </div>
+</div>

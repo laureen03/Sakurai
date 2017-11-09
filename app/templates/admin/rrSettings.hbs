@@ -1,0 +1,26 @@
+<div class="container admin-container">
+	<div class="review-refresh-section">
+	    
+	    <h2>{{t "header.rrSettings"}}</h2>
+	    <div class="options">
+	    	{{#if isActive}}
+	    		{{{t "rrSettings.rrOn"}}}
+	    	{{else}}
+	    		{{{t "rrSettings.rrOff"}}}
+	    	{{/if}}
+	    	{{input id="rrActive" type="checkbox" checked=isActive}}
+	    </div>
+
+		<div class="options">
+	        {{t "rrSettings.defaultML"}}
+	        {{my-select 
+                class="ml-select"
+                name="targetMl"
+	        	content=mlList
+                selectedValue=targetMasteryLevel}}
+	    </div>
+	     <div class="options">
+            <button class="btn btn-blue" {{action "saveSettings"}}>{{t "reviewRefresh.saveSettings"}}</button>
+        </div>
+	</div>
+</div>

@@ -1,0 +1,20 @@
+<div class="container enroll-container">
+
+    {{#if didSucceed}}
+        <h1 class="section-header dark">{{t "coInstructor.successTitle"}}</h1>
+        <div>{{t "coInstructor.successBody className=classCreated.name"}}</div>
+        <button type="button" class="btn btn-blue auto-center" {{action "endFlow"}}>{{t "button.returnToClasses"}}</button>
+
+    {{else}}
+        <h1 class="section-header dark">{{t "coInstructor.title"}}</h1>
+        <div>
+            <div>{{t "coInstructor.intro"}}</div>
+            {{input id="classCode" name="classCode" placeholder=codePlaceholder value=classCode}}
+
+            {{#if errorMessage}}
+                <div class="error">{{errorMessage}}</div>
+            {{/if}}
+        </div>
+        <button type="button" class="btn btn-blue auto-center" {{action "registerCoInstructor"}}>{{t "button.submit"}}</button>
+    {{/if}}
+</div>

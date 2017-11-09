@@ -1,0 +1,142 @@
+<div id="specificMisconceptions" class="question-library hidden-xs">
+	<h2>{{t "hmcd.specificMisconceptions"}}</h2>
+	<div class="misconceptions-enroll clearfix">
+		<div class="icon-box"><i class="fa fa-info-circle"></i></div>
+		<div class="explanation-box">
+			<p>{{t "hmcd.specificMisconceptionsP1"}}</p>
+			<p>{{t "hmcd.specificMisconceptionsP2"}}</p>
+		</div>
+	</div>
+    <div class="question-container clearfix">
+        <div class="qc-body">
+            {{#if hasClassMisconceptions}}
+                {{#each classMisconceptions as |question index|}}
+                <div class="qc-wrapper question-box">
+                    <div class="clearfix">
+                        <div class="right-col-wrapper">
+
+                            {{level-scale component-class="question"
+                                          data-level-value=question.difficulty
+                                          data-is-calibrating=question.calibrating
+                                          data-legend-text='common.difficulty' }}
+
+                            {{#if question.isClassMisconception}}
+                                <div class="misconception hidden-xs">
+                                    <div class="legend">{{t "questionLibrary.misconception"}}</div>
+                                </div>
+                            {{/if}}
+                        </div>
+
+                        <div class="question-information {{if questionSet 'left-space' ''}}">
+                            <div class="qc-wrapper-title">
+                                <div class="number">{{increment-int index}}</div>
+                                {{#if question.questionMedia}}
+                                    <div>
+                                        <img src="{{question.questionMedia}}" />
+                                    </div>
+                                {{/if}}
+                                <div class="text">{{safe-html question.questionText}}</div>
+                            </div>
+                            <div class="qc-wrapper-body {{question.questionType}}">
+                                {{#each question.interactions as |interaction|}}
+                                    {{library-answer-choices
+                                        interaction=interaction
+                                        has-class-percentages=true
+                                        action="showMoreAnswers" }}
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="qc-wrapper-explanation {{if questionSet 'left-space' ''}}">
+                        <div class="panel-heading">
+                            <h4>
+                                <a data-toggle="collapse" class="collapsable collapsed" data-parent="#accordion" href="#explanation-{{index}}">
+                                    <span class="collapse-icon glyphicon glyphicon-play small-icon explanation-icon"></span>
+                                    <span class="explanation-title">{{t "questionLibrary.explanation"}}:</span>
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div id="explanation-{{index}}" class="panel-collapse collapse  ">
+                            <div class="panel-body">
+                                {{#each question.feedbacks as |feedback|}}
+                                <p>{{{safe-html feedback.text}}}</p>
+                                {{/each}}
+                            </div>
+                        </div>
+                        <br clear="all" />
+                        {{#if remediationLinksEnabled}}
+                          {{#if question.remediationLinks}}
+                            <div class="qc-wrapper-remediation remediation-links">
+                                <h4>
+                                    {{t "questionLibrary.remediation"}}:
+                                </h4>
+                                {{word-list data-item-list=question.remediationLinks
+                                data-filter-property="isLP"
+                                data-filter-value=true
+                                data-output-property="name"
+                                data-item-action="onRemediationLinkClick"
+                                data-icon=true
+                                data-icon-class="icon-smartsenseIconStethoscope"}}
+                                {{word-list data-item-list=question.remediationLinks
+                                data-filter-property="isLA"
+                                data-filter-value=true
+                                data-output-property="name"
+                                data-item-action="onRemediationLinkClick"
+                                data-icon=true
+                                data-icon-class="icon-smartsenseIconStethoscope"}}
+                                {{word-list data-item-list=question.remediationLinks
+                                data-filter-property="isWeb"
+                                data-filter-value=true
+                                data-output-property="name"
+                                data-item-action="onRemediationLinkClick"
+                                data-icon=true
+                                data-icon-class="icon-smartsenseIconBook"}}
+
+                            </div>
+                          {{/if}}
+                      {{/if}}
+
+                        {{#if question.termTaxonomies}}
+                          <div class="term-taxonomies">
+                              {{!-- data-filter-property and data-filter-values are set to undefined so all items in the list
+                              are included in the final list --}}
+                              {{word-list data-item-list=question.sections
+                              data-filter-property="undefined"
+                              data-filter-value=undefined
+                              data-output-property="name"
+                              data-header=""}}
+
+                              {{word-list data-item-list=question.termTaxonomies
+                              data-filter-property="isBlooms"
+                              data-filter-value=true
+                              data-output-property="bloomName"
+                              data-header="metadata.bloomTaxonomy" }}
+
+                              {{word-list data-item-list=question.termTaxonomies
+                              data-filter-property="isClientNeeds"
+                              data-filter-value=true
+                              data-output-property="typeAndName"
+                              data-header="metadata.clientNeeds" }}
+
+                              {{word-list data-item-list=question.termTaxonomies
+                              data-filter-property="isNursingConcepts"
+                              data-filter-value=true
+                              data-output-property="typeAndName"
+                              data-header="metadata.nursingConcepts" }}
+                          </div>
+                        {{/if}}
+
+                    </div>
+                </div>
+            {{/each}}
+                <a class="library-misconceptions" {{action 'showInQuestionLibrary'}}> {{t "hmcd.viewAllMisconception"}} </a>
+            {{else}}
+            <div class="no-results">
+                {{t "hmcd.specificMisconceptionsNoResults"}}
+            </div>
+            {{/if}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>

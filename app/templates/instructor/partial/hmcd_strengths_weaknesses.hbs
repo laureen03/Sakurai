@@ -1,0 +1,43 @@
+<div id="strengthsWeaknesses">
+
+{{#if isMetadataAllowed }}
+
+    {{#if usesChapter}}
+        {{!-- When the term is chapter, use it as singular so it's "Chapter Strengths" instead of
+              "Chapters Strengths" --}}
+        {{performance-list  data-type="chapters"
+                            data-component-class="nursing-topics"
+                            data-category=terminologyTermPlural
+                            data-stats=chapterStats
+                            data-toggle-link=true
+                            data-item-click="onPerformanceChapterClick"}}
+    {{else}}
+        {{performance-list  data-type="chapters"
+                            data-component-class="nursing-topics"
+                            data-category-i18n="common.nursingTopic.other"
+                            data-stats=chapterStats
+                            data-toggle-link=true
+                            data-item-click="onPerformanceChapterClick"}}
+    {{/if}}
+
+    {{#each termTaxonomiesAllowedForQuizzing as |termTaxonomy|}}
+        {{performance-list  data-type=termTaxonomy.key
+                            data-filter-type=true
+                            data-category=termTaxonomy.label
+                            data-component-class=termTaxonomy.key
+                            data-stats=taxonomyStats
+                            data-toggle-link=true
+                            data-show-all=taxonomySettings.showAllClientNeedsPerformances
+                            data-item-click="onPerformanceTaxonomyClick"}}
+    {{/each}}
+{{else}}
+
+    {{performance-list
+        data-type="chapters"
+        data-component-class="chapters"
+        data-stats=chapterStats
+        data-item-click="onPerformanceChapterClick"}}
+
+{{/if}}
+
+</div>

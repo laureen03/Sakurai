@@ -1,0 +1,28 @@
+<div class="add-learning-objective">
+    <h2>{{t "metadata.learningObjectives"}}</h2>
+    {{{t "questionLibrary.createQuestions.comprehensiveTopicInstructions"}}}
+    {{#each parentLOs as |parentLO|}}
+        <div class="clearfix lo-select-group">
+            {{view "select" class="custom-select lo-select"
+            content=parentLO.sortedChildren
+            optionValuePath="content.id"
+            optionLabelPath="content.name"
+            prompt=parentLO.name}}
+            <div class="selected-learning-objectives">
+                {{#each selectedLearningObjectives as |selected|}}
+                    {{#in-array item=selected.id  array=parentLO.childrenIds}}
+                        <div class="selected-item">
+                            <span class="selected-item-text">{{selected.name}}</span>
+                                <span class="selected-item-remove" data-type="blooms">
+                                     <a href="#" {{action 'removeFromList' 'selectedLearningObjectives' selected}}>X</a>
+                                </span>
+                        </div>
+                    {{/in-array}}
+                {{/each}}
+            </div>
+        </div>
+    {{/each}} 
+    {{#if selectLearningObjectivesError}}
+        <label class="error-label learning-objective-error">{{t "questionLibrary.createQuestions.selectLearningObjectivesError"}}</label>
+    {{/if}}
+</div>

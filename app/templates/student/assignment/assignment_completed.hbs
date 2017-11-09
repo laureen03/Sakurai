@@ -1,0 +1,34 @@
+<div class="assignment-info clearfix">
+    {{partial "student/partials/assignment_header_3_col"}}
+    <div class="details">
+        {{t "assignment.youReachedBefore"}}
+    </div>
+    <div class="details">
+       <span class="label label-success">
+            {{#if assignment.isCompleted}}
+                <span class="label label-success">{{t "assignments.complete"}}</span>
+            {{/if}}
+            {{#if assignment.isAutoCompleted }}
+                <span class="label label-success">{{t "assignments.autoCompleted"}}</span>
+            {{/if}}
+       </span>
+       <span class="points highlight">
+            {{#if assignment.isUngraded}}
+                {{t "assignment.isUpgradedText"}}
+            {{else}}
+                {{assignment.score}}/{{assignment.points}}&nbsp;{{t "assignment.pointsText"}}
+            {{/if}}
+        </span>
+    </div>
+</div>
+<div class="btn-box clearfix margin-btn">
+    {{#link-to 'student.assignments' class.id class="btn btn-blue"}}{{t "assignQuiz.done"}}{{/link-to}}
+    {{#if showMLQuizzesList}}
+        <a {{action 'toggleQuizzesList'}} class="btn btn-blue">{{t "assignQuiz.viewQuizzes"}}</a>
+    {{/if}}
+</div>
+{{#if showQuizzes}}
+    <div>
+        {{partial "student/history"}}
+    </div>
+{{/if}}

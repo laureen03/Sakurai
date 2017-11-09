@@ -1,4 +1,7 @@
-SakuraiWebapp.OverallPerformanceComponent = Ember.Component.extend({
+import Ember from "ember"; 
+import context from "utils/context-utils";
+
+export default Ember.Component.extend({
 
     /**
      * Mastery level items
@@ -29,7 +32,7 @@ SakuraiWebapp.OverallPerformanceComponent = Ember.Component.extend({
         var component = this;
         component.drawChart();
 
-        SakuraiWebapp.context.addWindowResizeListener(function(){
+        context.addWindowResizeListener(function(){
             if (!component.get("isDestroyed")){
                 component.drawChart();
             }
@@ -46,9 +49,6 @@ SakuraiWebapp.OverallPerformanceComponent = Ember.Component.extend({
         var dataTable = new google.visualization.DataTable();
 
         var overallPerformance = this.get("overallPerformance");
-
-        var classPerformance = overallPerformance.get('classPerformance') || [];
-        var studentPerformance = overallPerformance.get('studentPerformance') || [];
 
         this.reset();
 
@@ -111,7 +111,7 @@ SakuraiWebapp.OverallPerformanceComponent = Ember.Component.extend({
                     function(){ //on failure
                         dataTable.setValue(e.row, 6, component.getQuizDetailTooltip('- -', '- -', '- -'));
                         visualitation.draw(dataTable, options);
-                    })
+                    });
             }
             else{
                 // TODO
@@ -143,16 +143,16 @@ SakuraiWebapp.OverallPerformanceComponent = Ember.Component.extend({
         dataTable.addColumn({type: 'string', role: 'annotationText'});
 
 
-        if(overallPerformance.get('totalQuizzes') == 0){
+        if(overallPerformance.get('totalQuizzes') === 0){
             component.set("noMasteryLevelItems", true);
         }
 
-        if (overallPerformance.hasClassPerformance() || overallPerformance.get('totalQuizzes') == 0 || overallPerformance.get("totalQuizzes") == null){
+        if (overallPerformance.hasClassPerformance() || overallPerformance.get('totalQuizzes') === 0 || overallPerformance.get("totalQuizzes") === null){
             //Next columns are for the class mastery mastery level line
             dataTable.addColumn({type: 'number', label: I18n.t('overallPerformance.avgClassMastery') });
             dataTable.addColumn({'type': 'string', 'role': 'tooltip', p: {'html':true}});
         }
-        if (overallPerformance.hasStudentPerformance() || overallPerformance.get('totalQuizzes') == 0 ){
+        if (overallPerformance.hasStudentPerformance() || overallPerformance.get('totalQuizzes') === 0 ){
             //Next columns are for the student mastery level line
             dataTable.addColumn({type: 'number', label: I18n.t('overallPerformance.yourMl') });
             dataTable.addColumn({'type': 'string', 'role': 'tooltip', p: {'html':true}});
@@ -196,7 +196,7 @@ SakuraiWebapp.OverallPerformanceComponent = Ember.Component.extend({
 
 
         if( component.get("noMasteryLevelItems") ||
-                (overallPerformance.get("totalQuizzes")==null && classPerformanceNum == 0)){
+                (overallPerformance.get("totalQuizzes")==null && classPerformanceNum === 0)){
 
             var row = [];
             row.push(null);
@@ -245,7 +245,6 @@ SakuraiWebapp.OverallPerformanceComponent = Ember.Component.extend({
      */
     getMasteryLevelItems: function(overallPerformance){
 
-        var oneQuizOnly = overallPerformance.get('totalQuizzes') == 1;
         var hasStudentPerformance = overallPerformance.hasStudentPerformance();
         var hasClassPerformance = overallPerformance.hasClassPerformance();
 
@@ -263,7 +262,7 @@ SakuraiWebapp.OverallPerformanceComponent = Ember.Component.extend({
                 data[ numQuiz] = {
                     student:performance,
                     class: undefined
-                }
+                };
             });
         }
 
@@ -276,7 +275,7 @@ SakuraiWebapp.OverallPerformanceComponent = Ember.Component.extend({
                 data[numQuiz] = {
                     class:performance,
                     student: student
-                }
+                };
             });
         }
         return data;
@@ -299,9 +298,9 @@ SakuraiWebapp.OverallPerformanceComponent = Ember.Component.extend({
 
 
         // null <= 8 evals to true so check null first
-        if(_totalQuizzes != null && _totalQuizzes <= 8 )
+        if(_totalQuizzes !== null && _totalQuizzes <= 8 )
         {
-            // aka _totalQuizzes == 0
+            // aka _totalQuizzes === 0
 
             if(component.get("noMasteryLevelItems")){
                 _maxValue = 10;
@@ -314,7 +313,7 @@ SakuraiWebapp.OverallPerformanceComponent = Ember.Component.extend({
                 }
             }
         }
-        else if(_totalQuizzes == null)
+        else if(_totalQuizzes === null)
         {
             if (overallPerformance){
                 var classLength = overallPerformance.get('classPerformance').get('length');
@@ -323,8 +322,8 @@ SakuraiWebapp.OverallPerformanceComponent = Ember.Component.extend({
                 _maxValue = classLength;
                 if(classLength <= 8){
                     _ticks = [];
-                    for(var i = 0; i <= classLength; i++){
-                        _ticks.push(i);
+                    for(var j = 0; j <= classLength; j++){
+                        _ticks.push(j);
                     }
                 }
             }
@@ -431,7 +430,7 @@ SakuraiWebapp.OverallPerformanceComponent = Ember.Component.extend({
             // pointSize: 5,
             lineWidth: 2
 
-        }
+        };
     }
 
 

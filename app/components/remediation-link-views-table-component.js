@@ -3,10 +3,14 @@
  *
  * @extends Ember.Component
  */
+import Ember from "ember"; 
+import SortableMixin from "mixins/sortable";
+import Question from "models/question";
+import SortableHelper from "utils/sortable";
 
-SakuraiWebapp.RemediationLinkViewsTableComponent = Ember.Component.extend(
-    SakuraiWebapp.SortableMixin,
-    {
+
+export default Ember.Component.extend(
+    SortableMixin,{
         
     /*
      * === PROPERTIES
@@ -25,7 +29,7 @@ SakuraiWebapp.RemediationLinkViewsTableComponent = Ember.Component.extend(
      */
     'data-store': null,
     /**
-     * @property {SakuraiWebapp.SortableHelper}
+     * @property {SortableHelper}
      */
     sortable: null,
 
@@ -43,11 +47,11 @@ SakuraiWebapp.RemediationLinkViewsTableComponent = Ember.Component.extend(
     componentName: "",
 
     /**
-     * @property {SakuraiWebapp.SortableHelper}
+     * @property {SortableHelper}
      */
     remediationLinkViewsSortable: Ember.computed("data-remediationLinkViews.[]", function(){
         var sortable = this.get("sortable") ||
-            SakuraiWebapp.SortableHelper.create({ sort: "lastViewAt", direction:false });
+            SortableHelper.create({ sort: "lastViewAt", direction:false });
 
         var remediationLinkViews = this.get("data-remediationLinkViews") || Ember.A();
 
@@ -69,8 +73,9 @@ SakuraiWebapp.RemediationLinkViewsTableComponent = Ember.Component.extend(
                 this.set("isFullQuestion", false);
                 this.set("model", null);
             }
-            else
+            else{
                 $('#remediation-link-views-mdl').modal('hide');
+            }
         }, 
 
         onSortByCriteria: function(sortableId, criteria){
@@ -84,14 +89,18 @@ SakuraiWebapp.RemediationLinkViewsTableComponent = Ember.Component.extend(
             store.find('question', questionId).then(function(questionLoaded){
                 var componentName = '';
                 var questionType = questionLoaded.get("interactions").get('firstObject').type;
-                if (questionType === SakuraiWebapp.Question.CHOICE)
+                if (questionType === Question.CHOICE){
                     componentName = 'question-choice';
-                if (questionType === SakuraiWebapp.Question.HOT_SPOT)
+                }
+                if (questionType === Question.HOT_SPOT){
                     componentName = 'question-hot-spot';
-                if (questionType === SakuraiWebapp.Question.FILL_IN_THE_BLANK)
+                }
+                if (questionType === Question.FILL_IN_THE_BLANK){
                     componentName = 'question-fill-in-the-blank';
-                if (questionType === SakuraiWebapp.Question.DRAG_AND_DROP)
+                }
+                if (questionType === Question.DRAG_AND_DROP){
                     componentName = 'question-dragn-drop';
+                }
                 controller.set("componentName", componentName);
                 controller.set("isFullQuestion", true);
                 controller.set("model", questionLoaded);
@@ -103,7 +112,7 @@ SakuraiWebapp.RemediationLinkViewsTableComponent = Ember.Component.extend(
         },
 
         onReferenceClick: function(referenceView){
-            var context = SakuraiWebapp.context;
+            var context = context;
             var lwwProperties = context.get("environment").getProperty("lww");
             var thePointUrl = lwwProperties.baseUrl + lwwProperties.referenceUrlPath;
             var isbn = context.get("authenticationManager").get("isbn");

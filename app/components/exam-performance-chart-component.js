@@ -4,7 +4,10 @@
  * @param current-page {number} page the component is currently on
  */
 
-SakuraiWebapp.ExamPerformanceChartComponent = Ember.Component.extend({
+import Ember from "ember"; 
+import context from "utils/context-utils";
+
+export default Ember.Component.extend({
 
     dataTable: null,
     lineChart: null,
@@ -24,7 +27,6 @@ SakuraiWebapp.ExamPerformanceChartComponent = Ember.Component.extend({
             lineChart = new google.visualization.LineChart(document.getElementById('chart_performance')),
             threshold = this.get("threshold") || 4,
             assignment = this.get("assignment"),
-            context = SakuraiWebapp.context,
             self = this;
 
         this.set('dataTable', dataTable);
@@ -33,19 +35,19 @@ SakuraiWebapp.ExamPerformanceChartComponent = Ember.Component.extend({
         if (!context.isTesting()){
             google.visualization.events.addListener(lineChart, 'ready', this.placeMarker.bind(lineChart, dataTable, threshold, assignment, this.getVerticalTicksNumber(threshold)));
         }
-        google.visualization.events.addListener(lineChart, 'select', function(e){self.selectHandler(lineChart, dataTable)});
+        google.visualization.events.addListener(lineChart, 'select', function(){self.selectHandler(lineChart, dataTable);});
         // Only add the table columns once
         this.addDataTableColumns(dataTable);
         this.drawChart();
     },
 
 
-    selectHandler: function selectHandler(lineChart, dataTable) {
+    selectHandler: function selectHandler(lineChart) {
         var component = this,
             pageLen = this.get('page-length'),
             currentPage = this.get('current-page'),
             paginationExecuted = this.get('paginationExecuted'),
-            isQuestionSelected = lineChart.getSelection().length != 0,
+            isQuestionSelected = lineChart.getSelection().length !== 0,
             additionalIndex = (paginationExecuted) ? 0 : 1;
 
         if (isQuestionSelected) {
@@ -82,7 +84,7 @@ SakuraiWebapp.ExamPerformanceChartComponent = Ember.Component.extend({
      */
     getVerticalTicksNumber: function (threshold) {
         var maxValue = this.get("maxValue");
-        return (threshold ==  maxValue) ? maxValue+1 : maxValue;
+        return (threshold ===  maxValue) ? maxValue+1 : maxValue;
     },
 
 
@@ -139,7 +141,7 @@ SakuraiWebapp.ExamPerformanceChartComponent = Ember.Component.extend({
             $(".passing-threshold .red-gradient").css("height", percentageBottom + "%");
 
             //Position of label
-            var cli = this.getChartLayoutInterface()
+            var cli = this.getChartLayoutInterface();
             $('.marker-threshold').css("top", (Math.floor(cli.getYLocation(threshold)) - 93) + parseInt(chartArea.attr("y")) + "px");
             //The ajustement expression is a linear function where f(8)=64 and f(2)=-20
             $('.label-threshold').css("top", (Math.floor(cli.getYLocation(threshold)) - 93 - (top / 2) + (17*threshold-56)) + "px");
@@ -187,13 +189,11 @@ SakuraiWebapp.ExamPerformanceChartComponent = Ember.Component.extend({
     addQuestionAnsweredRows:function(dataTable, answerKeys, pageLen, currentPage){
         var component = this,
             answerKeyArray = (answerKeys && answerKeys.toArray()) || [],
-            threshold = component.get("threshold"),
             lowerLimit = (currentPage - 1) * pageLen,
             upperLimit = currentPage * pageLen;
 
         $.each(answerKeyArray, function(index, item) {
-            var result,
-                tooltip;
+            var tooltip;
 
             if (index < lowerLimit) {
                 // continue to the next iteration
@@ -208,20 +208,22 @@ SakuraiWebapp.ExamPerformanceChartComponent = Ember.Component.extend({
 
                     tooltip = component.getMasteryLevelTooltip(rowIndex, masteryLevel);
 
-                    if (result.get("correct"))
+                    if (result.get("correct")){
                         dataTable.addRow([rowIndex,
                             masteryLevel,
                             tooltip,
                             null,
                             null
                         ]);
-                    else
+                    }
+                    else{
                         dataTable.addRow([rowIndex,
                             null,
                             null,
                             masteryLevel,
                             tooltip
                         ]);
+                    }
                 });
             }
         });
@@ -307,7 +309,7 @@ SakuraiWebapp.ExamPerformanceChartComponent = Ember.Component.extend({
                 baselineColor: "#e5e5e5"
             },
             legend: 'none'
-        }
+        };
     },
 
     calculateTicks: function(startNum, endNum) {

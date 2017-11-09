@@ -1,9 +1,12 @@
 /**
  *
  * Drop down component
- * @type {SakuraiWebapp.TaxonomyDropdownComponent }
+ * @type {TaxonomyDropdownComponent }
  */
-SakuraiWebapp.TaxonomyDropdownComponent = Ember.Component.extend({
+import Ember from "ember"; 
+import TermTaxonomy from "models/term-taxonomy";
+
+export default Ember.Component.extend({ 
 
     /**
      * @property {{id: "", name: "", type: "", group: ""}}
@@ -63,15 +66,15 @@ SakuraiWebapp.TaxonomyDropdownComponent = Ember.Component.extend({
         var $select = component.$("select");
         $select.select2({minimumResultsForSearch: 10});
         $select.on("change", function (e) { 
-            var value = e.target.value
-            if (value!= undefined && value != ""){
+            var value = e.target.value;
+            if (value !== undefined && value !== ""){
                 component.selectItem(e.target.value);
                 component.$("select").val("").trigger("change");
             }
         });
 
-        if (SakuraiWebapp.TermTaxonomy.NURSING_CONCEPTS == component.get("data-type")) {
-            $select.on("select2:open", function (e) { 
+        if (TermTaxonomy.NURSING_CONCEPTS === component.get("data-type")) {
+            $select.on("select2:open", function () { 
                 $(".select2-results__options").css('max-height', '400px');
             });
         }
@@ -87,14 +90,15 @@ SakuraiWebapp.TaxonomyDropdownComponent = Ember.Component.extend({
 
         if (taxonomy){
             var selectedTaxonomies = this.get("data-selected-items");
-            if(selectedTaxonomies.findBy('id', taxonomy.id) === undefined)
+            if(selectedTaxonomies.findBy('id', taxonomy.id) === undefined){
                 selectedTaxonomies.pushObject(taxonomy);
+            }
         }
     },
 
     /**
      * Removes a selected term taxonomy
-     * @param {SakuraiWebapp.TermTaxonomy} taxonomy
+     * @param {TermTaxonomy} taxonomy
      */
     removeItem: function(taxonomy){
         if (taxonomy){
@@ -112,7 +116,7 @@ SakuraiWebapp.TaxonomyDropdownComponent = Ember.Component.extend({
 
         var type = this.get("data-type");
         var filteredItems = (this.get("data-filter-type")) ? //filtering items by type
-            SakuraiWebapp.TermTaxonomy.filterByType(this.get("data-items"), type) :
+            TermTaxonomy.filterByType(this.get("data-items"), type) :
             this.get("data-items");
 
         filteredItems.forEach(function(item){
@@ -130,7 +134,7 @@ SakuraiWebapp.TaxonomyDropdownComponent = Ember.Component.extend({
                 });
             }
             else{
-                if (type == SakuraiWebapp.TermTaxonomy.BLOOM_TAXONOMY){//blooms has no parent
+                if (type === TermTaxonomy.BLOOM_TAXONOMY){//blooms has no parent
                     options.pushObject({
                         id: item.get("id"),
                         name: item.get("name"),
@@ -141,7 +145,7 @@ SakuraiWebapp.TaxonomyDropdownComponent = Ember.Component.extend({
             }
         });
 
-        return options
+        return options;
     }),
 
     /**
@@ -155,7 +159,7 @@ SakuraiWebapp.TaxonomyDropdownComponent = Ember.Component.extend({
     selectedItems: Ember.computed("data-selected-items.[]", "data-type", function(){ 
         var type = this.get("data-type");
         return (this.get("data-filter-type")) ? //filtering items by type
-            SakuraiWebapp.TermTaxonomy.filterByType(this.get("data-selected-items"), type) :
+            TermTaxonomy.filterByType(this.get("data-selected-items"), type) :
             this.get("data-selected-items");
     }),
 

@@ -1,4 +1,7 @@
-SakuraiWebapp.LoginForgotPasswordView = Ember.Component.extend({
+import Ember from "ember";
+
+export default Ember.Component.extend({
+
 	layoutName: 'layout/main',
 	templateName: 'login/forgot_password',
 

@@ -1,0 +1,109 @@
+<div class="stepsContent success-assignment">
+    <h2 class="title">
+        {{#if assignment.isQuestionCollectionAssignment}}
+            {{t "assignQuiz.assignmentCreated"}}
+        {{else}}
+            {{t "assignQuiz.assignmentLive"}}
+        {{/if}}
+    </h2>
+    <div class="assignment-info clearfix full-width">
+        <div class="assignment-content one-target clearfix">
+            <div class="name">
+                {{#if assignment.isQuestionCollectionAssignment}}
+                    {{t "assignQuiz.questionCollectionQuiz"}}
+                    <h2>{{assignment.name}}</h2>
+                    <span class="total_questions">{{assignment.totalQuestions}} {{t "assignQuiz.questionsTitle"}}</span>
+                {{else}}
+                    {{t "assignQuiz.masteryLevelQuiz"}}
+                    <h2>{{assignment.name}}</h2>
+
+                    {{partial "student/partials/assignment_header_chapter"}}
+
+                {{/if}}
+            </div>
+            <div class="target">
+                <div class="targets">
+                    {{#if assignment.isQuestionCollectionAssignment}}
+                        <span>{{t "assignQuiz.pointValue"}}</span>
+                        <div class="ml">
+                            {{assignment.points}}
+                        </div>
+                    {{else}}
+                        <span>{{t "assignQuiz.targetMastery"}}</span>
+                        <div class="ml">
+                            {{assignment.targetMasteryLevel}}
+                        </div>
+                    {{/if}}
+
+                </div>
+            </div>
+        </div>
+        {{#if assignment.staggered}}
+            {{#each classesAndDates as |classesDates|}}
+                <div class="details">
+                    <div>{{t "assignQuiz.assignedTo"}}:</div>
+                    <div class="classes-list">
+                        <span class="highlight">{{classesDates.name}}</span>
+                        {{#unless classesDates.isUnknownTerm}}
+                            &nbsp;-&nbsp;{{classesDates.term}}
+                        {{/unless}}
+                    </div>
+                    <div>{{t "assignQuiz.deadlines"}}:</div>
+                    {{#if assignment.hasTimeLimit}}
+                        <div class="highlight">
+                            <span>{{t "assignQuiz.timedAssignment" min=assignment.timeLimit}}</span>
+                        </div>
+                    {{/if}}
+                    <div class="highlight">
+                        <span>{{t "assignQuiz.availableOn"}}</span>&nbsp;
+                        {{format-date classesDates.availableDate timezone=classesDates.timeZone}}&nbsp;
+                        <span>{{t "assignQuiz.andDueOn"}}</span>&nbsp;
+                        {{format-date classesDates.dueDate timezone=classesDates.timeZone}}
+                    </div>
+                </div>
+            {{/each}}
+        {{else}}
+            <div class="details">
+                <div>{{t "assignQuiz.assignedTo"}}:</div>
+                <div class="classes-list">
+                    {{#each assignment.classes as |clazz|}}
+                        <div>
+                            <span class="highlight">{{clazz.name}}</span>
+                            {{#unless clazz.isUnknownTerm}}
+                                &nbsp;-&nbsp;{{clazz.term}}
+                            {{/unless}}
+                        </div>
+                    {{/each}}
+                </div>
+                <div>{{t "assignQuiz.deadlines"}}:</div>
+                {{#if assignment.hasTimeLimit}}
+                <div class="highlight">
+                    <span>{{t "assignQuiz.timedAssignment" min=assignment.timeLimit}}</span>
+                </div>
+                {{/if}}
+                <div class="highlight">
+                    <span>{{t "assignQuiz.availableOn"}}</span>&nbsp;
+                    {{format-date assignment.availableDate timezone=assignment.timeZone}}&nbsp;
+                    <span>{{t "assignQuiz.andDueOn"}}</span>&nbsp;
+                    {{format-date assignment.dueDate timezone=assignment.timeZone}}
+                </div>
+            </div>
+        {{/if}}
+        
+    </div>
+    <div class="btn-box margin-top-55">
+        {{#if isCCMAllowed}}
+            {{#if assignment.hasManyClasses}}
+                {{#link-to 'instructor.hmcd' class.id class="btn btn-blue ccm-done" }}{{t "assignQuiz.done"}}{{/link-to}}
+            {{else}}
+                {{#if assignment.staggered}}
+                    {{#link-to 'instructor.hmcd' class.id class="btn btn-blue ccm-done" }}{{t "assignQuiz.done"}}{{/link-to}}
+                {{else}}
+                    {{#link-to 'instructor.hmcd' assignment.firstClass.id class="btn btn-blue ccm-done" }}{{t "assignQuiz.done"}}{{/link-to}}
+                {{/if}}
+            {{/if}}
+        {{else}}
+            {{#link-to 'instructor.hmcd' class.id class="btn btn-blue" }}{{t "assignQuiz.done"}}{{/link-to}}
+        {{/if}}
+    </div>
+</div>

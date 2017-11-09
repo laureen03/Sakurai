@@ -1,0 +1,33 @@
+{{#if model.questionMedia}}
+    <div>
+        <img src={{model.questionMedia}} />
+    </div>
+{{/if}}
+<h2>
+    {{#with model.questionText as |questionText|}}
+        {{safe-html questionText}}
+    {{/with}}
+</h2>
+<ul class="question-container {{if isDisable 'disabled' ''}}">
+    {{#each model.interactions as |interaction|}}
+        {{#each interaction.answerChoices as |answerChoice|}}
+            <li>
+                <label for={{answerChoice.id}}>
+                    {{#if isMultiple}}
+                        <input id={{answerChoice.id}} name={{answerChoice.id}} type="checkbox" data-id={{answerChoice.id}} />
+                    {{else}}
+                        <input id={{answerChoice.id}} name="singleq-radio" type="radio" data-id={{answerChoice.id}} />
+                    {{/if}}
+
+                    {{#if answerChoice.media}}
+                        <img src={{answerChoice.media}} />
+                    {{else}}
+                        {{safe-html answerChoice.text}}
+                    {{/if}}
+                </label>
+            </li>
+        {{/each}}
+    {{/each}}
+</ul>
+
+{{partial 'question/footer'}}

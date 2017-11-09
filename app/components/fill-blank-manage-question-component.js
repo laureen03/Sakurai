@@ -1,10 +1,14 @@
 /**
  *
- * @type {SakuraiWebapp.FillBlankManageQuestionComponent }
+ * @type {FillBlankManageQuestionComponent }
  */
-SakuraiWebapp.FillBlankManageQuestionComponent = Ember.Component.extend(
-    SakuraiWebapp.ManageQuestionComponentMixin,
-    {
+import Ember from "ember"; 
+import ManageQuestionComponentMixin from "mixins/manage-question-component";
+import Question from "models/question";
+import Interaction from "objects/interaction";
+
+export default Ember.Component.extend(
+    ManageQuestionComponentMixin, {
 
         /**
          * @property {string}
@@ -59,8 +63,8 @@ SakuraiWebapp.FillBlankManageQuestionComponent = Ember.Component.extend(
 
         /**
          * Setups the interaction during the didInsertElement
-         * @see SakuraiWebapp.ManageQuestionComponentMixin#didInsertElement
-         * @see SakuraiWebapp.ManageQuestionComponentMixin#didInsertElementInteraction
+         * @see ManageQuestionComponentMixin#didInsertElement
+         * @see ManageQuestionComponentMixin#didInsertElementInteraction
          */
         didInsertElementInteraction: function () {
             var self = this;
@@ -83,13 +87,13 @@ SakuraiWebapp.FillBlankManageQuestionComponent = Ember.Component.extend(
 
         /**
          * Initializes the question interaction
-         * @param {SakuraiWebapp.Question} question
+         * @param {Question} question
          * @param {bool} createMode
          *
          * It is called by
-         * @see SakuraiWebapp.ManageQuestionComponentMixin#initQuestion
+         * @see ManageQuestionComponentMixin#initQuestion
          *
-         * @see SakuraiWebapp.ManageQuestionComponentMixin#initInteraction
+         * @see ManageQuestionComponentMixin#initInteraction
          */
         initInteraction: function (question, createMode) {
             var component = this;
@@ -103,7 +107,7 @@ SakuraiWebapp.FillBlankManageQuestionComponent = Ember.Component.extend(
                     component.set('correctResponseText', correctResponse.value[0]);
                 }
 
-                if (tools.indexOf(SakuraiWebapp.Question.TOOLS.CALCULATOR) >= 0) {
+                if (tools.indexOf(Question.TOOLS.CALCULATOR) >= 0) {
                     component.set('hasCalculator', true);
                 }
             }
@@ -114,9 +118,9 @@ SakuraiWebapp.FillBlankManageQuestionComponent = Ember.Component.extend(
          * @return {bool}
          *
          * It is called by
-         * @see SakuraiWebapp.ManageQuestionComponentMixin#saveQuestion
+         * @see ManageQuestionComponentMixin#saveQuestion
          *
-         * @see SakuraiWebapp.ManageQuestionComponentMixin#validateInteraction
+         * @see ManageQuestionComponentMixin#validateInteraction
          */
         validateInteraction: function(){
             // $.trim() works fine even with null and undefined
@@ -132,20 +136,20 @@ SakuraiWebapp.FillBlankManageQuestionComponent = Ember.Component.extend(
         /**
          * Set all values for Interaction and return a Json
          *
-         * @see SakuraiWebapp.ManageQuestionComponentMixin#saveQuestion
-         * @see SakuraiWebapp.ManageQuestionComponentMixin#getInteractions
+         * @see ManageQuestionComponentMixin#saveQuestion
+         * @see ManageQuestionComponentMixin#getInteractions
          **/
         getInteractions: function () {
             var self = this,
                 unitMeasure = $.trim(this.get('unitMeasure'));
 
-            return new Em.RSVP.Promise( function(resolve, reject) {
+            return new Ember.RSVP.Promise( function(resolve) {
 
-                var interaction = SakuraiWebapp.Interaction.create({});
+                var interaction = Interaction.create({});
 
                 interaction.setProperties({
-                    "type": SakuraiWebapp.Question.FILL_IN_THE_BLANK,
-                    "subType": SakuraiWebapp.Question.FILL_IN_THE_BLANK,
+                    "type": Question.FILL_IN_THE_BLANK,
+                    "subType": Question.FILL_IN_THE_BLANK,
                     "minChoices": 1,
                     "maxChoices": 1,
                     "shuffle": false
@@ -156,7 +160,7 @@ SakuraiWebapp.FillBlankManageQuestionComponent = Ember.Component.extend(
                 }
 
                 if (self.get('hasCalculator')) {
-                    interaction.addTool(SakuraiWebapp.Question.TOOLS.CALCULATOR);
+                    interaction.addTool(Question.TOOLS.CALCULATOR);
                 }
 
                 interaction.setCorrectResponse(null, [self.get("correctResponseText")], false);

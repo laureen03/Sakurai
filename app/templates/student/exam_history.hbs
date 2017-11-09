@@ -1,0 +1,92 @@
+<div class="container exam-history">
+    <h2 class="margin-top-55">{{t "examHistory.examHistoryTitle"}}</h2>
+
+    {{#if examHistorySortable.collection}}
+        <table class="table tablesorter examHistory-table">
+            <thead>
+                <tr>
+                    <th class="header sort_quizIndex tleft">
+                        <a {{action 'onSortByCriteria' 'examHistory' 'quizIndex'}}>
+                            <span class="quizIndex-action action">{{t "quizHistory.name"}}</span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs header sort_isComplete">
+                    	<a {{action 'onSortByCriteria' 'examHistory' 'isComplete' }}>
+                            <span class="isComplete-action action">{{t "quizHistory.status"}}</span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs header sort_startedOnTimeStamp">
+                        <a {{action 'onSortByCriteria' 'examHistory' 'startedOnTimeStamp' }}>
+                            <span class="startedOnTimeStamp-action action headerSortUp">{{t "quizHistory.startDate"}}</span>
+                        </a>
+                    </th>
+                    <th class="hidden-xs header sort_sortableMasteryLevel">
+                        <a {{action 'onSortByCriteria' 'examHistory' 'sortableMasteryLevel' }}>
+                            <span class="sortableMasteryLevel-action action">{{t "examHistory.masteryLevelAchieved"}}</span>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            	{{#each examHistorySortable.collection as |exam|}}
+                    <tr id="exam-row-{{exam.examIndex}}">
+                        <td class="quiz-name tleft">
+                            <h5>
+                                {{#if exam.hasAssignment}}
+                                    {{#if exam.isComplete}}
+                                        <a class="gray" {{action 'viewResults' exam.id}}>{{exam.assignment.name}}</a>
+                                    {{else}}
+                                        {{exam.assignment.name}}
+                                        {{#if exam.assignment.isAvailable}}
+                                            {{#unless controller.isImpersonated}}
+                                                &nbsp;-&nbsp;<a {{action 'goToExam' exam.id}} class="link-finish-quiz">
+                                                {{t "examHistory.finishExam"}}</a>
+                                            {{/unless}}
+                                        {{/if}}
+                                    {{/if}}
+                                {{else}}
+                                    {{#if exam.isComplete }}
+                                        <a class="gray" {{action 'viewResults' exam.id}}>{{t "examHistory.exam"}} {{exam.examIndex}}</a>
+                                    {{else}}
+                                        {{#if exam.hasTimedOut}}
+                                            <a class="gray" {{action 'viewResults' exam.id}}>{{t "examHistory.exam"}} {{exam.examIndex}}</a>
+                                        {{else}}
+                                            {{t "examHistory.exam"}}&nbsp;{{exam.examIndex}}
+                                            {{#unless controller.isImpersonated}}
+                                                &nbsp;-&nbsp;<a {{action 'goToExam' exam.id}} class="link-finish-quiz">
+                                                {{t "examHistory.finishExam"}}</a>
+                                            {{/unless}}
+                                        {{/if}}
+                                    {{/if}}
+                                {{/if}}
+                            </h5>
+                        </td>
+                        <td class="hidden-xs">
+                            {{#if exam.isComplete}}
+                                <span class="label label-success">{{t "assignments.complete"}}</span>
+                            {{else}}
+                                {{#if exam.hasAssignment}}
+                                    {{#unless exam.assignment.isAvailable}}
+                                        <span class="label label-danger">{{t "assignments.pastDue"}}</span>
+                                    {{else}}
+                                        <span class="label label-warning">{{t "quizHistory.incomplete"}}</span>
+                                    {{/unless}}
+                                {{else}}
+                                    <span class="label label-warning">{{t "quizHistory.incomplete"}}</span>
+                                {{/if}}
+                            {{/if}}
+                        </td>
+                        <td class="hidden-xs date"><span class="date-format">{{format-date exam.startedOn}}</span></td>
+                        <td class="hidden-xs">
+                            {{#if exam.isComplete}}
+                                {{exam.sortableMasteryLevel}}
+                            {{/if}}
+                        </td>
+                    </tr>
+            	{{/each}}
+            </tbody>
+        </table>
+    {{else}}
+        <h4 class="{{if isImpersonated 'disabled' ''}}">{{t "examHistory.noExamTaken"}}&nbsp;{{#link-to 'exam.create' class.id}}{{t "examHistory.takePracticelink"}}{{/link-to}}</h4>
+    {{/if}}
+</div>

@@ -1,0 +1,9 @@
+<header role="banner">
+	{{render "headerClasses"}}
+	{{partial "student/subHeader"}}
+</header>
+<section class="clearfix content-wrapper">
+	{{yield}}
+</section>
+{{partial "authenticatedFooter"}}
+{{component 'exit-app' sso=sso isXSmall=isXSmall}}

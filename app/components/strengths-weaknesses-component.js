@@ -2,12 +2,15 @@
  *
  * @type {*}
  */
-SakuraiWebapp.StrengthsWeaknessesComponent = Ember.Component.extend({
-	action_pre_select: "preSelect",
+ import Ember from "ember"; 
+
+export default Ember.Component.extend({	
+
+    action_pre_select: "preSelect",
 	action_select_weaknesses: "selectWeakest",
 
     /**
-     * @property {SakuraiWebapp.TermTaxonomyStat|SakuraiWebapp.ChapterStat}
+     * @property {TermTaxonomyStat|ChapterStat}
      */
     'data-stats':null,
 
@@ -43,7 +46,7 @@ SakuraiWebapp.StrengthsWeaknessesComponent = Ember.Component.extend({
 
     /**
      * Return strengths per type
-     * @property {SakuraiWebapp.TermTaxonomyPerformance[]}
+     * @property {TermTaxonomyPerformance[]}
      */
     strengths: Ember.computed("data-stats.strengths.[]", "data-type", function(){
         return (this.get("data-filter-type")) ?
@@ -53,7 +56,7 @@ SakuraiWebapp.StrengthsWeaknessesComponent = Ember.Component.extend({
 
     /**
      * Return weaknesses per type
-     * @property {SakuraiWebapp.TermTaxonomyPerformance[]}
+     * @property {TermTaxonomyPerformance[]}
      */
     weaknesses: Ember.computed("data-stats.weaknesses.[]", "data-type", function(){
         return (this.get("data-filter-type")) ?
@@ -67,19 +70,6 @@ SakuraiWebapp.StrengthsWeaknessesComponent = Ember.Component.extend({
     labelBtn: Ember.computed("data-label-btn", "data-label-btn-i18n", function(){
         var i18n = this.get("data-label-btn-i18n");
         var label = this.get("data-label-btn");
-        if (i18n){
-            label = I18n.t(i18n);
-        }
-
-        return label;
-    }),
-
-    /**
-     * @property {string} title label
-     */
-    labelBtn: Ember.computed("data-label-btn", "data-label-btn-i18n", function(){
-        var i18n = this.get("data-label-title-i18n");
-        var label = this.get("data-label-title");
         if (i18n){
             label = I18n.t(i18n);
         }

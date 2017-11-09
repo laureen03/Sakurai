@@ -1,0 +1,61 @@
+<div class="container hmcd">
+	<div class="col-md-3 options-menu">
+		<div class="divider"></div>
+		<ul>
+			<li><a data-scroll-to="classPerformance">{{t "hmcd.classPerformance"}}</a></li>
+			<li><a data-scroll-to="assignmentResults">{{t "hmcd.assignmentResults"}}</a></li>
+			<li><a data-scroll-to="studentUsage">{{t "hmcd.studentUsage.title"}}</a></li>
+			<li><a data-scroll-to="strengthsWeaknesses">{{t "hmcd.strengthsWeaknesses"}}</a></li>
+			<li><a data-scroll-to="overall-usage">{{t "hmcd.overallUsage.title"}}</a></li>
+			<li class="hidden-xs"><a data-scroll-to="specificMisconceptions">{{t "hmcd.specificMisconceptions"}}</a></li>
+			{{#unless isCCMAllowed}}
+                {{#if displayEnrollStudent}}
+                    <li><a class="enrollStudent" data-scroll-to="enrollStudent">{{t "hmcd.enrollStudent"}}</a></li>
+                {{/if}}
+            {{/unless}}
+		</ul>
+		<div class="divider"></div>
+	</div>
+	<div class="col-md-9 hmcd-content">
+        {{#if displayClassPerformance}}
+            {{render "instructor.partial.hmcdClassPerformance"}}
+        {{else}}
+            <div class="lazy-load-spin"><span class="glyphicon glyphicon-refresh animate-spin"></span></div>
+        {{/if}}
+
+        {{#if displayAssignmentResults}}
+            <h2 id="assignmentResults">{{t "hmcd.assignmentResults"}}
+                <small id="manageAssignments">{{#link-to 'instructor.assignments' class.product.id class.id (query-params prevPage="hmcd") class="highlight-link"}}  {{t "instructor.manageAssignments"}}{{/link-to}}</small>
+            </h2>
+            {{render "instructor.partial.hmcdAssignmentsResults"}}
+        {{else}}
+            <div class="lazy-load-spin"><span class="glyphicon glyphicon-refresh animate-spin"></span></div>
+        {{/if}}
+        {{#if displayStudentUsage}}
+            {{render "instructor.partial.hmcdStudentUsage"}}
+        {{else}}
+            <div class="lazy-load-spin"><span class="glyphicon glyphicon-refresh animate-spin"></span></div>
+        {{/if}}
+        {{#if displayStrengthsWeaknesses}}
+            {{render "instructor.partial.hmcdStrengthsWeaknesses"}}
+        {{else}}
+            <div class="lazy-load-spin"><span class="glyphicon glyphicon-refresh animate-spin"></span></div>
+        {{/if}}
+        {{#if displayOverallUsage}}
+            {{render "instructor.partial.hmcdOverallUsage"}}
+        {{else}}
+            <div class="lazy-load-spin"><span class="glyphicon glyphicon-refresh animate-spin"></span></div>
+        {{/if}}
+        {{#if displayMisconceptions}}
+            {{render "instructor.partial.hmcdMisconceptions"}}
+        {{else}}
+            <div class="lazy-load-spin"><span class="glyphicon glyphicon-refresh animate-spin"></span></div>
+        {{/if}}
+        {{#unless isCCMAllowed}}
+            {{#if displayEnrollStudent}}
+                {{partial "instructor/partial/hmcdEnrollStudent"}}
+            {{/if}}
+        {{/unless}}
+	</div>
+</div>
+

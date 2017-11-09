@@ -1,0 +1,21 @@
+{{#if allowReviewAndRefresh}}
+	<div class="review-refresh-section">
+	    <h1>{{t "reviewRefresh.quizType"}}</h1>
+	    <div>{{radio-button id="adaptiveLearning" name="quizType_radios" value='adaptive' checked=quizType}}&nbsp;<label class="label-quiz-type" for="adaptiveLearning">{{t "reviewRefresh.adaptiveLearningQuiz"}}</label></div>
+	    <div class="review-refresh-radio {{if isActive 'enabled' 'disabled'}}">{{radio-button id="reviewAndRefresh" name="quizType_radios" value='reviewRefresh' checked=quizType}}&nbsp;<label class="label-quiz-type" for="reviewAndRefresh">{{t "reviewRefresh.reviewRefreshQuiz"}}</label></div>
+            {{#if showInactiveMsg}}
+                <div class="inactiveRR">
+                    <i>
+                    {{#unless validDate}}
+                            {{t "reviewRefresh.dateInactive1"}}{{format-date reviewRefreshClassSettings.availableDate timezone=reviewRefreshClassSettings.timeZone}}{{t "reviewRefresh.dateInactive2"}}
+                    {{else}}
+                            {{t "reviewRefresh.inactiveRR"}}
+                    {{/unless}}
+                    </i>
+                </div>
+            {{/if}}
+            <div><a class="about-link" data-target="#about-mdl" data-toggle="modal">{{t "reviewRefresh.moreAboutReviewAndRefresh"}}</a></div>
+	    {{simple-modal idElement='about-mdl' title="reviewRefresh.aboutReviewAndRefresh" bodyHtml=bodyAboutReviewAndRefresh}}
+	</div>
+    {{simple-modal idElement='warningTopicsAreasReviewRefresh' title="reviewRefresh.attention" body=reviewAndRefreshWarningTranslationLabel}}
+{{/if}}

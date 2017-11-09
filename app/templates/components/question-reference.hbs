@@ -1,0 +1,26 @@
+{{#if references}}
+<div class="question-references">
+    <h4>
+        {{title}}:
+    </h4>
+    <ul>
+        {{#each references as |reference|}}
+            <li>
+                {{#if reference.hasRemediationLink}}
+                    <p class="reference-text">
+                        {{{reference.text}}}
+                    </p>
+                    <p class="reference-section-text">
+                        <a class="item-action" {{action 'onRemediationLinkClick' reference}} href="#">
+                            <span aria-hidden="true" class="icon-remediation icon-smartsenseIconBook"></span>
+                        </a>
+                        {{reference.sectionText}}
+                    </p>
+                {{else}}
+                    {{{reference.text}}}
+                {{/if}}
+            </li>
+        {{/each}}
+    </ul>
+</div>
+{{/if}}

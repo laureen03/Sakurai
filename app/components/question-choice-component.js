@@ -1,5 +1,9 @@
-SakuraiWebapp.QuestionChoiceComponent = Ember.Component.extend(
-SakuraiWebapp.QuestionMixin, {
+import Ember from "ember"; 
+import QuestionMixin from "mixins/question-mixin";
+
+
+export default Ember.Component.extend(
+    QuestionMixin, {
     /**
      * @property {string} shuffle action
      */
@@ -16,7 +20,7 @@ SakuraiWebapp.QuestionMixin, {
     'data-display-answer-key-action': null,
 
     isMultiple: Ember.computed('model', function () {
-        if ((this.get("model.interactions")) && (this.get("model.interactions").get('firstObject').maxChoices == 1) && (this.get("model.interactions").get('firstObject').maxChoices == 1)) {
+        if ((this.get("model.interactions")) && (this.get("model.interactions").get('firstObject').maxChoices === 1) && (this.get("model.interactions").get('firstObject').maxChoices === 1)) {
             $('.question-container input[name=singleq-radio]').prop('checked', false);
             return false;
         } else {
@@ -38,7 +42,7 @@ SakuraiWebapp.QuestionMixin, {
                 $('.question-container input:checked').each(function () {
                     answer.push($(this).data('id'));
                 });
-                if (answer.length != 0) {
+                if (answer.length !== 0) {
                     component.sendAction('data-save-action', answer);
                     component.set("isDisable", true);
                 } else {
@@ -46,7 +50,7 @@ SakuraiWebapp.QuestionMixin, {
                 }
             } else {
                 var selectedItem = $('.question-container input[name=singleq-radio]:checked');
-                if (selectedItem.length != 0) {
+                if (selectedItem.length !== 0) {
                     answer.push(selectedItem.data('id'));
                     component.sendAction('data-save-action', answer);
                     component.set("isDisable", true);
