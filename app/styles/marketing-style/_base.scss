@@ -1,0 +1,36 @@
+
+body {
+	font-family: $font-family-base;
+	font-size: $font-size-base;
+	line-height: $line-height-base;
+	color: $text-color;
+	background-color: $body-bg;
+	-webkit-font-smoothing: antialiased;
+	padding-top:117px;
+	&.page, &.access-card, &.error404 {
+		background-color:#333;
+	}
+}
+
+a{
+	text-decoration:none;
+}
+
+img, video {
+	height:auto;
+	max-width:100%;
+}
+
+strong, b {
+	font-weight:600;
+}
+
+em, i {
+	font-style:italic;
+}
+
+main {
+	background-color:#fff;
+	position:relative;
+	z-index:6;
+}

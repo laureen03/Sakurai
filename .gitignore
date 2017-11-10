@@ -15,3 +15,7 @@
 /libpeerconnection.log
 npm-debug.log
 testem.log
+
+/.idea/Sakurai.iml
+/.idea/modules.xml
+/.idea/workspace.xml

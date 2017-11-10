@@ -3,7 +3,7 @@
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center top;
-	background-image: url('../images/bg/bg-student-no-pattern.png');
+	background-image:  url('#{$img-path}/bg/bg-student-no-pattern.png');
 }
 
 .error{
@@ -42,7 +42,7 @@ input[type="text"],input[type="email"]{
     }
 
     .ap-large{
-        background: url('../images/icons/icon-ap-large.png') no-repeat;
+        background: url('#{$img-path}/icons/icon-ap-large.png') no-repeat;
         display: block;
         height: 52px;
         margin: 20px auto 10px;
@@ -50,7 +50,7 @@ input[type="text"],input[type="email"]{
     }
 
     .bio-large{
-        background: url('../images/icons/icon-biology-large.png') no-repeat;
+        background: url('#{$img-path}/icons/icon-biology-large.png') no-repeat;
         display: block;
         height: 72px;
         margin: 0 auto 10px;
@@ -58,7 +58,7 @@ input[type="text"],input[type="email"]{
     }
 
     .med-large{
-        background: url('../images/icons/icon-nursing-medical-large.png') no-repeat;
+        background: url('#{$img-path}/icons/icon-nursing-medical-large.png') no-repeat;
         display: block;
         height: 57px;
         margin: 15px auto 10px;
@@ -69,7 +69,7 @@ input[type="text"],input[type="email"]{
 
 .need-help{
     .ap-small{
-        background: url('../images/icons/icon-ap.png') no-repeat;
+        background: url('#{$img-path}/icons/icon-ap.png') no-repeat;
         display: block;
         height: 21px;
         margin: 0 auto;
@@ -77,7 +77,7 @@ input[type="text"],input[type="email"]{
     }
 
     .bio-small{
-        background: url('../images/icons/icon-biology-small.png') no-repeat;
+        background: url('#{$img-path}/icons/icon-biology-small.png') no-repeat;
         display: block;
         height: 28px;
         margin: 0 auto;
@@ -85,7 +85,7 @@ input[type="text"],input[type="email"]{
     }
 
     .med-small{
-        background: url('../images/icons/icon-nursing-and-medical.png') no-repeat;
+        background: url('#{$img-path}/icons/icon-nursing-and-medical.png') no-repeat;
         display: block;
         height: 24px;
         margin: 0 auto 3px;

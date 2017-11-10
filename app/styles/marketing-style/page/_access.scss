@@ -19,15 +19,6 @@ body.get-started {
 	}
 }
 
-.get-started {
-	.course-select {
-		.course {
-			padding:0 32px;
-			margin-bottom:16px;
-		}
-	}
-}
-
 body.free-trial {
 	.hero {
 		button[type="submit"] {
@@ -161,25 +152,6 @@ section.accordion {
 		}
 	}
 
-	header {
-
-		@include background-image(linear-gradient(#f6f6f6, #e0e0e0));
-
-		background-color:#e7e7e7;
-		position:relative;
-
-		&.ui-accordion-header{
-			cursor:pointer;
-		}
-
-		h5{
-			color:#888;
-			font-size:15px;
-			line-height:38px;
-			margin:0;
-		}
-	}
-
 	.ui-icon {
 		
 		background:transparent url('#{$assetMarketingPath}/bg-sign-in-tab-indicator.png') no-repeat right bottom;
@@ -248,19 +220,6 @@ section.accordion {
 			}
 
 			
-		}
-	}
-
-	.radius.highlight {
-		@include border-radius(3px);
-
-		background:#fff;
-		border:1px solid #fafafa;
-		padding:20px 13px 15px;
-		
-		&:hover, &:focus {
-			background:#fafafa;
-			border:1px solid $gray;
 		}
 	}
 

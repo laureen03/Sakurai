@@ -8,6 +8,8 @@ export default Controller.extend(
     ControllerMixin, 
     LoginMixin,{
 
+    needs: ['template:layout/main'],
+
 	/* V A R */
     header: Ember.inject.controller(),
 

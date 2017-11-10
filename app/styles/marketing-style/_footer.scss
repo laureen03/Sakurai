@@ -1,0 +1,51 @@
+footer {
+	background-color:#333;
+	border-top:1px solid #444;
+
+	color:#fff;
+
+	font-size:11px;
+	line-height:24px;
+
+	padding-top:12px;
+	padding-bottom:16px;
+	position:relative;
+	z-index:10; 
+
+	p, ul {
+		margin-bottom:0;
+	}
+
+	a, a:active, a:hover, a:focus, a:visited {
+		color:#fff;
+	}
+
+	ul.list-inline li {
+		vertical-align:middle;
+	}
+
+	li.menu-friend-prepu-on-facebook, li.menu-follow-prepu-on-twitter {
+		a {
+			@extend .ir;
+
+			display:block;
+			
+			height:24px;
+			width:24px;
+		}
+	}
+	li.menu-friend-prepu-on-facebook a {
+		background:transparent url('#{$assetMarketingPath}/icon-facebook.png') no-repeat left top;
+	}
+	li.menu-follow-prepu-on-twitter a {
+		background:transparent url('#{$assetMarketingPath}/icon-twitter.png') no-repeat left top;
+	}
+}
+
+@media screen and (max-width:$screen-sm) {
+	footer {
+		p, .text-right {
+			text-align:center;
+		}
+	}
+}

@@ -1,0 +1,73 @@
+// Set modal to be 100% width in really small modes?
+// or display: none?
+// @media screen and (max-width:500px) { 
+// 	#persistent-modal {
+// 		position
+// 	}
+// }
+
+#persistent-modal {
+	@include box-shadow(5px -5px 18px rgba(0,0,0,.1));
+
+	&.instructor {
+		background:#147a96 url('#{$assetMarketingPath}/bg-modal-instructor.png') no-repeat left top;
+		height:162px;
+		width:428px;
+	}
+
+	&.student {
+		background:#147a96 url('#{$assetMarketingPath}/bg-modal.png') no-repeat left top;
+		height:183px;
+		width:365px;
+	}
+
+	bottom:-200px;
+	color:#fff;
+	padding:30px 0 0;
+	position:fixed;
+	right:20px;
+	z-index:10;
+
+	h4, p, a, a:hover, a:focus, a:active, a:visited {
+		color:#fff;
+	}
+
+	p a {
+		text-decoration:underline;
+	}
+
+	h4{ 
+		margin-bottom:18px;
+	}
+
+	a.close-button {
+		@include text-shadow(0 1px 0 rgba(0,0,0,.25));
+		@include inline-block;
+		
+		line-height:18px;
+		font-weight:600;
+	
+		position:absolute;
+	
+		right:7px;
+			
+		text-decoration:none;
+		text-transform:uppercase;
+		top:10px;
+
+		i.icon-close {
+			@include inline-block;
+			background:transparent url('#{$assetMarketingPath}/icon-modal-close.png') no-repeat left top;
+			width:19px;
+			height:18px;
+		}
+	}
+
+	a.btn {
+		height:45px; 
+		line-height:45px;
+		margin:0 6px 12px;
+		
+		
+	}
+}

@@ -1,3 +1,4 @@
+
 /* Colors */
 $green-color: #44AE44;
 $red-bar-color: #AC1C00;
@@ -39,7 +40,7 @@ $prepu-orange: #ef6b35;
 $border-gray-light: #e1e1e1;
 $green-correct-select-point: #71b636;
 /*PATHS*/
-$img-path: "../images";
+$img-path: "/assets/images";
 /* hmcd fixes */
 $light-blue-color: #676767;
 $almos-bluelight-color: #28839a;
@@ -52,15 +53,3 @@ $legend-before-color: #919090;
 $all-student-en : 'ALL STUDENTS';
 $this-class-en : 'THIS CLASS';
 $hs-gray-color: #E2E3E2;
-
-$gray-base:              #000 !default;
-$gray-darker:            lighten($gray-base, 13.5%) !default; // #222
-$gray-dark:              lighten($gray-base, 20%) !default;   // #333
-$gray:                   lighten($gray-base, 33.5%) !default; // #555
-$gray-light:             lighten($gray-base, 46.7%) !default; // #777
-$gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
-
-
-$brand-primary:         #ef6b35 !default;
-$screen-sm:                  768px !default;
-$navbar-default-link-color:                #929292 !default;
