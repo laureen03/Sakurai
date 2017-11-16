@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import Context from '../utils/context-utils';
-import RemediationLinkView from '../models/remediation-link-view';
+import context from 'sakurai-webapp/utils/context';
+import RemediationLinkView from 'sakurai-webapp/models/remediation-link-view';
 
 /**
  * Convenience mixing to handle actions from the question_partial.hbs
@@ -73,7 +73,7 @@ import RemediationLinkView from '../models/remediation-link-view';
         if (!this.get("canIncRemediationLinkView")){ return; }
 
         var store = this.store;
-        var authenticationManager = Context.get("authenticationManager");
+        var authenticationManager = context.get("authenticationManager");
         var userId = authenticationManager.getCurrentUserId();
         RemediationLinkView.incRemediationLinkViews(store, remediationLink.get("id"), userId);
     },

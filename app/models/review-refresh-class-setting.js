@@ -1,7 +1,7 @@
 import DS from 'ember-data';
 import Ember from "ember";
-import ReviewRefreshClassSetting from "../models/review-refresh-class-setting";
-import Context from '../utils/context-utils';
+import ReviewRefreshClassSetting from "sakurai-webapp/models/review-refresh-class-setting";
+import context from 'sakurai-webapp/utils/context';
 
 export default DS.Model.extend({
 	/**

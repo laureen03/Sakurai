@@ -1,6 +1,6 @@
 import DS from 'ember-data';
 import Ember from "ember";
-import QuestionAudit from "../models/question-audit";
+import QuestionAudit from "sakurai-webapp/models/question-audit";
 
 export default DS.Model.extend({
 

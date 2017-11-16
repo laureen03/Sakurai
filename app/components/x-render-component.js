@@ -1,5 +1,5 @@
 import Ember from "ember"; 
-import context from "utils/context-utils";
+import context from "utils/context";
 import RemediationLinkView from "models/remediation-link-view";
 import ReferenceView from "models/reference-view";
 

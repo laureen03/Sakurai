@@ -2,7 +2,7 @@ import Ember from "ember";
 
 export default Ember.Component.extend({
 	
-	layoutName: 'layout/main',
+	layoutName: 'templates/layout/main',
 	templateName: 'index',
 	didReceiveAttrs : function(){
 		//clears error messages

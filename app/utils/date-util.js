@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import DateUtil from '../utils/date-util';
+import DateUtil from 'sakurai-webapp/utils/date-util';
 
 export default Ember.Object.extend({
     /**

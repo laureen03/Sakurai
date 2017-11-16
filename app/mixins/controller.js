@@ -1,7 +1,7 @@
 
 import Ember from "ember";
 import SortableMixin from '../mixins/sortable';
-import Context from '../utils/context-utils';
+import context from 'sakurai-webapp/utils/context';
 import MobileUtil from '../utils/mobile-util';
 import ReviewRefreshClassSetting from '../models/review-refresh-class-setting';
 

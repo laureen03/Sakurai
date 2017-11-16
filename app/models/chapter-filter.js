@@ -1,6 +1,6 @@
 import DS from 'ember-data';
 import Ember from "ember";
-import ChapterFilter from "../models/chapter-filter";
+import ChapterFilter from "sakurai-webapp/models/chapter-filter";
 
 export default DS.Model.extend({
     /**

@@ -1,9 +1,9 @@
 import DS from 'ember-data';
 import Ember from "ember";
-import Product from "../models/product";
-import Section from "../models/section";
-import TermTaxonomy from "../models/term-taxonomy";
-import Context from '../utils/context-utils';
+import Product from "sakurai-webapp/models/product";
+import Section from "sakurai-webapp/models/section";
+import TermTaxonomy from "sakurai-webapp/models/term-taxonomy";
+import context from 'sakurai-webapp/utils/context';
 
 export default DS.Model.extend({
 

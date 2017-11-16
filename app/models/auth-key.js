@@ -1,6 +1,6 @@
 
 import DS from 'ember-data';
-import AuthKey from "../models/auth-Key";
+import AuthKey from "sakurai-webapp/models/auth-Key";
 
 export default DS.Model.extend({
     username: DS.attr('string'),

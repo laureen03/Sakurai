@@ -1,8 +1,8 @@
 import DS from 'ember-data';
 import Ember from "ember";
-import Assignment from "../models/assignment";
-import DateUtil from '../utils/date-util';
-import Context from '../utils/context-utils';
+import Assignment from "sakurai-webapp/models/assignment";
+import DateUtil from 'sakurai-webapp/utils/date-util';
+import context from 'sakurai-webapp/utils/context';
 
 export default DS.Model.extend({
     /**

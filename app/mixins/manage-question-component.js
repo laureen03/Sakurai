@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import Context from '../utils/context-utils';
-import LearningObjective from '../models/learning-objective';
+import context from 'sakurai-webapp/utils/context';
+import LearningObjective from 'sakurai-webapp/models/learning-objective';
 
 /**
  *

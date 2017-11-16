@@ -1,7 +1,7 @@
 /*global Ember*/
 import DS from 'ember-data';
-import Enrollment from "../models/enrollment";
-import Context from '../utils/context-utils';
+import Enrollment from "sakurai-webapp/models/enrollment";
+import context from 'sakurai-webapp/utils/context';
 
 export default DS.Model.extend({
     code: DS.attr('string'),

@@ -1,6 +1,6 @@
 import DS from 'ember-data';
 import Ember from "ember";
-import LearningObjective from "../models/learning-objective";
+import LearningObjective from "sakurai-webapp/models/learning-objective";
 
 export default DS.Model.extend({
     /**

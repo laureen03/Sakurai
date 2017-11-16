@@ -1,6 +1,6 @@
 import DS from 'ember-data';
 import Ember from "ember";
-import TermTaxonomy from "../models/term-taxonomy";
+import TermTaxonomy from "sakurai-webapp/models/term-taxonomy";
 
 export default DS.Model.extend({
     /**

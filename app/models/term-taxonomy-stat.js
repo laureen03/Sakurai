@@ -1,6 +1,6 @@
 /*global Ember*/
 import DS from 'ember-data';
-import TermTaxonomy from "../models/term-taxonomy";
+import TermTaxonomy from "sakurai-webapp/models/term-taxonomy";
 
 export default DS.Model.extend({
     weaknesses: DS.hasMany('termTaxonomyPerformance', { async: true }),

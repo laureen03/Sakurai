@@ -1,5 +1,5 @@
 import DS from 'ember-data';
-import Section from "../models/section";
+import Section from "sakurai-webapp/models/section";
 
 export default DS.Model.extend({
     name: DS.attr("string"),

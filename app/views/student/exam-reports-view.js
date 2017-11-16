@@ -1,6 +1,6 @@
 import Ember from "ember";
 import UserInterfaceFeaturesMixin from "mixins/user-interface-features";
-import context from "utils/context-utils";
+import context from "utils/context";
 
 export default Ember.Component.extend(
     UserInterfaceFeaturesMixin, {

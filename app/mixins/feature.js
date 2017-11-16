@@ -1,5 +1,5 @@
 import Ember from "ember";
-import Context from '../utils/context-utils';
+import context from 'sakurai-webapp/utils/context';
 import TermTaxonomy from '../models/term-taxonomy';
 /**
  * This mixing contains convenience methods for controlling app features

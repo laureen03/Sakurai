@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import context from 'utils/context-utils';
+import context from 'sakurai-webapp/utils/context';
 
 export default Ember.Object.extend({
 

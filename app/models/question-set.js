@@ -1,7 +1,7 @@
 import DS from 'ember-data';
 import Ember from "ember";
-import QuestionSet from "../models/question-set";
-import Context from '../utils/context-utils';
+import QuestionSet from "sakurai-webapp/models/question-set";
+import context from 'sakurai-webapp/utils/context';
 
 export default DS.Model.extend({
     /**

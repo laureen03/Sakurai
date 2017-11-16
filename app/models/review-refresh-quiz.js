@@ -1,6 +1,6 @@
 import DS from 'ember-data';
 import Ember from "ember";
-import ReviewRefreshQuiz from "../models/review-refresh-quiz";
+import ReviewRefreshQuiz from "sakurai-webapp/models/review-refresh-quiz";
 
 export default DS.Model.extend({
 

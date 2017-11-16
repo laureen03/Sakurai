@@ -1,7 +1,7 @@
 import DS from 'ember-data';
 import Ember from "ember";
-import Question from "../models/question";
-import Context from '../utils/context-utils';
+import Question from "sakurai-webapp/models/question";
+import context from 'sakurai-webapp/utils/context';
 
 export default DS.Model.extend({
     questionText: DS.attr('string'),

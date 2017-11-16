@@ -1,6 +1,6 @@
 import DS from 'ember-data';
 import Ember from "ember";
-import Class from "../models/class";
+import Class from "sakurai-webapp/models/class";
 
 export default DS.Model.extend({
     name: DS.attr('string'),

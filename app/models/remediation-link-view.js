@@ -1,7 +1,7 @@
 import DS from 'ember-data';
 import Ember from "ember";
-import RemediationLinkView from "../models/remediation-link-view";
-import Context from '../utils/context-utils';
+import RemediationLinkView from "sakurai-webapp/models/remediation-link-view";
+import context from 'sakurai-webapp/utils/context';
 
 export default DS.Model.extend({
 

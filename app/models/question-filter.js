@@ -1,6 +1,6 @@
 import DS from 'ember-data';
 import Ember from "ember";
-import QuestionFilter from "../models/question-filter";
+import QuestionFilter from "sakurai-webapp/models/question-filter";
 
 export default DS.Model.extend({
 

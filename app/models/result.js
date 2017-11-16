@@ -5,7 +5,7 @@
  */
 import DS from 'ember-data';
 import Ember from "ember";
-import Result from "../models/result";
+import Result from "sakurai-webapp/models/result";
 
 export default DS.Model.extend({
 

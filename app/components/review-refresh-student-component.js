@@ -1,6 +1,6 @@
 import Ember from "ember"; 
 import ReviewRefreshClassSetting from "models/review-refresh-class-setting";
-import context from "utils/context-utils";
+import context from "utils/context";
 
 export default Ember.Component.extend({
     "data-class": null,

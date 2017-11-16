@@ -15,7 +15,7 @@
 
 import Ember from "ember"; 
 import DS from "ember-data";
-import context from "utils/context-utils";
+import context from "utils/context";
 
 
 export default Ember.Component.extend({

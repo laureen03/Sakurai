@@ -1,7 +1,7 @@
 import DS from 'ember-data';
 import Ember from "ember";
-import Exam from "../models/exam";
-import Context from '../utils/context-utils';
+import Exam from "sakurai-webapp/models/exam";
+import context from 'sakurai-webapp/utils/context';
 
 export default DS.Model.extend({
 

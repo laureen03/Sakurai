@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import MobileUtil from '../utils/mobile-util';
+import MobileUtil from 'sakurai-webapp/utils/mobile-util';
 
 /**
  * Convenience class for mobile settings

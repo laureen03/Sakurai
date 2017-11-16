@@ -1,7 +1,7 @@
 import DS from 'ember-data';
 import Ember from "ember";
-import Quiz from "../models/quiz";
-import Context from '../utils/context-utils';
+import Quiz from "sakurai-webapp/models/quiz";
+import context from 'sakurai-webapp/utils/context';
 
 export default DS.Model.extend({
 
