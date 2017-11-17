@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import AuthenticationManager from "sakurai-webapp/utils/authentication-manager";
 //import ENV from '/config/environment';
 
 /**
@@ -107,7 +108,7 @@ export default Ember.Object.extend({
      * @private
      */
     _initAuthenticationManager: function(){
-        this.authenticationManager = SakuraiWebapp.AuthenticationManager.create({});
+        this.authenticationManager = AuthenticationManager.create({});
     },
 
     /**
@@ -119,23 +120,22 @@ export default Ember.Object.extend({
             mode = this.get('mode'),
             modes = this.get('modes');
 
+        debugger;
+
         if (mode === modes.PROD){
-            environment = SakuraiWebapp.ProductionEnvironment.create({});
+            //environment = SakuraiWebapp.ProductionEnvironment.create({});
         }
         else if (mode === modes.DEV){
-            environment = SakuraiWebapp.DevelopmentEnvironment.create({});
+            //environment = SakuraiWebapp.DevelopmentEnvironment.create({});
         }
         else if (mode === modes.FIXTURE){
-            environment = SakuraiWebapp.FixtureEnvironment.create({});
+            //environment = SakuraiWebapp.FixtureEnvironment.create({});
         }
         else if (mode === modes.TEST){
-            environment = SakuraiWebapp.TestingEnvironment.create({});
-        }
-        else if (mode === modes.VAGRANT){
-            environment = SakuraiWebapp.VagrantEnvironment.create({});
+            //environment = SakuraiWebapp.TestingEnvironment.create({});
         }
         else if(mode === modes.UAT){
-            environment = SakuraiWebapp.UatEnvironment.create({});
+            //environment = SakuraiWebapp.UatEnvironment.create({});
         }
         this.set('environment', environment);
     },
@@ -202,10 +202,9 @@ export default Ember.Object.extend({
      * @returns {boolean}
      */
     isTesting: function(){
-        /*var mode = this.get('mode');
+        var mode = this.get('mode');
         var modes = this.get('modes');
-        return (mode === modes.TEST);*/
-        return false;
+        return (mode === modes.TEST);
     },
 
     /**

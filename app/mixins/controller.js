@@ -1,9 +1,9 @@
 
 import Ember from "ember";
-import SortableMixin from '../mixins/sortable';
-import context from 'sakurai-webapp/utils/context';
-import MobileUtil from '../utils/mobile-util';
-import ReviewRefreshClassSetting from '../models/review-refresh-class-setting';
+import SortableMixin from 'sakurai-webapp/mixins/sortable';
+import Context from 'sakurai-webapp/utils/context';
+import MobileUtil from 'sakurai-webapp/utils/mobile-util';
+import ReviewRefreshClassSetting from 'sakurai-webapp/models/review-refresh-class-setting';
 
 /**
  * This mixing contains convenience methods for all controllers using it
@@ -11,9 +11,9 @@ import ReviewRefreshClassSetting from '../models/review-refresh-class-setting';
 export default Ember.Mixin.create(
     SortableMixin, {
 
-     context: Ember.computed(function(){
-         return Context;
-     }),
+    context: Ember.computed(function(){
+        return Context.create();
+    }),
 
     applicationModule: Ember.computed.alias('context.applicationModule'),
 

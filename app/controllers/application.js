@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import ControllerMixin from 'sakurai-webapp/mixins/controller';
-import Context from '../utils/context';
+import Context from 'sakurai-webapp/utils/context';
 import MobileUtil from 'sakurai-webapp/utils/mobile-util';
 
 export default Ember.Controller.extend(
@@ -14,10 +14,10 @@ export default Ember.Controller.extend(
          * @see css_lww_instructor_interaction_spec.js
          * @see test_utils.js#enableFrame
          */
-         debugger;
-        if (Context.isTesting()){
+
+        if (this.get("context").isTesting()){
             //tests modifies this property manually to reproduce the desired behavior
-            return Context.get("isInFrame");
+            return this.get("context").get("isInFrame");
         }
 
         //if not testing check for
@@ -33,9 +33,9 @@ export default Ember.Controller.extend(
      */
     checkMobile: function(){
 
-        if (Context.isTesting()){
+        if (this.get("context").isTesting()){
             //tests modifies this property manually to reproduce the desired behavior
-            return Context.get("isInMobile");
+            return this.get("context").get("isInMobile");
         }
 
         return MobileUtil.isMobile();
@@ -47,8 +47,8 @@ export default Ember.Controller.extend(
     currentPathDidChange: Ember.observer('currentPath', function() {
         var currentPath = this.get('currentPath');
         this.get('history').push(currentPath);
-        Context.set("prevApplicationModule", Context.get("applicationModule"));
-        Context.set("applicationModule", currentPath.replace(".", "-"));
+        this.get("context").set("prevApplicationModule", this.get("context").get("applicationModule"));
+        this.get("context").set("applicationModule", currentPath.replace(".", "-"));
     }),
 
     controllerSetup: function(){
@@ -69,8 +69,8 @@ export default Ember.Controller.extend(
         };
 
         //Check if the App is running into Iframe
-        Context.set("isInFrame", this.checkFrame());
-        Context.set("isInMobile", this.checkMobile());
+        this.get("context").set("isInFrame", this.checkFrame());
+        this.get("context").set("isInMobile", this.checkMobile());
         this.verifyEnableDisableFrame();
 
     }.on('init'),
@@ -137,7 +137,7 @@ export default Ember.Controller.extend(
      * app can go from frame to not frame version
      * @see test_utils.js#enableFrame
      */
-    isInFrameOrMobileObserver: Ember.observer('Context.isInFrame', 'Context.isInMobile', function(){
+    isInFrameOrMobileObserver: Ember.observer('context.isInFrame', 'context.isInMobile', function(){
         this.verifyEnableDisableFrame();
     }) //@see controller mixing
 

@@ -1,8 +1,8 @@
 
 import DS from 'ember-data';
-import AuthKey from "sakurai-webapp/models/auth-Key";
+//import AuthKey from "sakurai-webapp/models/auth-Key";
 
-export default DS.Model.extend({
+const AuthKey = DS.Model.extend({
     username: DS.attr('string'),
     password: DS.attr('string'),
     token: DS.attr('string'),
@@ -68,7 +68,6 @@ AuthKey.reopenClass({
     mimic: function(store, token, publisherName){
         return AuthKey.refresh(store, token, publisherName);
     }
-
-
-
 });
+
+export default AuthKey;
