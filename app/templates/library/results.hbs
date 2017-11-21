@@ -44,7 +44,7 @@
                     </span>
                 </div>
             {{else}}
-                {{partial "library/search_filters"}}
+                {{partial "library/search-filters"}}
                 <div class="filters">
                     {{#if criteria.term}}
                         <div class="filter-breadcrumb-item filter-box term-filter">
@@ -280,7 +280,7 @@
                    <h4 class="modal-title">{{t "questionLibrary.modal.title"}} {{questionSet.name}}</h4>
                </div>
                {{#if preview}}
-                   {{partial 'library/preview_questions_body_partial'}}
+                   {{partial 'library/preview-questions-body-partial'}}
                {{/if}}
                <div class="modal-footer">
                    <a href="javascript:window.print()" class="btn btn-blue btn-small">{{t "button.print"}}</a>
