@@ -1,15 +1,12 @@
 import Ember from 'ember';
 import ControllerMixin from 'sakurai-webapp/mixins/controller';
 import LoginMixin from 'sakurai-webapp/mixins/login';
-import context from 'sakurai-webapp/utils/context';
 
 export default Ember.Controller.extend(
     ControllerMixin, 
     LoginMixin,{
 
-    needs: ['template:layout/main'],
-
-	/* V A R */
+    /* V A R */
     header: Ember.inject.controller(),
 
 	/**
@@ -38,7 +35,8 @@ export default Ember.Controller.extend(
 	_authenticate: function(){
 		var controller = this;
 		var store = controller.store;
-		var authenticationManager = context.get('authenticationManager');
+
+		var authenticationManager = this.get('context').get('authenticationManager');
 
 		var publisherName = controller.get("publisherName");
 		var email = controller.get('email');
@@ -66,7 +64,6 @@ export default Ember.Controller.extend(
 		* Login action
 		*/
 		login: function(){
-			debugger;
 			var controller = this;
 			if ($("#login-form").valid())
 			{

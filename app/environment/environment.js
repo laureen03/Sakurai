@@ -3,10 +3,10 @@
  * @type {Environment}
  */
 import Ember from "ember";
-import ApplicationAdapter from "sakurai-webapp/adapter/application";
-import AuthKeyAdapter from "sakurai-webapp/adapter/auth-key";
+import ApplicationAdapter from "sakurai-webapp/adapters/application";
+import AuthKeyAdapter from "sakurai-webapp/adapters/auth-key";
 
-Ember.Object.extend({
+export default Ember.Object.extend({
 
     /**
      * @property {Object} default environment properties
@@ -92,7 +92,7 @@ Ember.Object.extend({
         var props = this.get('properties');
 
         //Configures the application adapter for models
-        SakuraiWebapp.ApplicationAdapter = DS.RESTAdapter.extend({
+        ApplicationAdapter.reopen({
             host: props.restAdapter.host,
             namespace: props.restAdapter.namespace,
             shouldBackgroundReloadRecord:function() {
@@ -101,7 +101,7 @@ Ember.Object.extend({
         });
 
         //Configures the custom adapter for AuthKey model
-        SakuraiWebapp.AuthKeyAdapter = SakuraiWebapp.AuthKeyAdapter.extend({
+        AuthKeyAdapter.reopen({
             host: props.restAdapter.host,
             namespace: props.restAdapter.namespace
         });

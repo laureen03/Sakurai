@@ -87,7 +87,7 @@ export default Ember.Controller.extend(
     targetQuestionSet: null,
 
     /**
-     * @property {bool} control the layout of questions (flag for question_partial.hbs)
+     * @property {bool} control the layout of questions (flag for question-partial.hbs)
      */
     importingQuestionSet: true,
 

@@ -1,12 +1,13 @@
 import Ember from "ember";
-import context from 'sakurai-webapp/utils/context';
-import TermTaxonomy from '../models/term-taxonomy';
+import TermTaxonomy from 'sakurai-webapp/models/term-taxonomy';
+import ControllerMixin from 'sakurai-webapp/mixins/controller';
+
 /**
  * This mixing contains convenience methods for controlling app features
  *
  *
  */
-export default Ember.Mixin.create({
+export default Ember.Mixin.create(ControllerMixin,{
 
     /**
      * Indicates when the ccm feature is allowed
@@ -14,7 +15,7 @@ export default Ember.Mixin.create({
      * @property {bool}
      */
     isCCMAllowed: Ember.computed('class.product.isCCMAllowed', function(){
-        var context = Context;
+        var context = this.get('context');
         var authenticationManager = context.get('authenticationManager');
         var clazz = this.get("class");
         var product = (clazz) ?
@@ -33,6 +34,9 @@ export default Ember.Mixin.create({
      * @property {bool}
      */
     isMetadataAllowed: Ember.computed('class.product.isMetadataAllowed', function(){
+        if (this.get("class") === undefined){
+            return false;
+        }
         var product = this.get("class").get('product');
         var metadataAllowed = product.get('isMetadataAllowed') || false;
         Ember.Logger.debug("Feature Mixin - metadataAllowed: " + metadataAllowed);
@@ -45,6 +49,9 @@ export default Ember.Mixin.create({
      * @property {bool}
      */
     isExamAllowed: Ember.computed('class.product.isExamAllowed', function(){
+        if (this.get("class") === undefined){
+            return false;
+        }
         var product = this.get("class").get('product');
         var examAllowed = product.get('isExamAllowed');
         Ember.Logger.debug("Feature Mixin - examAllowed: " + examAllowed);
@@ -57,6 +64,9 @@ export default Ember.Mixin.create({
      * @property {bool}
      */
     isRemediationLinkAllowed: Ember.computed('class.product.isRemediationLinkAllowed', function(){
+        if (this.get("class") === undefined){
+            return false;
+        }
         var product = this.get("class").get('product');
         var remediationLinkAllowed = product.get('isRemediationLinkAllowed');
         Ember.Logger.debug("Feature Mixin - remediationLinkAllowed: " + remediationLinkAllowed);
@@ -69,6 +79,9 @@ export default Ember.Mixin.create({
      * @property {bool}
      */
     isReferenceLinksAllowed: Ember.computed('class.product.isReferenceLinksAllowed', function(){
+        if (this.get("class") === undefined){
+            return false;
+        }
         var product = this.get("class").get('product');
         var referenceLinkAllowed = product.get('isReferenceLinksAllowed');
         Ember.Logger.debug("Feature Mixin - isReferenceLinksEnabled: " + referenceLinkAllowed);
@@ -88,6 +101,9 @@ export default Ember.Mixin.create({
      * @property {bool}
      */
     isDataTypeTermTaxonomy: Ember.computed('class.product.isDataTypeClientNeeds', 'class.product.isDataTypeNursingConcepts', function(){
+        if (this.get("class") === undefined){
+            return false;
+        }
         var product = this.get("class").get('product');
         var dataTypeTermTaxonomy = product.get('isDataTypeClientNeeds') ||
             product.get('isDataTypeNursingConcepts');
@@ -100,6 +116,9 @@ export default Ember.Mixin.create({
      * @property {bool}
      */
     isClientNeedsAllowedForTagging: Ember.computed('class.product.isClientNeedsAllowedForTagging', function(){
+        if (this.get("class") === undefined){
+            return false;
+        }
         var product = this.get("class").get('product');
         var allowed = product.get("isClientNeedsAllowedForTagging");
         Ember.Logger.debug("Feature Mixin - clientNeedsAllowedForTagging: " + allowed);
@@ -111,6 +130,9 @@ export default Ember.Mixin.create({
      * @property {bool}
      */
     isNursingConceptsAllowedForTagging: Ember.computed('class.product.isNursingConceptsAllowedForTagging', function(){
+        if (this.get("class") === undefined){
+            return false;
+        }
         var product = this.get("class").get('product');
         var allowed = product.get("isNursingConceptsAllowedForTagging");
         Ember.Logger.debug("Feature Mixin - nursingConceptsAllowedForTagging: " + allowed);
@@ -122,6 +144,9 @@ export default Ember.Mixin.create({
      * @property {bool}
      */
     isClientNeedsAllowedForQuizzing: Ember.computed('stclass.product.isClientNeedsAllowedForQuizzingudentStatus', function(){
+        if (this.get("class") === undefined){
+            return false;
+        }
         var product = this.get("class").get('product');
         var allowed = product.get("isClientNeedsAllowedForQuizzing");
         Ember.Logger.debug("Feature Mixin - clientNeedsAllowedForQuizzing: " + allowed);
@@ -133,6 +158,9 @@ export default Ember.Mixin.create({
      * @property {bool}
      */
     isNursingConceptsAllowedForQuizzing: Ember.computed('class.product.isNursingConceptsAllowedForQuizzing', function(){
+        if (this.get("class") === undefined){
+            return false;
+        }
         var product = this.get("class").get('product');
         var allowed = product.get("isNursingConceptsAllowedForQuizzing");
         Ember.Logger.debug("Feature Mixin - nursingConceptsAllowedForQuizzing: " + allowed);
@@ -143,6 +171,9 @@ export default Ember.Mixin.create({
      * @property {array}
      */
     termTaxonomiesAllowedForTagging: Ember.computed('class.product.termTaxonomiesAllowedForTagging', function(){
+        if (this.get("class") === undefined){
+            return false;
+        }
         var product = this.get("class").get('product');
         var allowedTypes = product.get("termTaxonomiesAllowedForTagging") || [];
         var forTagging = [];
@@ -163,6 +194,9 @@ export default Ember.Mixin.create({
      * @property {array}
      */
     termTaxonomiesAllowedForQuizzing: Ember.computed('class.product.termTaxonomiesAllowedForQuizzing', function(){
+        if (this.get("class") === undefined){
+            return false;
+        }
         var product = this.get("class").get('product');
         return product.get("termTaxonomiesAllowedForQuizzing");
     }),
@@ -208,10 +242,6 @@ export default Ember.Mixin.create({
         return Ember.String.singularize(this.get("chapterTerm"));
     }),
 
-    context: Ember.computed(function(){
-        return Context;
-    }),
-
     user: Ember.computed.alias('context.authenticationManager.authKey.user'),
 
     /**
@@ -228,6 +258,9 @@ export default Ember.Mixin.create({
      * @property {bool}
      */
     isExamThresholdControlAllowed: Ember.computed('class.product.isExamThresholdControlAllowed', function(){
+        if (this.get("class") === undefined){
+            return false;
+        }
         var product = this.get("class").get('product');
         var examThresholdControlAllowed = product.get('isExamThresholdControlAllowed');
         Ember.Logger.debug("Feature Mixin - examThresholdControlAllowed: " + examThresholdControlAllowed);
@@ -246,7 +279,7 @@ export default Ember.Mixin.create({
         if (toggleVersion === 0){
             return false;
         }
-        return (Context.getToggleVersion(module) <= toggleVersion);
+        return (this.get("context").getToggleVersion(module) <= toggleVersion);
     },
 
     /**
@@ -255,7 +288,7 @@ export default Ember.Mixin.create({
      * @return {boolean}
      */
     validateTaxonomyTagConcepts: function (taxonomyType) {
-        var authenticationManager = Context.get('authenticationManager');
+        var authenticationManager = this.get("context").get('authenticationManager');
         var taxonomyTag = authenticationManager.get("taxonomyTag");
         if (TermTaxonomy.isConcepts(taxonomyType) && (taxonomyTag)) {
             return true;

@@ -1,6 +1,6 @@
 /*
  * Workaround to determine whether a question's edit link should be shown or not.
- * If the question_partial is to be moved to its own component (with its own scope)
+ * If the question-partial is to be moved to its own component (with its own scope)
  * then this logic could be moved there and this helper could be removed.
  */
 

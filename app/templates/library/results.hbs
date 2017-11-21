@@ -183,7 +183,7 @@
                 </div>
                 <div id="qc-result-body" class="qc-body">
                     {{#each questions as |question index|}}
-                        {{partial 'library/question_partial'}}
+                        {{partial 'library/question-partial'}}
                     {{/each}}
                 </div>
                 <div class="qc-footer">
@@ -382,4 +382,4 @@
 
 <!-- text-entry questions: modal to show other answers -->
 {{partial "library/question/other_answers_modal"}}
-{{render "library.create_question_collection"}}
+{{render "library.create-question-collection"}}

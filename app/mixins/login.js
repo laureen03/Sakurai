@@ -1,7 +1,8 @@
 import Ember from 'ember';
-import context from 'sakurai-webapp/utils/context';
+import ControllerMixin from 'sakurai-webapp/mixins/controller';
 
-export default Ember.Mixin.create({
+export default Ember.Mixin.create(
+    ControllerMixin, {
 	/**
      * Authenticate with the controller data
      * @param {number} totalClasses
@@ -9,9 +10,7 @@ export default Ember.Mixin.create({
      */
     afterAuthenticate: function(totalClasses, classes){
         var controller = this;
-        var context = Context;
-        var authenticationManager = context.get('authenticationManager');
-
+        var authenticationManager = this.get('context').get('authenticationManager');
         var user = authenticationManager.getCurrentUser();
         var oneClass = totalClasses === 1;
         if (user.get("isStudent")){

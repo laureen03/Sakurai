@@ -3,9 +3,9 @@ import context from 'sakurai-webapp/utils/context';
 import RemediationLinkView from 'sakurai-webapp/models/remediation-link-view';
 
 /**
- * Convenience mixing to handle actions from the question_partial.hbs
+ * Convenience mixing to handle actions from the question-partial.hbs
  *
- * The question_partial template is used in several application areas
+ * The question-partial template is used in several application areas
  * @see SakuraiWebapp.LibraryResultsController
  * @see SakuraiWebapp.LibraryImportController
  * @see SakuraiWebapp.InstructorQcAssignmentSummaryController
@@ -81,7 +81,7 @@ import RemediationLinkView from 'sakurai-webapp/models/remediation-link-view';
     actions: {
 
         /**
-         * Action trigger in the question_partial.hbs
+         * Action trigger in the question-partial.hbs
          * @param remediationLink
          */
         onRemediationLinkClick: function(remediationLink){
@@ -90,7 +90,7 @@ import RemediationLinkView from 'sakurai-webapp/models/remediation-link-view';
         },
 
         /**
-         * Action trigger in the question_partial.hbs
+         * Action trigger in the question-partial.hbs
          * @param reference
          */
         onReferenceLinkClick: function(reference){

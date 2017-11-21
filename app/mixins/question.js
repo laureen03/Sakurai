@@ -13,7 +13,7 @@ export default Ember.Mixin.create({
 
     actions: {
         /**
-         * Action trigger in the question_partial.hbs
+         * Action trigger in the question-partial.hbs
          * @param reference
          */
         onReferenceLinkClick: function(reference){

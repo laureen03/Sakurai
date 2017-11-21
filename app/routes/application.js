@@ -14,7 +14,6 @@ export default Ember.Route.extend({
         var store = this.store;
         return new Ember.RSVP.Promise(function(resolve){
             if (!route.get('anonymous').contains(transition.targetName)){
-                debugger;
                 var authenticationManager = context.get('authenticationManager');
                 authenticationManager.authenticateFromStorage(store).then(function(data){
                     if (!data.fromStorage || !data.authenticated){

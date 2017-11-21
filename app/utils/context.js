@@ -1,6 +1,8 @@
 import Ember from 'ember';
 import AuthenticationManager from "sakurai-webapp/utils/authentication-manager";
-//import ENV from '/config/environment';
+import DevelopmentEnvironment from 'sakurai-webapp/environment/development';
+import TestingEnvironment from 'sakurai-webapp/environment/testing';
+import ProductionEnvironment from 'sakurai-webapp/environment/production';
 
 /**
  * This class is used to control the application context
@@ -120,19 +122,17 @@ export default Ember.Object.extend({
             mode = this.get('mode'),
             modes = this.get('modes');
 
-        debugger;
-
         if (mode === modes.PROD){
-            //environment = SakuraiWebapp.ProductionEnvironment.create({});
+            environment = ProductionEnvironment.create({});
         }
         else if (mode === modes.DEV){
-            //environment = SakuraiWebapp.DevelopmentEnvironment.create({});
+            environment = DevelopmentEnvironment.create({});
         }
         else if (mode === modes.FIXTURE){
             //environment = SakuraiWebapp.FixtureEnvironment.create({});
         }
         else if (mode === modes.TEST){
-            //environment = SakuraiWebapp.TestingEnvironment.create({});
+            environment = TestingEnvironment.create({});
         }
         else if(mode === modes.UAT){
             //environment = SakuraiWebapp.UatEnvironment.create({});
@@ -212,7 +212,7 @@ export default Ember.Object.extend({
      * @returns {*}
      */
     getStore : function () {
-        return SakuraiWebapp.__container__.lookup('service:store');
+        //akuraiWebapp.DevelopmentEnvironmentakuraiWebapp.DevelopmentEnvironment SakuraiWebapp.__container__.lookup('service:store');
     }
 
 });

@@ -1,9 +1,9 @@
-
+import Environment from "sakurai-webapp/environment/environment";
 /**
  * This class configures the development environment
  * @type {DevelopmentEnvironment}
  */
-SakuraiWebapp.DevelopmentEnvironment = SakuraiWebapp.Environment.extend({
+export default Environment.extend({
 
     /**
      * @property {Object} override default environment settings
@@ -16,8 +16,11 @@ SakuraiWebapp.DevelopmentEnvironment = SakuraiWebapp.Environment.extend({
      */
     propertiesOverrides: {
         restAdapter: {
-            namespace: 'app_dev.php/1',
-            host: 'http://127.0.0.1:8081'
+            //namespace: 'app_dev.php/1',
+            //host: 'http://127.0.0.1:8081'
+            //UAT
+            namespace: '1',
+            host: 'https://sakurai-api-uat.prep-u.com/'
         },
 
         logLevels: ["error", "warn", "info", "log", "debug"],
@@ -46,35 +49,4 @@ SakuraiWebapp.DevelopmentEnvironment = SakuraiWebapp.Environment.extend({
         this._super();
     }
 });
-
-/**
- * This class configures the development environment
- * @type {VagrantEnvironment}
- */
-SakuraiWebapp.VagrantEnvironment = SakuraiWebapp.DevelopmentEnvironment.extend({
-
-    devOverrides: {
-        restAdapter: {
-            host: 'http://172.20.0.15:9090'
-        }
-    }
-
-});
-
-/**
- * This class configures the development environment
- * @type {UatEnvironment}
- */
-SakuraiWebapp.UatEnvironment = SakuraiWebapp.DevelopmentEnvironment.extend({
-
-    devOverrides: {
-        restAdapter: {
-            namespace: '1',
-            host: 'https://sakurai-api-uat.prep-u.com/'
-        }
-    }
-
-});
-
-
 
